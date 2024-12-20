@@ -30,7 +30,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'dalamber.urls'
+ROOT_URLCONF = 'syscall.urls'
 
 TEMPLATES = [
     {
@@ -48,7 +48,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'dalamber.wsgi.application'
+WSGI_APPLICATION = 'syscall.wsgi.application'
 
 
 DATABASES = {
