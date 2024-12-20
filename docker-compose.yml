@@ -1,0 +1,11 @@
+version: "3.7"
+
+services:
+  backend:
+    container_name: dalamber-backend
+    build: .
+    command: python3 /application/manage.py runserver 0.0.0.0:8000
+    volumes:
+      - "./:/application"
+    ports:
+      - "8000:8000"
