@@ -1,6 +1,6 @@
 FROM python:3.12.8-slim-bullseye
 
-ENV DJANGO_SETTINGS_MODULE dalamber.settings
+ENV DJANGO_SETTINGS_MODULE syscall.settings
 
 WORKDIR /application
 ADD . /application/
