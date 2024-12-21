@@ -1,0 +1,36 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/core.css' %}">
+    <title>{% block title %} Syscall - Система автоматизации обучения {% endblock %}</title>
+</head>
+<body>
+    <!----------------- HEADER -------------------->
+    <header>
+        <h1>Добро пожаловать в систему автоматизации обучения!</h1>
+    </header>
+
+    <!----------------- NAVBAR -------------------->
+    <nav>
+        <ul>
+            <li><a href="{% url 'home' %}">Главная</a></li>
+            <li><a href="{% url 'register' %}">Регистрация</a></li>
+        </ul>
+    </nav>
+
+    <!----------------- MAIN -------------------->
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!----------------- FOOTER -------------------->
+    <footer>
+        <p>&copy; Дальневосточный федеральный университет 2024</p>
+    </footer>
+</body>
+</html>
