@@ -10,7 +10,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -33,7 +32,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'syscall.urls'
+ROOT_URLCONF = 'acj.urls'
 
 TEMPLATES = [
     {
@@ -51,8 +50,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'syscall.wsgi.application'
-
+WSGI_APPLICATION = 'acj.wsgi.application'
 
 DATABASES = {
     'default': {
@@ -61,15 +59,13 @@ DATABASES = {
     }
 }
 
-
 AUTH_PASSWORD_VALIDATORS = []
 
-AUTH_USER_MODEL = 'users.SyscallUser'
+AUTH_USER_MODEL = 'users.ACJUser'
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
-
 
 LANGUAGE_CODE = 'ru-ru'
 
@@ -79,13 +75,11 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = '/'
-
 
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': [

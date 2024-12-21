@@ -1,10 +1,10 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, PasswordResetForm, SetPasswordForm
 
-from users.models import SyscallUser
+from users.models import ACJUser
 
 
-class SyscallUserAuthenticationForm(AuthenticationForm):
+class ACJUserAuthenticationForm(AuthenticationForm):
     username = forms.CharField(
         label='Логин',
         widget=forms.TextInput(attrs={
@@ -23,11 +23,11 @@ class SyscallUserAuthenticationForm(AuthenticationForm):
     )
 
     class Meta:
-        model = SyscallUser
+        model = ACJUser
         fields = ('username', 'password')
 
 
-class SyscallUserCreationForm(UserCreationForm):
+class ACJUserCreationForm(UserCreationForm):
     username = forms.CharField(
         label='Логин',
         widget=forms.TextInput(attrs={
@@ -62,11 +62,11 @@ class SyscallUserCreationForm(UserCreationForm):
     )
 
     class Meta:
-        model = SyscallUser
+        model = ACJUser
         fields = ('username', 'password1', 'password2', 'email')
 
 
-class SyscallUserPasswordResetForm(PasswordResetForm):
+class ACJUserPasswordResetForm(PasswordResetForm):
     email = forms.EmailField(
         label='Адрес электронной почты',
         widget=forms.EmailInput(attrs={
@@ -76,7 +76,7 @@ class SyscallUserPasswordResetForm(PasswordResetForm):
     )
 
 
-class SyscallUserSetPasswordForm(SetPasswordForm):
+class ACJUserSetPasswordForm(SetPasswordForm):
     new_password1 = forms.CharField(
         label='Новый пароль',
         widget=forms.PasswordInput(attrs={

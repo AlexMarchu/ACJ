@@ -2,6 +2,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'syscall.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'acj.settings')
 
 application = get_wsgi_application()

@@ -1,6 +1,6 @@
 FROM python:3.12.8-slim-bullseye
 
-ENV DJANGO_SETTINGS_MODULE syscall.settings
+ENV DJANGO_SETTINGS_MODULE acj.settings
 
 WORKDIR /application
 ADD . /application/

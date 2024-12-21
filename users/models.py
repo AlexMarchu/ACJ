@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils import timezone
 
-from users.managers import SyscallUserManager
+from users.managers import ACJUserManager
 
 
 class UserRole(models.Model):
@@ -22,18 +22,18 @@ class UserRole(models.Model):
         return self.role
 
 
-class SyscallUser(AbstractUser):
+class ACJUser(AbstractUser):
     role = models.ForeignKey(UserRole, on_delete=models.CASCADE, default=3)
     email = models.EmailField(unique=True)
 
-    objects = SyscallUserManager()
+    objects = ACJUserManager()
 
     def __str__(self):
         return f"User: {self.username}"
 
 
 class EmailConfirmationToken(models.Model):
-    user = models.OneToOneField('SyscallUser', on_delete=models.CASCADE)
+    user = models.OneToOneField('ACJUser', on_delete=models.CASCADE)
     token = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
     created_at = models.DateTimeField(auto_now_add=True)
 

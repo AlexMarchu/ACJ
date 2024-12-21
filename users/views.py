@@ -11,13 +11,13 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View, generic
 from django.conf import settings
 
-from users.forms import SyscallUserAuthenticationForm, SyscallUserCreationForm, SyscallUserPasswordResetForm, \
-    SyscallUserSetPasswordForm
+from users.forms import ACJUserAuthenticationForm, ACJUserCreationForm, ACJUserPasswordResetForm, \
+    ACJUserSetPasswordForm
 from users.models import EmailConfirmationToken
 
 
-class SyscallUserAuthenticationView(LoginView):
-    form_class = SyscallUserAuthenticationForm
+class ACJUserAuthenticationView(LoginView):
+    form_class = ACJUserAuthenticationForm
     template_name = 'users/authentication.html'
     success_url = reverse_lazy('home')
 
@@ -25,8 +25,8 @@ class SyscallUserAuthenticationView(LoginView):
         return super().form_valid(form)
 
 
-class SyscallUserRegistrationView(CreateView):
-    form_class = SyscallUserCreationForm
+class ACJUserRegistrationView(CreateView):
+    form_class = ACJUserCreationForm
     template_name = 'users/registration.html'
     success_url = reverse_lazy('home')
 
@@ -69,9 +69,9 @@ class EmailConfirmationView(View):
         return redirect('home')
 
 
-class SyscallUserPasswordResetView(generic.View):
+class ACJUserPasswordResetView(generic.View):
     template_name = 'users/password_reset.html'
-    form_class = SyscallUserPasswordResetForm
+    form_class = ACJUserPasswordResetForm
     success_url = reverse_lazy('password_reset_done')
 
     def get(self, request, *args, **kwargs):
@@ -119,8 +119,8 @@ class SyscallUserPasswordResetView(generic.View):
         return render(request, self.template_name, {'form': form})
 
 
-class SyscallUserPasswordResetConfirmView(PasswordResetConfirmView):
-    form_class = SyscallUserSetPasswordForm
+class ACJUserPasswordResetConfirmView(PasswordResetConfirmView):
+    form_class = ACJUserSetPasswordForm
     template_name = 'users/password_reset_confirm.html'
     success_url = reverse_lazy('password_reset_complete')
 
