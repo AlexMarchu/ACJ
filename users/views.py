@@ -1,6 +1,6 @@
-from django.contrib.auth import login
-from django.contrib.auth.views import LoginView
-from django.views.generic import CreateView
+from django.contrib.auth import login, get_user_model
+from django.contrib.auth.views import LoginView, PasswordResetConfirmView
+from django.views.generic import CreateView, TemplateView
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
@@ -8,10 +8,11 @@ from django.core.mail import send_mail
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth import login
 from django.shortcuts import render, get_object_or_404, redirect
-from django.views import View
+from django.views import View, generic
 from django.conf import settings
 
-from users.forms import SyscallUserAuthenticationForm, SyscallUserCreationForm
+from users.forms import SyscallUserAuthenticationForm, SyscallUserCreationForm, SyscallUserPasswordResetForm, \
+    SyscallUserSetPasswordForm
 from users.models import EmailConfirmationToken
 
 
@@ -66,3 +67,64 @@ class EmailConfirmationView(View):
         confirmation_token.delete()
 
         return redirect('home')
+
+
+class SyscallUserPasswordResetView(generic.View):
+    template_name = 'users/password_reset.html'
+    form_class = SyscallUserPasswordResetForm
+    success_url = reverse_lazy('password_reset_done')
+
+    def get(self, request, *args, **kwargs):
+        form = self.form_class()
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            User = get_user_model()
+            try:
+                user = User.objects.get(email=email)
+            except User.DoesNotExist:
+                return render(request, 'users/email_not_found.html')
+
+            token = default_token_generator.make_token(user)
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            password_reset_url = request.build_absolute_uri(
+                reverse('password_reset_confirm', kwargs={'uidb64': uid, 'token': token})
+            )
+
+            subject = 'Сброс пароля для Syscall'
+            content = (
+                f'Здравствуйте!\n\n'
+                f'Вы получили это письмо, потому что мы получили запрос на сброс пароля для вашей учетной '
+                f'записи в Syscall.\n\n'
+                f'Чтобы сбросить пароль, перейдите по следующей ссылке:\n{password_reset_url}\n'
+                'Если вы не запрашивали сброс пароля, просто проигнорируйте это письмо и '
+                'ваш пароль останется неизменным.\n\n'
+                'Спасибо,\n'
+                'Команда Syscall.'
+            )
+            from_email = settings.DEFAULT_FROM_EMAIL
+            recipient_list = [email]
+
+            try:
+                send_mail(subject, content, from_email, recipient_list)
+                print('Письмо успешно отправлено')
+            except Exception as e:
+                print(f'Ошибка при отправке письма: {e}')
+
+            return render(request, 'users/password_reset_done.html')
+
+        return render(request, self.template_name, {'form': form})
+
+
+class SyscallUserPasswordResetConfirmView(PasswordResetConfirmView):
+    form_class = SyscallUserSetPasswordForm
+    template_name = 'users/password_reset_confirm.html'
+    success_url = reverse_lazy('password_reset_complete')
+
+
+class PasswordResetCompleteView(TemplateView):
+    template_name = 'users/password_reset_complete.html'
+

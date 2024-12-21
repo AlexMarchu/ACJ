@@ -64,3 +64,32 @@ class SyscallUserCreationForm(UserCreationForm):
     class Meta:
         model = SyscallUser
         fields = ('username', 'password1', 'password2', 'email')
+
+
+class SyscallUserPasswordResetForm(PasswordResetForm):
+    email = forms.EmailField(
+        label='Адрес электронной почты',
+        widget=forms.EmailInput(attrs={
+            'placeholder': 'Ваш email',
+            'required': 'required'
+        })
+    )
+
+
+class SyscallUserSetPasswordForm(SetPasswordForm):
+    new_password1 = forms.CharField(
+        label='Новый пароль',
+        widget=forms.PasswordInput(attrs={
+            'placeholder': 'Новый пароль',
+            'required': 'required',
+            'autofocus': 'autofocus'
+        })
+    )
+
+    new_password2 = forms.CharField(
+        label='Новый пароль (подтверждение)',
+        widget=forms.PasswordInput(attrs={
+            'placeholder': 'Подтвердите новый пароль',
+            'required': 'required'
+        })
+    )
