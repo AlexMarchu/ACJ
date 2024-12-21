@@ -94,16 +94,16 @@ class ACJUserPasswordResetView(generic.View):
                 reverse('password_reset_confirm', kwargs={'uidb64': uid, 'token': token})
             )
 
-            subject = 'Сброс пароля для Syscall'
+            subject = 'Сброс пароля для ACJ'
             content = (
                 f'Здравствуйте!\n\n'
                 f'Вы получили это письмо, потому что мы получили запрос на сброс пароля для вашей учетной '
-                f'записи в Syscall.\n\n'
+                f'записи в ACJ.\n\n'
                 f'Чтобы сбросить пароль, перейдите по следующей ссылке:\n{password_reset_url}\n'
                 'Если вы не запрашивали сброс пароля, просто проигнорируйте это письмо и '
                 'ваш пароль останется неизменным.\n\n'
                 'Спасибо,\n'
-                'Команда Syscall.'
+                'Команда ACJ.'
             )
             from_email = settings.DEFAULT_FROM_EMAIL
             recipient_list = [email]
