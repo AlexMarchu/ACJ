@@ -31,6 +31,14 @@ class Test(models.Model):
     expected_output = models.TextField()
 
 
+class Language(models.Model):
+    name = models.CharField(max_length=128, unique=True)
+    language_id = models.IntegerField(unique=True)
+
+    def __str__(self):
+        return f"{self.name} (ID: {self.language_id})"
+
+
 class SubmissionContent(models.Model):
     content = models.TextField(verbose_name="Код")
 
@@ -56,7 +64,7 @@ class SubmissionStatus(models.Model):
 class Submission(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     problem = models.ForeignKey(Problem, on_delete=models.CASCADE)
-    language = models.CharField(max_length=35)
+    language = models.ForeignKey(Language, on_delete=models.CASCADE)
     timestamp = models.DateTimeField(auto_now_add=True)
     execution_time = models.FloatField(null=True, blank=True)
     memory_used = models.FloatField(null=True, blank=True)
