@@ -9,7 +9,7 @@ class ProblemTag(models.Model):
 
 
 class Problem(models.Model):
-    name = models.CharField(max_length=255)
+    title = models.CharField(max_length=255)
     author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name="problems")
     description = models.TextField()
     input_format = models.TextField()
@@ -19,7 +19,16 @@ class Problem(models.Model):
     tags = models.ManyToManyField(ProblemTag)
 
     def __str__(self):
-        return f"{self.name}"
+        return f"{self.title}"
+
+    def fetch_tests(self):
+        return Test.objects.filter(problem=self)
+
+
+class Test(models.Model):
+    problem = models.ForeignKey(Problem, on_delete=models.CASCADE)
+    stdin = models.TextField()
+    expected_output = models.TextField()
 
 
 class SubmissionContent(models.Model):
