@@ -3,6 +3,28 @@ import requests
 from problems.models import SubmissionStatus
 
 
+def get_language_id(language):
+    data = {
+        "C": 50,
+        "C#": 51,
+        "C++": 54,
+        "Go": 60,
+        "Haskell": 61,
+        "Java": 62,
+        "JavaScript": 63,
+        "Pascal": 67,
+        "PHP": 68,
+        "Python (3.11.2)": 92,
+        "Rust": 73,
+        "TypeScript": 74,
+        "Kotlin": 78,
+        "SQL (SQLite 3.27.2)": 82,
+        "Perl": 85,
+    }
+
+    return data.get(language)
+
+
 def submit_to_judge0(submission):
     url = "https://judge0-ce.p.rapidapi.com/submissions"
     headers = {
@@ -15,7 +37,7 @@ def submit_to_judge0(submission):
     submission_tokens = list()
     for test in tests:
         payload = {
-            "language_id": 52,
+            "language_id": get_language_id(submission.language),
             "source_code": submission.content.content,
             "stdin": test.stdin,
             "expected_output": test.expected_output
