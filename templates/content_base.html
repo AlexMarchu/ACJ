@@ -5,32 +5,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'css/core.css' %}">
-    <title>{% block title %} ACJ - Система автоматизации обучения {% endblock %}</title>
+    <link rel="icon" href="{% static 'favicon.ico' %}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <title>ACJ - {% block title %} {% endblock %}</title>
 </head>
 <body>
-    <!----------------- HEADER -------------------->
     <header>
-        <h1>Добро пожаловать в систему автоматизации обучения!</h1>
+        <object id="logo" data="{% static 'icons/logo.svg' %}" type="image/svg+xml"></object>
+        <div id="actions">
+            {% if user.is_authenticated %}
+                <a class="no-decoration default-btn" href="" >{{ user.username }}</a> | <a class="no-decoration default-btn" href="{% url 'login' %}">Выйти</a>
+            {% else %}
+                <a class="no-decoration default-btn" href="{% url 'login' %}" >Войти</a> | <a class="no-decoration default-btn" href="{% url 'register' %}">Зарегистрироваться</a>
+            {% endif %}
+        </div>
     </header>
 
-    <!----------------- NAVBAR -------------------->
-    <nav>
-        <ul>
-            <li><a href="{% url 'home' %}">Главная</a></li>
-            <li><a href="{% url 'register' %}">Регистрация</a></li>
-        </ul>
-    </nav>
-
-    <!----------------- MAIN -------------------->
     <main>
         {% block content %}
         {% endblock %}
     </main>
 
-    <!----------------- FOOTER -------------------->
     <footer>
         <p>&copy; Дальневосточный федеральный университет 2024</p>
+        <div id="links">
+            <a class="no-decoration default-btn" href="https://github.com/AlexMarchu/ACJ">Документация</a>
+            <a class="no-decoration default-btn" href="https://github.com/AlexMarchu/ACJ">Разработка</a>
+        </div>
     </footer>
 </body>
 </html>

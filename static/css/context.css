@@ -1,0 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
+
+:root {
+    --default-font: Nunito;
+    --primary-color: #6e4cf9;
+    --side-padding: 34px;
+}

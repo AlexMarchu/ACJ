@@ -1,14 +1,17 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+@import 'context.css';
+
+html, body {
+    height: 100%;
+}
 
 body {
-    font-family: 'Nunito', sans-serif;
-    background-color: #f4f4f4;
+    font-family: var(--default-font), sans-serif;
+    background-color: #fafafa;
     margin: 0;
     padding: 0;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
 }
 
 .container {
@@ -49,7 +52,7 @@ input[type="text"], input[type="password"], input[type="email"] {
 
 input[type="submit"] {
     width: 100%;
-    background-color: hsl(252, 75%, 60%);
+    background-color: var(--primary-color);
     color: white;
     border: none;
     padding: 12px;
