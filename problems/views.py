@@ -67,10 +67,16 @@ def get_submission_result(submission_token):
 
 
 def update_submission_status(submission, tokens):
+    all_passed = True
     for token in tokens:
         result = get_submission_result(token)
-        if result["status"]["id"] == 3:
-            submission.status.status = SubmissionStatus.StatusChoices.ACCEPTED
-        else:
-            submission.status.status = SubmissionStatus.StatusChoices.REJECTED
-        submission.status.save()
+        if result["status"]["id"] != 3:
+            all_passed = False
+            break
+
+    if all_passed:
+        submission.status.status = SubmissionStatus.StatusChoices.ACCEPTED
+    else:
+        submission.status.status = SubmissionStatus.StatusChoices.REJECTED
+
+    submission.status.save()
