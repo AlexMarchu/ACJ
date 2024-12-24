@@ -1,4 +1,5 @@
 from django.contrib.auth import login, get_user_model
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView, PasswordResetConfirmView
 from django.views.generic import CreateView, TemplateView
 from django.contrib.auth.tokens import default_token_generator
@@ -12,8 +13,8 @@ from django.views import View, generic
 from django.conf import settings
 
 from users.forms import ACJUserAuthenticationForm, ACJUserCreationForm, ACJUserPasswordResetForm, \
-    ACJUserSetPasswordForm
-from users.models import EmailConfirmationToken
+    ACJUserSetPasswordForm, ProfileEditForm
+from users.models import EmailConfirmationToken, ACJUser
 
 
 class ACJUserAuthenticationView(LoginView):
@@ -128,3 +129,25 @@ class ACJUserPasswordResetConfirmView(PasswordResetConfirmView):
 class PasswordResetCompleteView(TemplateView):
     template_name = 'users/password_reset_complete.html'
 
+
+@login_required(login_url='/auth/login/')
+def profile_view(request, username):
+    profile_owner = get_object_or_404(ACJUser, username=username)
+    is_owner = profile_owner == request.user
+
+    if request.method == 'POST':
+        form = ProfileEditForm(request.POST, instance=profile_owner)
+        if form.is_valid():
+            form.save()
+            return redirect('profile', username=username)
+
+    else:
+        form = ProfileEditForm(instance=profile_owner)
+
+    context = {
+        'profile_owner': profile_owner,
+        'is_owner': is_owner,
+        'form': form,
+    }
+
+    return render(request, 'users/profile.html', context)
