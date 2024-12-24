@@ -22,9 +22,21 @@ class UserRole(models.Model):
         return self.role
 
 
+class Country(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    code = models.CharField(max_length=2, unique=True)
+
+    def __str__(self):
+        return f"{self.name}"
+
+
 class ACJUser(AbstractUser):
     role = models.ForeignKey(UserRole, on_delete=models.CASCADE, default=3)
     email = models.EmailField(unique=True)
+    country = models.ForeignKey(Country, on_delete=models.SET_NULL, null=True, blank=True)
+    city = models.CharField(max_length=100, null=True, blank=True)
+    institution = models.CharField(max_length=100, null=True, blank=True)
+    birth_date = models.DateField(null=True, blank=True)
 
     objects = ACJUserManager()
 

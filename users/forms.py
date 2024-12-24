@@ -93,3 +93,25 @@ class ACJUserSetPasswordForm(SetPasswordForm):
             'required': 'required'
         })
     )
+
+
+class ProfileEditForm(forms.ModelForm):
+    class Meta:
+        model = ACJUser
+        fields = ('first_name', 'last_name', 'country', 'city', 'institution', 'birth_date')
+        labels = {
+            'first_name': 'Имя',
+            'last_name': 'Фамилия',
+            'country': 'Страна',
+            'city': 'Город / регион',
+            'institution': 'Учебное заведение',
+            'birth_date': 'Дата рождения'
+        }
+        widgets = {
+            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'country': forms.Select(attrs={'class': 'form-control'}),
+            'city': forms.TextInput(attrs={'class': 'form-control'}),
+            'institution': forms.TextInput(attrs={'class': 'form-control'}),
+            'birth_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+        }
