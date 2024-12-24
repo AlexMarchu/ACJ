@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="{% static 'favicon.ico' %}">
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
-    <title>ACJ - {% block title %} {% endblock %}</title>
+    <title>ACJ - {% block title %} Home {% endblock %}</title>
 </head>
 <body>
     <header>
@@ -37,5 +37,11 @@
             <a class="no-decoration default-btn" href="https://github.com/AlexMarchu/ACJ">Разработка</a>
         </div>
     </footer>
+
+    <script>
+        document.getElementById("logo-svg").addEventListener("click", function() {
+            window.location.href = "{% url 'home' %}";
+        });
+    </script>
 </body>
 </html>

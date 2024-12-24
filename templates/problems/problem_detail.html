@@ -1,0 +1,87 @@
+{% extends 'content_base.html' %}
+{% load static %}
+
+{% block title %}
+    {{ problem.title }}
+{% endblock %}
+
+{% block content %}
+    <link rel="stylesheet" href="{% static 'css/problems.css' %}">
+    <div class="problem-detail-container">
+        <h1>Задача {{ problem.id }}. {{ problem.title }}</h1>
+        <div class="problem-info">
+            <p><strong>Автор:</strong> {{ problem.author.username }}</p>
+            <p><strong>Ограничение по времени:</strong> {{ problem.time_limit }} сек</p>
+            <p><strong>Ограничение по памяти:</strong> {{ problem.memory_limit }} МБ</p>
+        </div>
+        <div class="problem-description">
+            <h2>Условие</h2>
+            <p>{{ problem.description }}</p>
+        </div>
+        <div class="problem-formats">
+            <h2>Формат входных данных</h2>
+            <p>{{ problem.input_format }}</p>
+            <h2>Формат выходных данных</h2>
+            <p>{{ problem.output_format }}</p>
+        </div>
+        <div class="code-editor">
+            <select id="language-select">
+                {% for language in languages %}
+                    <option value="{{ language.language_id }}">{{ language.name }}</option>
+                {% endfor %}
+            </select>
+            <textarea id="code-input"></textarea>
+            <button id="submit-code">Отправить</button>
+        </div>
+        <div id="submission-status"></div>
+    </div>
+
+    <script>
+        document.getElementById("submit-code").addEventListener("click", function() {
+            const code = document.getElementById("code-input").value;
+            const languageId = document.getElementById("language-select").value;
+
+            fetch("{% url 'submit_code' %}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token }}",
+                },
+                body: JSON.stringify({
+                    problem_id: {{ problem.id }},
+                    code: code,
+                    language_id: languageId
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "success") {
+                    document.getElementById("submission-status").innerText = "Решение отправлено на проверку";
+                    getSubmissionStatus(data.submission_id);
+                } else {
+                    document.getElementById("submission-status").innerText = "Ошибка при отправке решения";
+                }
+            })
+            .catch(error => {
+                console.error("Ошибка при отправке кода: ", error);
+                document.getElementById("submission-status").innerText = "Произошла ошибка :(";
+            });
+        });
+
+        function getSubmissionStatus(submissionId) {
+            fetch(`{% url 'check_status' %}?submission_id=${submissionId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "PENDING") {
+                    setTimeout(() => getSubmissionStatus(submissionId), 2000);
+                } else {
+                    document.getElementById("submission-status").innerText = `Статус: ${data.status}`;
+                }
+            })
+            .catch(error => {
+                console.error("Ошибка при получении статуса: ", error);
+                document.getElementById("submission-status").innerText = "Произошла ошибка при проверке статуса";
+            });
+        }
+    </script>
+{% endblock %}

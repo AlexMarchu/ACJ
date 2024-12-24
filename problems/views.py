@@ -1,7 +1,12 @@
+import json
+
 import requests
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework import viewsets, permissions
 
-from problems.models import SubmissionStatus, Language, Problem, Test
+from problems.models import SubmissionStatus, Language, Problem, Test, SubmissionContent, Submission
 from problems.permissions import IsAdminOrTeacher
 from problems.serializers import ProblemSerializer, TestSerializer
 
@@ -80,3 +85,39 @@ def update_submission_status(submission, tokens):
         submission.status.status = SubmissionStatus.StatusChoices.REJECTED
 
     submission.status.save()
+
+
+@csrf_exempt
+def submit_code(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        problem_id = data.get("problem_id")
+        code = data.get("code")
+        language_id = data.get("language_id")
+
+        submission_content = SubmissionContent.objects.create(content=code)
+        submission_status = SubmissionStatus.objects.create(status=SubmissionStatus.StatusChoices.PENDING)
+        language = Language.objects.get(language_id=language_id)
+
+        submission = Submission.objects.create(
+            user=request.user,
+            problem_id=problem_id,
+            language=language,
+            content=submission_content,
+            status=submission_status
+        )
+
+        try:
+            tokens = submit_to_judge0(submission)
+            update_submission_status(submission, tokens)
+            return JsonResponse({"status": "success", "submission_id": submission.id})
+        except Exception as exception:
+            return JsonResponse({"status": "error", "message": str(exception)})
+    return JsonResponse(
+        {"status": "error", "message": "Invalid request method"})  # TODO: ban this case by DRF decorator
+
+
+def check_status(request):
+    submission_id = request.GET.get("submission_id")
+    submission = get_object_or_404(Submission, id=submission_id)
+    return JsonResponse({"status": submission.status.status})

@@ -1,0 +1,15 @@
+{% extends 'content_base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/problems.css' %}">
+<div class="problems-container">
+    {% for problem in problems %}
+    <div class="problem-card">
+        <h3>{{ problem.title }}</h3>
+        <p>{{ problem.description|truncatewords:20 }}</p>
+        <a href="{% url 'problem_detail' problem.id %}">Подробнее</a>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

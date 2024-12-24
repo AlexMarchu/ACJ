@@ -29,17 +29,20 @@ header {
 
 header #logo-svg {
     height: 70%;
+    cursor: pointer;
 }
 
 main {
     height: 100%;
-    padding: 0px var(--side-padding);
+    padding: 20px var(--side-padding);
+    flex: 1;
+    overflow-y: auto;
 }
 
 footer {
     border-top: 1px solid rgb(215, 214, 214);
     margin: 0px var(--side-padding);
-    height: 84px;
+    height: 64px;
     display: flex;
     flex-direction: row;
     align-items: center;

@@ -1,12 +1,13 @@
 from django.contrib import admin
 from django.urls import path, include
 
-from acj.views import home_view
+from acj.views import home_view, problem_list, problem_detail
 from users.views import ACJUserPasswordResetView, ACJUserPasswordResetConfirmView, PasswordResetCompleteView, \
     profile_view
 
 urlpatterns = [
-    path('', home_view, name='home'),
+    path('', problem_list, name='home'),
+    path('problem/<int:problem_id>/', problem_detail, name='problem_detail'),
     path('admin/', admin.site.urls),
     path('api/', include('problems.urls')),
     path('auth/', include('users.urls')),
