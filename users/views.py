@@ -150,4 +150,4 @@ def profile_view(request, username):
         'form': form,
     }
 
-    return render(request, 'users/profile.html', context)
+    return render(request, 'profiles/profile.html', context)

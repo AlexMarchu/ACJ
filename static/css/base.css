@@ -27,12 +27,13 @@ header {
     justify-content: space-between;
 }
 
-header #logo {
+header #logo-svg {
     height: 70%;
 }
 
 main {
     height: 100%;
+    padding: 0px var(--side-padding);
 }
 
 footer {
@@ -46,7 +47,7 @@ footer {
     padding-left: 9px;
 }
 
-footer #links {
+footer #footer-actions {
     display: flex;
     flex-direction: row;
     column-gap: 6px;

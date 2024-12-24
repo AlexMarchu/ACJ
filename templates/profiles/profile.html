@@ -1,0 +1,13 @@
+{% extends 'profiles/profile_base.html' %}
+
+{% block inner-content %}
+    <h1>{{ profile_owner.username }}</h1>
+    <div>
+        <p><strong>Имя:</strong> {{ profile_owner.last_name }} {{ profile_owner.first_name }}</p>
+        <p><strong>Страна:</strong> {{ profile_owner.country }}</p>
+        <p><strong>Город:</strong> {{ profile_owner.city }}</p>
+        <p><strong>Вуз:</strong> {{ profile_owner.institution }}</p>
+        <p><strong>Дата рождения:</strong> {{ profile_owner.birth_date }}</p>
+    </div>
+    <script>selectNavbarItem("profile");</script>
+{% endblock %}

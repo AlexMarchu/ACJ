@@ -1,0 +1,22 @@
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#navbar {
+    padding: 13px 7px;
+    margin: 14px 0px;
+    background-color: #e5e7eb;
+    width: fit-content;
+    border-radius: 10px;
+}
+
+#navbar .navbar-item {
+    padding: 6px 10px;
+    border-radius: 8px;
+}
+
+#navbar .selected-navbar-item {
+    background-color: #ffffff;
+}

@@ -1,0 +1,26 @@
+{% extends 'content_base.html' %}
+{% load static %}
+
+{% block title %}
+    {{ profile_owner.username }}
+{% endblock %}
+
+{% block content %}
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+    <script>
+        function selectNavbarItem(item) {
+            document.getElementById(`${item}-item`).classList.add("selected-navbar-item");
+        }
+    </script>
+
+    <div id="navbar">
+        <a class="no-decoration navbar-item" id="profile-item">Профиль</a>
+        {% if user == profile_owner %}
+            <a class="no-decoration navbar-item" id="settings-item">Настройки</a>
+        {% endif %}
+        <a class="no-decoration navbar-item" id="statistics-item">Статистика</a>
+        <a class="no-decoration navbar-item" id="teams-item">Команды</a>
+    </div>
+    {% block inner-content %}
+    {% endblock %}
+{% endblock %}
