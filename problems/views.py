@@ -1,6 +1,29 @@
 import requests
+from rest_framework import viewsets, permissions
 
-from problems.models import SubmissionStatus, Language
+from problems.models import SubmissionStatus, Language, Problem, Test
+from problems.permissions import IsAdminOrTeacher
+from problems.serializers import ProblemSerializer, TestSerializer
+
+
+class ProblemViewSet(viewsets.ModelViewSet):
+    queryset = Problem.objects.all()
+    serializer_class = ProblemSerializer
+
+    def get_permissions(self):
+        if self.action in ["create", "update", "partial_update", "destroy"]:
+            return [permissions.IsAuthenticated(), IsAdminOrTeacher()]
+        return [permissions.IsAuthenticated()]
+
+
+class TestViewSet(viewsets.ModelViewSet):
+    queryset = Test.objects.all()
+    serializer_class = TestSerializer
+
+    def get_permissions(self):
+        if self.action in ["create", "update", "partial_update", "destroy"]:
+            return [permissions.IsAuthenticated(), IsAdminOrTeacher()]
+        return [permissions.IsAuthenticated()]
 
 
 def submit_to_judge0(submission):

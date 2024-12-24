@@ -12,11 +12,11 @@ class Problem(models.Model):
     title = models.CharField(max_length=255)
     author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name="problems")
     description = models.TextField()
-    input_format = models.TextField()
+    input_format = models.TextField(blank=True)
     output_format = models.TextField()
     time_limit = models.IntegerField(default=1)
     memory_limit = models.IntegerField(default=256)
-    tags = models.ManyToManyField(ProblemTag)
+    tags = models.ManyToManyField(ProblemTag, blank=True)
 
     def __str__(self):
         return f"{self.title}"
@@ -26,8 +26,8 @@ class Problem(models.Model):
 
 
 class Test(models.Model):
-    problem = models.ForeignKey(Problem, on_delete=models.CASCADE)
-    stdin = models.TextField()
+    problem = models.ForeignKey(Problem, on_delete=models.CASCADE, related_name="tests")
+    stdin = models.TextField(blank=True)
     expected_output = models.TextField()
 
 

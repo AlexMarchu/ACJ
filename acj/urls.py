@@ -7,6 +7,7 @@ from users.views import ACJUserPasswordResetView, ACJUserPasswordResetConfirmVie
 urlpatterns = [
     path('', home_view, name='home'),
     path('admin/', admin.site.urls),
+    path('api/', include('problems.urls')),
     path('auth/', include('users.urls')),
     path('password_reset/', ACJUserPasswordResetView.as_view(), name='password_reset'),
     path('password_reset/confirm/<uidb64>/<token>/', ACJUserPasswordResetConfirmView.as_view(),
