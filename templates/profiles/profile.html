@@ -1,13 +1,15 @@
 {% extends 'profiles/profile_base.html' %}
 
 {% block inner-content %}
-    <h1>{{ profile_owner.username }}</h1>
-    <div>
-        <p><strong>Имя:</strong> {{ profile_owner.last_name }} {{ profile_owner.first_name }}</p>
-        <p><strong>Страна:</strong> {{ profile_owner.country }}</p>
-        <p><strong>Город:</strong> {{ profile_owner.city }}</p>
-        <p><strong>Вуз:</strong> {{ profile_owner.institution }}</p>
-        <p><strong>Дата рождения:</strong> {{ profile_owner.birth_date }}</p>
+    <div class="container profile-card">
+        <h1 class="title">{{ profile_owner.username }}</h1>
+        <div class="info">
+            <p><strong>Имя: </strong>{{ profile_owner.last_name }} {{ profile_owner.first_name }}</p>
+            <p><strong>Регион: </strong>{{ profile_owner.country }}, {{ profile_owner.city }}</p>
+            <p><strong>Дата рождения: </strong>{{ profile_owner.birth_date|default_if_none:'Не указано' }}</p>
+            <p><strong>Учебное заведение: </strong>{{ profile_owner.institution|default_if_none:'Не указано' }}</p>
+            <p><strong>Зарегистрирован: </strong>{{ profile_owner.date_joined|timesince }} назад</p>
+        </div>
     </div>
     <script>selectNavbarItem("profile");</script>
 {% endblock %}
