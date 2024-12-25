@@ -19,7 +19,7 @@ from users.models import EmailConfirmationToken, ACJUser
 
 class ACJUserAuthenticationView(LoginView):
     form_class = ACJUserAuthenticationForm
-    template_name = 'users/authentication.html'
+    template_name = 'auth/authentication.html'
     success_url = reverse_lazy('home')
 
     def form_valid(self, form):
@@ -28,7 +28,7 @@ class ACJUserAuthenticationView(LoginView):
 
 class ACJUserRegistrationView(CreateView):
     form_class = ACJUserCreationForm
-    template_name = 'users/registration.html'
+    template_name = 'auth/registration.html'
     success_url = reverse_lazy('home')
 
     def form_valid(self, form):
@@ -50,7 +50,7 @@ class ACJUserRegistrationView(CreateView):
         except Exception as e:
             print(f'Ошибка при отправке: {e}')
 
-        return render(self.request, 'users/request_email_confirmation.html', {'user': user})
+        return render(self.request, 'auth/request_email_confirmation.html', {'user': user})
 
 
 class EmailConfirmationView(View):
@@ -58,7 +58,7 @@ class EmailConfirmationView(View):
         confirmation_token = get_object_or_404(EmailConfirmationToken, token=token)
 
         if not confirmation_token.is_valid():
-            return render(request, 'users/token_invalid.html')
+            return render(request, 'auth/token_invalid.html')
 
         user = confirmation_token.user
         user.is_active = True
@@ -71,7 +71,7 @@ class EmailConfirmationView(View):
 
 
 class ACJUserPasswordResetView(generic.View):
-    template_name = 'users/password_reset.html'
+    template_name = 'auth/password_reset.html'
     form_class = ACJUserPasswordResetForm
     success_url = reverse_lazy('password_reset_done')
 
@@ -87,7 +87,7 @@ class ACJUserPasswordResetView(generic.View):
             try:
                 user = User.objects.get(email=email)
             except User.DoesNotExist:
-                return render(request, 'users/email_not_found.html')
+                return render(request, 'auth/email_not_found.html')
 
             token = default_token_generator.make_token(user)
             uid = urlsafe_base64_encode(force_bytes(user.pk))
@@ -115,19 +115,19 @@ class ACJUserPasswordResetView(generic.View):
             except Exception as e:
                 print(f'Ошибка при отправке письма: {e}')
 
-            return render(request, 'users/password_reset_done.html')
+            return render(request, 'auth/password_reset_done.html')
 
         return render(request, self.template_name, {'form': form})
 
 
 class ACJUserPasswordResetConfirmView(PasswordResetConfirmView):
     form_class = ACJUserSetPasswordForm
-    template_name = 'users/password_reset_confirm.html'
+    template_name = 'auth/password_reset_confirm.html'
     success_url = reverse_lazy('password_reset_complete')
 
 
 class PasswordResetCompleteView(TemplateView):
-    template_name = 'users/password_reset_complete.html'
+    template_name = 'auth/password_reset_complete.html'
 
 
 @login_required(login_url='/auth/login/')
