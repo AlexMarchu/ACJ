@@ -17,6 +17,7 @@ class Problem(models.Model):
     time_limit = models.IntegerField(default=1)
     memory_limit = models.IntegerField(default=256)
     tags = models.ManyToManyField(ProblemTag, blank=True)
+    visible_tests_count = models.IntegerField(default=1)
 
     def __str__(self):
         return f"{self.title}"

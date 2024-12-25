@@ -42,13 +42,14 @@
         {% block content %}
         {% endblock %}
     </main>
-
-    <footer>
-        <p>&copy; Дальневосточный федеральный университет 2024</p>
-        <div id="footer-actions">
-            <a class="no-decoration default-btn" href="https://github.com/AlexMarchu/ACJ">Документация</a>
-            <a class="no-decoration default-btn" href="https://github.com/AlexMarchu/ACJ">Разработка</a>
-        </div>
-    </footer>
+    {% block footer %}
+        <footer>
+            <p>&copy; Дальневосточный федеральный университет 2024</p>
+            <div id="footer-actions">
+                <a class="no-decoration default-btn" href="https://github.com/AlexMarchu/ACJ">Документация</a>
+                <a class="no-decoration default-btn" href="https://github.com/AlexMarchu/ACJ">Разработка</a>
+            </div>
+        </footer>
+    {% endblock %}
 </body>
 </html>

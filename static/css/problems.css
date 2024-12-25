@@ -6,6 +6,7 @@
     justify-content: center;
     gap: 20px;
     padding: 20px;
+    margin-bottom: 50px;
 }
 
 .problem-card {
@@ -75,6 +76,28 @@ h2 {
 .problem-description .problem-formats {
     display: flex;
     flex-direction: column;
+}
+
+.problem-tests {
+    margin-top: 10px;
+}
+
+.problem-tests table {
+    width: 30%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.problem-tests th, .problem-tests td {
+    border: 1px solid #e0e0e0;
+    padding: 10px;
+    text-align: left;
+}
+
+.problem-tests pre {
+    margin: 0;
+    white-space: pre-wrap;
+    word-wrap: break-word;
 }
 
 .code-editor {
