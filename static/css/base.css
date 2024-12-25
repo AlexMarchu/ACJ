@@ -16,7 +16,7 @@ body {
 
 header {
     box-sizing: border-box;
-    height: 64px;
+    min-height: 64px;
     width: 100%;
     padding: 8px var(--side-padding);
     display: flex;
@@ -32,7 +32,6 @@ header #logo-svg {
 }
 
 main {
-    height: 100%;
     padding: 16px var(--side-padding);
     flex: 1;
 }
@@ -40,7 +39,7 @@ main {
 footer {
     border-top: 1px solid rgb(215, 214, 214);
     margin: 0px var(--side-padding);
-    height: 64px;
+    min-height: 64px;
     display: flex;
     flex-direction: row;
     align-items: center;
