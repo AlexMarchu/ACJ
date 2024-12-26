@@ -96,8 +96,8 @@
                     document.getElementById("language-select").value = languageId;
 
                     const reader = new FileReader();
-                    reader.onload = function(e) {
-                        document.getElementById("code-input").value = e.target.result;
+                    reader.onload = function(event) {
+                        document.getElementById("code-input").value = event.target.result;
                     };
                     reader.readAsText(file);
                 } else {
@@ -111,23 +111,20 @@
             const code = document.getElementById("code-input").value;
             const languageId = document.getElementById("language-select").value;
 
-            fetch("{% url 'submit_code' %}", {
-                method: "POST",
+            axios.post("{% url 'submit_code' %}", {
+                problem_id: {{ problem.id }},
+                code: code,
+                language_id: languageId
+            }, {
                 headers: {
                     "Content-Type": "application/json",
                     "X-CSRFToken": "{{ csrf_token }}",
-                },
-                body: JSON.stringify({
-                    problem_id: {{ problem.id }},
-                    code: code,
-                    language_id: languageId
-                })
+                }
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === "success") {
+            .then(response => {
+                if (response.data.status === "success") {
                     document.getElementById("submission-status").innerText = "Решение отправлено на проверку";
-                    getSubmissionStatus(data.submission_id);
+                    getSubmissionStatus(response.data.submission_id);
                 } else {
                     document.getElementById("submission-status").innerText = "Ошибка при отправке решения";
                 }
@@ -139,13 +136,12 @@
         });
 
         function getSubmissionStatus(submissionId) {
-            fetch(`{% url 'check_status' %}?submission_id=${submissionId}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === "PENDING") {
+            axios.get(`{% url 'check_status' %}?submission_id=${submissionId}`)
+            .then(response => {
+                if (response.data.status === "PENDING") {
                     setTimeout(() => getSubmissionStatus(submissionId), 2000);
                 } else {
-                    document.getElementById("submission-status").innerText = `Статус: ${data.status}`;
+                    document.getElementById("submission-status").innerText = `Статус: ${response.data.status}`;
                 }
             })
             .catch(error => {

@@ -1,4 +1,4 @@
-from django.contrib.auth import login, get_user_model, update_session_auth_hash, logout
+from django.contrib.auth import get_user_model, update_session_auth_hash, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView, PasswordResetConfirmView
 from django.views.generic import CreateView, TemplateView
