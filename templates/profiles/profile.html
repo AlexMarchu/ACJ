@@ -1,8 +1,14 @@
 {% extends 'profiles/profile_base.html' %}
+{% load static %}
+
+{% block title %}
+    {{ profile_owner.username }}
+{% endblock %}
 
 {% block inner-content %}
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
     <div class="container profile-card">
-        <h1 class="title">{{ profile_owner.username }}</h1>
+        <h2 class="title">{{ profile_owner.username }}</h2>
         <div class="info">
             <p><strong>Имя: </strong>{{ profile_owner.last_name }} {{ profile_owner.first_name }}</p>
             <p><strong>Регион: </strong>{{ profile_owner.country }}, {{ profile_owner.city }}</p>

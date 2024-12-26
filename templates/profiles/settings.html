@@ -1,18 +1,18 @@
 {% extends 'profiles/profile_base.html' %}
+{% load static %}
+
+{% block title %}
+    Настройки
+{% endblock %}
 
 {% block inner-content %}
-    <div>
-        <label>
-            <input type="checkbox" id="profile-edit-toggle">
-            Редактировать профиль
-        </label>
-    </div>
-
-    <div id="profile-edit-form" style="display: none; border: 1px solid #ccc; border-radius: 10px; padding: 20px; margin-top: 20px;">
+    <link rel="stylesheet" href="{% static 'css/settings.css' %}">
+    <div class="container profile-edit">
+        <h2 class="title">Редактирование профиля</h2>
         <form method="post">
             {% csrf_token %}
             {{ form.as_p }}
-            <button type="submit" class="btn btn-primary">Сохранить</button>
+            <button type="submit" class="btn-primary">Сохранить</button>
         </form>
     </div>
     <script>selectNavbarItem("settings");</script>

@@ -62,11 +62,28 @@ footer #footer-actions {
     padding: 6px 9px;
     border-radius: 6px;
     background-color: transparent;
-    transition: background-color 0.35s;
+    transition: background-color 0.3s;
+    cursor: pointer;
+    font-size: 12pt;
 }
 
 .default-btn:hover {
     background-color: #f1f0f0;
+}
+
+.btn-primary {
+    cursor: pointer;
+    transition: opacity 0.3s;
+    font-size: 12pt;
+    background-color: var(--primary-color);
+    color: #ffffff;
+    border: none;
+    padding: 9px 12px;
+    border-radius: 10px;
+}
+
+.btn-primary:hover {
+    opacity: 0.8;
 }
 
 .container {

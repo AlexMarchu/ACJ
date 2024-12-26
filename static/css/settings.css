@@ -1,0 +1,25 @@
+.profile-edit {
+    padding: 10px 20px;
+    width: 450px;
+}
+
+.profile-edit .title {
+    margin: 0px;
+    margin-bottom: 18px;
+    text-align: center;
+}
+
+.profile-edit label {
+    font-weight: 700;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.profile-edit input, .profile-edit select {
+    box-sizing: border-box;
+    font-size: 12pt;
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
