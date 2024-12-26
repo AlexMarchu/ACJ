@@ -151,3 +151,14 @@ def profile_view(request, username):
     }
 
     return render(request, 'profiles/profile.html', context)
+
+
+@login_required(login_url='/auth/login/')
+def settings_view(request):
+    profile_owner = request.user
+    return render(request, 'profiles/settings.html', {"profile_owner": profile_owner})
+
+
+def statistics_view(request, username):
+    profile_owner = get_object_or_404(ACJUser, username=username)
+    return render(request, 'profiles/statistics.html', {"profile_owner": profile_owner})

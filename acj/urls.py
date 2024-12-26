@@ -1,9 +1,9 @@
 from django.contrib import admin
 from django.urls import path, include
 
-from acj.views import home_view, problem_list, problem_detail, statistics_view, settings_view
+from acj.views import home_view, problem_list, problem_detail
 from users.views import ACJUserPasswordResetView, ACJUserPasswordResetConfirmView, PasswordResetCompleteView, \
-    profile_view
+    profile_view, statistics_view, settings_view
 
 urlpatterns = [
     path('', problem_list, name='home'),
