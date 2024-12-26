@@ -18,8 +18,18 @@ def problem_list(request):
 def problem_detail(request, problem_id):
     problem = get_object_or_404(Problem, id=problem_id)
     languages = Language.objects.all()
+    visible_tests = problem.tests.all()[:problem.visible_tests_count]
     context = {
         'problem': problem,
         'languages': languages,
+        'visible_tests': visible_tests,
     }
     return render(request, 'problems/problem_detail.html', context)
+
+
+def settings_view(request):
+    return render(request, 'profiles/settings.html')
+
+
+def statistics_view(request, username):
+    return render(request, 'profiles/statistics.html', {"username": username})

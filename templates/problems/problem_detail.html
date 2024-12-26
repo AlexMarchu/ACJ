@@ -24,6 +24,27 @@
             <h2>Формат выходных данных</h2>
             <p>{{ problem.output_format }}</p>
         </div>
+        <div class="problem-tests">
+            <h2>Примеры тестов</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>№</th>
+                        <th>Стандартный вход</th>
+                        <th>Стандартный выход</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for test in visible_tests %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td><pre>{{ test.stdin }}</pre></td>
+                            <td><pre>{{ test.expected_output }}</pre></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
         <div class="code-editor">
             <select id="language-select">
                 {% for language in languages %}
@@ -84,4 +105,8 @@
             });
         }
     </script>
+{% endblock %}
+
+{% block footer %}
+
 {% endblock %}
