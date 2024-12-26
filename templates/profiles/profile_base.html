@@ -10,11 +10,11 @@
     </script>
 
     <div id="navbar">
-        <a class="no-decoration navbar-item" id="profile-item">Профиль</a>
+        <a class="no-decoration navbar-item" id="profile-item" href="{% url 'profile' profile_owner.username %}">Профиль</a>
         {% if user == profile_owner %}
-            <a class="no-decoration navbar-item" id="settings-item">Настройки</a>
+            <a class="no-decoration navbar-item" id="settings-item" href="{% url 'settings' %}">Настройки</a>
         {% endif %}
-        <a class="no-decoration navbar-item" id="statistics-item">Статистика</a>
+        <a class="no-decoration navbar-item" id="statistics-item" href="{% url 'statistics' profile_owner.username %}">Статистика</a>
     </div>
     {% block inner-content %}
     {% endblock %}
