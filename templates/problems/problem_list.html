@@ -8,7 +8,7 @@
     <div class="problem-card">
         <h3>{{ problem.title }}</h3>
         <p>{{ problem.description|truncatewords:20 }}</p>
-        <a href="{% url 'problem_detail' problem.id %}">Подробнее</a>
+        <a href="{% url 'problem_detail' problem.id %}" class="btn-primary">Подробнее</a>
     </div>
     {% endfor %}
 </div>

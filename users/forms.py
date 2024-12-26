@@ -1,5 +1,6 @@
 from django import forms
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, PasswordResetForm, SetPasswordForm
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, PasswordResetForm, SetPasswordForm, \
+    PasswordChangeForm
 
 from users.models import ACJUser
 
@@ -93,6 +94,13 @@ class ACJUserSetPasswordForm(SetPasswordForm):
             'required': 'required'
         })
     )
+
+
+class ACJPasswordChangeForm(PasswordChangeForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['old_password'].widget.attrs.pop('autofocus', None)
 
 
 class ProfileEditForm(forms.ModelForm):

@@ -4,7 +4,9 @@ import requests
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, permissions, status
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 from problems.models import SubmissionStatus, Language, Problem, Test, SubmissionContent, Submission
 from problems.permissions import IsAdminOrTeacher
@@ -88,33 +90,38 @@ def update_submission_status(submission, tokens):
 
 
 @csrf_exempt
+@api_view(["POST"])
 def submit_code(request):
-    if request.method == "POST":
-        data = json.loads(request.body)
-        problem_id = data.get("problem_id")
-        code = data.get("code")
-        language_id = data.get("language_id")
+    data = request.data
+    problem_id = data.get("problem_id")
+    code = data.get("code")
+    language_id = data.get("language_id")
 
-        submission_content = SubmissionContent.objects.create(content=code)
-        submission_status = SubmissionStatus.objects.create(status=SubmissionStatus.StatusChoices.PENDING)
-        language = Language.objects.get(language_id=language_id)
-
-        submission = Submission.objects.create(
-            user=request.user,
-            problem_id=problem_id,
-            language=language,
-            content=submission_content,
-            status=submission_status
+    if not all([problem_id, code, language_id]):
+        return Response(
+            {"status": "error", "message": "Missing required fields"},
+            status=status.HTTP_400_BAD_REQUEST,
         )
 
-        try:
-            tokens = submit_to_judge0(submission)
-            update_submission_status(submission, tokens)
-            return JsonResponse({"status": "success", "submission_id": submission.id})
-        except Exception as exception:
-            return JsonResponse({"status": "error", "message": str(exception)})
-    return JsonResponse(
-        {"status": "error", "message": "Invalid request method"})  # TODO: ban this case by DRF decorator
+    submission_content = SubmissionContent.objects.create(content=code)
+    submission_status = SubmissionStatus.objects.create(status=SubmissionStatus.StatusChoices.PENDING)
+    language = Language.objects.get(language_id=language_id)
+
+    submission = Submission.objects.create(
+        user=request.user,
+        problem_id=problem_id,
+        language=language,
+        content=submission_content,
+        status=submission_status
+    )
+
+    try:
+        tokens = submit_to_judge0(submission)
+        update_submission_status(submission, tokens)
+        return JsonResponse({"status": "success", "submission_id": submission.id})
+    except Exception as exception:
+        print(f"Error: {str(exception)} :(")
+        return JsonResponse({"status": "error", "message": str(exception)})
 
 
 def check_status(request):

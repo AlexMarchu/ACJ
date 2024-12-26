@@ -11,8 +11,15 @@
         <h2 class="title">Редактирование профиля</h2>
         <form method="post">
             {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="btn-primary">Сохранить</button>
+            {{ profile_form.as_p }}
+            <button type="submit" class="btn-primary" name="profile_submit">Сохранить</button>
+        </form>
+
+        <h2 class="title">Изменение пароля</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ password_form.as_p }}
+            <button type="submit" class="btn-primary" name="password_submit">Сохранить</button>
         </form>
     </div>
     <script>selectNavbarItem("settings");</script>

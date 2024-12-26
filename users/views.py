@@ -1,4 +1,4 @@
-from django.contrib.auth import login, get_user_model
+from django.contrib.auth import login, get_user_model, update_session_auth_hash, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView, PasswordResetConfirmView
 from django.views.generic import CreateView, TemplateView
@@ -13,7 +13,7 @@ from django.views import View, generic
 from django.conf import settings
 
 from users.forms import ACJUserAuthenticationForm, ACJUserCreationForm, ACJUserPasswordResetForm, \
-    ACJUserSetPasswordForm, ProfileEditForm
+    ACJUserSetPasswordForm, ProfileEditForm, ACJPasswordChangeForm
 from users.models import EmailConfirmationToken, ACJUser
 
 
@@ -51,6 +51,11 @@ class ACJUserRegistrationView(CreateView):
             print(f'Ошибка при отправке: {e}')
 
         return render(self.request, 'auth/request_email_confirmation.html', {'user': user})
+
+
+def logout_view(request):
+    logout(request)
+    return redirect("login")
 
 
 class EmailConfirmationView(View):
@@ -156,7 +161,30 @@ def profile_view(request, username):
 @login_required(login_url='/auth/login/')
 def settings_view(request):
     profile_owner = request.user
-    return render(request, 'profiles/settings.html', {"profile_owner": profile_owner})
+    profile_form = ProfileEditForm(instance=profile_owner)
+    password_form = ACJPasswordChangeForm(user=profile_owner)
+
+    if request.method == "POST":
+        if "profile_submit" in request.POST:
+            profile_form = ProfileEditForm(request.POST, instance=profile_owner)
+            if profile_form.is_valid():
+                profile_form.save()
+                return redirect("settings")
+
+        elif "password_submit" in request.POST:
+            password_form = ACJPasswordChangeForm(data=request.POST, user=profile_owner)
+            if password_form.is_valid():
+                user = password_form.save()
+                update_session_auth_hash(request, user)
+                return redirect("settings")
+
+    context = {
+        "profile_owner": profile_owner,
+        "profile_form": profile_form,
+        "password_form": password_form,
+    }
+
+    return render(request, 'profiles/settings.html', context)
 
 
 def statistics_view(request, username):

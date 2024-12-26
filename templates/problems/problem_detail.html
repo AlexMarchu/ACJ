@@ -46,18 +46,67 @@
             </table>
         </div>
         <div class="code-editor">
-            <select id="language-select">
-                {% for language in languages %}
-                    <option value="{{ language.language_id }}">{{ language.name }}</option>
-                {% endfor %}
-            </select>
+            <span>
+                <select id="language-select">
+                    {% for language in languages %}
+                        <option value="{{ language.language_id }}">{{ language.name }}</option>
+                    {% endfor %}
+                </select>
+                <input type="file" id="code-file-input"
+                       accept=".c,.cs,.cpp,.go,.hs,.java,.js,.pas,.php,.py,.rs,.ts,.kt,.sql,.pl">
+            </span>
             <textarea id="code-input"></textarea>
-            <button id="submit-code">Отправить</button>
+            {% if request.user.is_authenticated %}
+                <button id="submit-code">Отправить</button>
+            {% else %}
+                <p>Войдите в аккаунт, чтобы отправить решение</p>
+            {% endif %}
         </div>
         <div id="submission-status"></div>
     </div>
 
     <script>
+        document.getElementById("code-file-input").addEventListener("change", function(event) {
+            const languageExtensions = {
+                ".c": 50,        // C
+                ".cs": 51,       // C#
+                ".cpp": 54,      // C++
+                ".go": 60,       // Go
+                ".hs": 61,       // Haskell
+                ".java": 62,     // Java
+                ".js": 63,       // JavaScript
+                ".pas": 67,      // Pascal
+                ".php": 68,      // PHP
+                ".py": 92,       // Python
+                ".rs": 73,       // Rust
+                ".ts": 74,       // TypeScript
+                ".kt": 78,       // Kotlin
+                ".sql": 82,      // SQL
+                ".pl": 85,       // Perl
+            };
+
+            const file = event.target.files[0];
+
+            if (file) {
+                const fileName = file.name;
+                const fileExtension = fileName.slice(fileName.lastIndexOf(".")).toLowerCase();
+
+                if (languageExtensions[fileExtension]) {
+                    const languageId = languageExtensions[fileExtension];
+                    document.getElementById("language-select").value = languageId;
+
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        document.getElementById("code-input").value = e.target.result;
+                    };
+                    reader.readAsText(file);
+                } else {
+                    alert("Неподдерживаемое расширение файла. Пожалуйста, выберите файл с поддерживаемым расширением.");
+                    event.target.value = "";
+                }
+            }
+        });
+
         document.getElementById("submit-code").addEventListener("click", function() {
             const code = document.getElementById("code-input").value;
             const languageId = document.getElementById("language-select").value;

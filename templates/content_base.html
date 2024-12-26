@@ -34,7 +34,7 @@
             {% if user.is_authenticated %}
                 <a class="no-decoration default-btn" href="{% url 'profile' user.username %}" >{{ user.username }}</a>
                  | 
-                <a class="no-decoration default-btn" href="{% url 'login' %}">Выйти</a>
+                <a class="no-decoration default-btn" href="{% url 'logout' %}">Выйти</a>
             {% else %}
                 <a class="no-decoration default-btn" href="{% url 'login' %}" >Войти</a>
                  | 
