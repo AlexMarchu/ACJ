@@ -25,11 +25,3 @@ def problem_detail(request, problem_id):
         'visible_tests': visible_tests,
     }
     return render(request, 'problems/problem_detail.html', context)
-
-
-def settings_view(request):
-    return render(request, 'profiles/settings.html')
-
-
-def statistics_view(request, username):
-    return render(request, 'profiles/statistics.html', {"username": username})
