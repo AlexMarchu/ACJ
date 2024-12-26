@@ -23,7 +23,7 @@ header {
     flex-direction: row;
     align-items: center;
     background-color: #ffffff;
-    box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.12);
+    box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.15);
     justify-content: space-between;
 }
 
@@ -33,6 +33,10 @@ header #logo-svg {
 
 main {
     padding: 16px var(--side-padding);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    row-gap: 16px;
     flex: 1;
 }
 
@@ -53,6 +57,24 @@ footer #footer-actions {
     column-gap: 6px;
 }
 
+#navbar {
+    padding: 10px 4.5px;
+    background-color: #e5e7eb;
+    width: fit-content;
+    border-radius: 10px;
+}
+
+#navbar .navbar-item {
+    padding: 5px 10px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: currentColor;
+}
+
+#navbar .selected-navbar-item {
+    background-color: #ffffff;
+}
+
 .no-decoration {
     text-decoration: none;
     color: currentColor;
@@ -64,6 +86,7 @@ footer #footer-actions {
     background-color: transparent;
     transition: background-color 0.3s;
     cursor: pointer;
+    border: none;
     font-size: 12pt;
 }
 

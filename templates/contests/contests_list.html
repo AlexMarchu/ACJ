@@ -1,0 +1,12 @@
+{% extends 'content_base.html' %}
+
+{% block content %}
+    <div id="navbar">
+        <a class="navbar-item" id="all-item" href="{% url 'home' %}">Все</a>
+        <a class="navbar-item" id="upcoming-item" href="{% url 'home' %}">Предстоящие</a>
+        <a class="navbar-item" id="mine-item" href="{% url 'home' %}">Мои</a>
+        <a class="navbar-item" id="favourites-item" href="{% url 'home' %}">Избранное</a>
+    </div>
+    
+    <script>selectNavbarItem("all");</script>
+{% endblock %}

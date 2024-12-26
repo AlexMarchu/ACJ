@@ -1,20 +1,12 @@
 {% extends 'content_base.html' %}
-{% load static %}
 
 {% block content %}
-    <link rel="stylesheet" href="{% static 'css/profile_base.css' %}">
-    <script>
-        function selectNavbarItem(item) {
-            document.getElementById(`${item}-item`).classList.add("selected-navbar-item");
-        }
-    </script>
-
     <div id="navbar">
-        <a class="no-decoration navbar-item" id="profile-item" href="{% url 'profile' profile_owner.username %}">Профиль</a>
+        <a class="navbar-item" id="profile-item" href="{% url 'profile' profile_owner.username %}">Профиль</a>
         {% if user == profile_owner %}
-            <a class="no-decoration navbar-item" id="settings-item" href="{% url 'settings' %}">Настройки</a>
+            <a class="navbar-item" id="settings-item" href="{% url 'settings' %}">Настройки</a>
         {% endif %}
-        <a class="no-decoration navbar-item" id="statistics-item" href="{% url 'statistics' profile_owner.username %}">Статистика</a>
+        <a class="navbar-item" id="statistics-item" href="{% url 'statistics' profile_owner.username %}">Статистика</a>
     </div>
     {% block inner-content %}
     {% endblock %}

@@ -10,6 +10,11 @@
     <title>ACJ - {% block title %} Home {% endblock %}</title>
 </head>
 <body>
+    <script>
+        function selectNavbarItem(item) {
+            document.getElementById(`${item}-item`).classList.add("selected-navbar-item");
+        }
+    </script>
     <header>
         <a id="logo-svg" href="{% url 'home' %}">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0.45 0.06 326.9147 47.4821" height="100%" xmlns:bx="https://boxy-svg.com">
@@ -42,6 +47,7 @@
         {% block content %}
         {% endblock %}
     </main>
+
     {% block footer %}
         <footer>
             <p>&copy; Дальневосточный федеральный университет 2024</p>
