@@ -43,6 +43,15 @@ class ACJUser(AbstractUser):
     def __str__(self):
         return f"User: {self.username}"
 
+    def is_admin(self):
+        return self.role.role == UserRole.RoleChoices.ADMIN
+
+    def is_teacher(self):
+        return self.role.role == UserRole.RoleChoices.TEACHER
+
+    def is_student(self):
+        return self.role.role == UserRole.RoleChoices.STUDENT
+
 
 class EmailConfirmationToken(models.Model):
     user = models.OneToOneField('ACJUser', on_delete=models.CASCADE)
