@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     'djoser',
     'users',
     'problems',
+    'celery_app',
 ]
 
 MIDDLEWARE = [
@@ -101,3 +102,11 @@ EMAIL_USE_SSL = True
 EMAIL_HOST_USER = 'varcekcool1242@yandex.ru'
 EMAIL_HOST_PASSWORD = 'tpifydamkmtbxfia'
 DEFAULT_FROM_EMAIL = 'varcekcool1242@yandex.ru'
+
+# Celery Configuration Options
+CELERY_TIMEZONE = 'Asia/Vladivostok'
+CELERY_BROKER_URL = 'redis://redis:6379/0'
+CELERY_RESULT_BACKEND = 'redis://redis:6379/0'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TASK_SERIALIZER = 'json'
