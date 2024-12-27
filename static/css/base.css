@@ -39,8 +39,9 @@ header #header-actions {
     column-gap: 2px;
 }
 
-header #header-actions #creation-btn {
-    height: 20px;
+header .menu .menu-content  {
+    left: -138px;
+    top: 32px;
 }
 
 main {
@@ -106,7 +107,7 @@ footer #footer-actions {
     font-size: 12pt;
     display: flex;
     align-items: center;
-    justify-content: center;
+    column-gap: 8px;
 }
 
 .default-btn:hover {
@@ -134,4 +135,17 @@ footer #footer-actions {
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     box-sizing: border-box;
     border: 1px solid rgb(228, 228, 228);
+}
+
+.menu {
+    position: relative;
+    display: inline-block;
+}
+
+.menu .menu-content {
+    display: none;
+    z-index: 1;
+    position: absolute;
+    width: max-content;
+    padding: 6px;
 }

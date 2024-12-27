@@ -10,11 +10,7 @@
     <title>ACJ - {% block title %} Home {% endblock %}</title>
 </head>
 <body>
-    <script>
-        function selectNavbarItem(item) {
-            document.getElementById(`${item}-item`).classList.add("selected-navbar-item");
-        }
-    </script>
+    <script src="{% static 'js/base.js' %}"></script>
     <header>
         <a id="logo-svg" href="{% url 'home' %}">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0.45 0.06 326.9147 47.4821" height="100%" xmlns:bx="https://boxy-svg.com">
@@ -33,9 +29,15 @@
         <div id="header-actions">
             {% if user.is_authenticated %}
                 <a class="no-decoration default-btn" href="{% url 'profile' user.username %}" >{{ user.username }}</a>
-                {% if user.is_teacher %}
+                {% if user.is_teacher or user.is_admin %}
                      |
-                    <a id="creation-btn" class="no-decoration default-btn" href="{% url 'home' %}"><i class="fi fi-rr-apps-add"></i></a>
+                    <div class="menu">
+                        <a id="creation-btn" class="no-decoration default-btn menu-trigger"><i class="fi fi-rr-apps-add"></i></a>
+                        <div class="container menu-content">
+                            <a class="no-decoration default-btn menu-item" href="{% url 'home' %}"><i class="fi fi-rr-star"></i>Создать задачу</a>
+                            <a class="no-decoration default-btn menu-item" href="{% url 'home' %}"><i class="fi fi-rr-trophy"></i>Создать контест</a>
+                        </div>
+                    </div>
                 {% endif %}
                  |
                 <a class="no-decoration default-btn" href="{% url 'logout' %}">Выйти</a>
