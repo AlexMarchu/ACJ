@@ -3,7 +3,7 @@ from django.urls import path, include
 
 from acj.views import home_view, problem_list, problem_detail
 from users.views import ACJUserPasswordResetView, ACJUserPasswordResetConfirmView, PasswordResetCompleteView, \
-    profile_view, statistics_view, settings_view
+    profile_view, settings_view
 
 urlpatterns = [
     path('', problem_list, name='home'),
@@ -16,6 +16,5 @@ urlpatterns = [
          name='password_reset_confirm'),
     path('password_reset/complete', PasswordResetCompleteView.as_view(), name='password_reset_complete'),
     path('profiles/<str:username>/', profile_view, name='profile'),
-    path('profiles/<str:username>/statistics', statistics_view, name='statistics'),
     path('settings/', settings_view, name='settings'),
 ]

@@ -1,16 +1,42 @@
 @import 'context.css';
 
-.profile-card {
-    padding: 10px 20px;
-    width: 430px;
+.wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    column-gap: 20px;
 }
 
-.profile-card .title {
+.statistics, .profile-card  {
+    padding: 10px 20px 14px 20px;
+}
+
+.statistics {
+    flex: 1;
+    height: 600px;
+}
+
+.profile-card {
+    width: 430px;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+}
+
+.profile-card .info {
+    width: 100%;
+}
+
+.profile-card .btn-primary {
+    margin-top: 12px;
+}
+
+.title {
     margin: 0px;
-    margin-bottom: 18px;
+    margin-bottom: 14px;
     text-align: center;
 }
 
 .profile-card .info p {
-    margin: 10px 0px;
+    margin: 6px 0px;
 }

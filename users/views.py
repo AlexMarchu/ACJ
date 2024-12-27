@@ -160,33 +160,26 @@ def profile_view(request, username):
 
 @login_required(login_url='/auth/login/')
 def settings_view(request):
-    profile_owner = request.user
-    profile_form = ProfileEditForm(instance=profile_owner)
-    password_form = ACJPasswordChangeForm(user=profile_owner)
+    profile_form = ProfileEditForm(instance=request.user)
+    password_form = ACJPasswordChangeForm(user=request.user)
 
     if request.method == "POST":
         if "profile_submit" in request.POST:
-            profile_form = ProfileEditForm(request.POST, instance=profile_owner)
+            profile_form = ProfileEditForm(request.POST, instance=request.user)
             if profile_form.is_valid():
                 profile_form.save()
                 return redirect("settings")
 
         elif "password_submit" in request.POST:
-            password_form = ACJPasswordChangeForm(data=request.POST, user=profile_owner)
+            password_form = ACJPasswordChangeForm(data=request.POST, user=request.user)
             if password_form.is_valid():
                 user = password_form.save()
                 update_session_auth_hash(request, user)
                 return redirect("settings")
 
     context = {
-        "profile_owner": profile_owner,
         "profile_form": profile_form,
         "password_form": password_form,
     }
 
     return render(request, 'profiles/settings.html', context)
-
-
-def statistics_view(request, username):
-    profile_owner = get_object_or_404(ACJUser, username=username)
-    return render(request, 'profiles/statistics.html', {"profile_owner": profile_owner})

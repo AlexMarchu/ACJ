@@ -4,17 +4,22 @@ function selectNavbarItem(item) {
 
 var menus;
 
-function onLoad() {
-    this.menus = document.querySelectorAll(".menu");
-    document.addEventListener("click", (event) => {
-        this.menus.forEach((element) => {
-            element.querySelector(".menu-content").style.display = "none";
-        });
+function hideAllMenus() {
+    menus.forEach((element) => {
+        element.querySelector(".menu-content").style.display = "none";
     });
-    this.menus.forEach((element) => {
+}
+
+function onLoad() {
+    menus = document.querySelectorAll(".menu");
+    document.addEventListener("click", hideAllMenus);
+
+    menus.forEach((element) => {
         element.querySelector(".menu-trigger").addEventListener("click", (event) => {
             var content = element.querySelector(".menu-content");
-            if (!content.style.display || content.style.display === "none") {
+            var display = content.style.display;
+            hideAllMenus();
+            if (!display || display === "none") {
                 content.style.display = "block";
             } else {
                 content.style.display = "none";

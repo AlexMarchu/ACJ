@@ -26,6 +26,8 @@ header {
     box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.15);
     border-bottom: 1px solid rgb(228, 228, 228);
     justify-content: space-between;
+    position: sticky;
+    top: 0;
 }
 
 header #logo-svg {
@@ -36,12 +38,22 @@ header #header-actions {
     display: flex;
     flex-direction: row;
     align-items: center;
-    column-gap: 2px;
+    column-gap: 3px;
 }
 
-header .menu .menu-content  {
-    left: -138px;
-    top: 32px;
+header #creation-menu .menu-content  {
+    left: -144px;
+    top: 36px;
+}
+
+header #profile-menu .menu-content  {
+    left: -64px;
+    top: 36px;
+    width: 145px;
+}
+
+header #header-actions .default-btn {
+    height: 20px;
 }
 
 main {
@@ -67,24 +79,25 @@ footer {
 footer #footer-actions {
     display: flex;
     flex-direction: row;
-    column-gap: 6px;
+    align-items: center;
+    column-gap: 3px;
 }
 
-#navbar {
+.navbar {
     padding: 10px 4.5px;
     background-color: #e5e7eb;
     width: fit-content;
     border-radius: 10px;
 }
 
-#navbar .navbar-item {
+.navbar .navbar-item {
     padding: 5px 10px;
     border-radius: 8px;
     text-decoration: none;
     color: currentColor;
 }
 
-#navbar .selected-navbar-item {
+.navbar .selected-navbar-item {
     background-color: #ffffff;
 }
 
@@ -123,6 +136,10 @@ footer #footer-actions {
     border: none;
     padding: 9px 12px;
     border-radius: 10px;
+    display: flex;
+    align-items: center;
+    column-gap: 8px;
+    width: fit-content;
 }
 
 .btn-primary:hover {
@@ -131,7 +148,7 @@ footer #footer-actions {
 
 .container {
     background-color: #ffffff;
-    border-radius: 12px;
+    border-radius: 16px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     box-sizing: border-box;
     border: 1px solid rgb(228, 228, 228);
@@ -148,4 +165,5 @@ footer #footer-actions {
     position: absolute;
     width: max-content;
     padding: 6px;
+    border-radius: 12px;
 }
