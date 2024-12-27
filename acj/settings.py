@@ -22,6 +22,7 @@ INSTALLED_APPS = [
     'users',
     'problems',
     'celery_app',
+    'contests',
 ]
 
 MIDDLEWARE = [
