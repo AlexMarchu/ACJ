@@ -7,20 +7,34 @@
 
 {% block inner-content %}
     <link rel="stylesheet" href="{% static 'css/settings.css' %}">
-    <div class="container profile-edit">
-        <h2 class="title">Редактирование профиля</h2>
+    <div class="container">
         <form method="post">
             {% csrf_token %}
             {{ profile_form.as_p }}
             <button type="submit" class="btn-primary" name="profile_submit">Сохранить</button>
         </form>
-
-        <h2 class="title">Изменение пароля</h2>
+        <div class="capture">
+            <h1 class="title">Редактирование публичного профиля</h1>
+            <p class="description">Добро пожаловать в раздел редактирования вашего публичного профиля! 
+                Заполнение этих полей необязательно, однако поможет другим пользователям лучше узнать вас, 
+                а также позволит максимально эффективно использовать возможности нашей платформы.
+            </p>
+        </div>
+    </div>
+    <div class="container">
         <form method="post">
             {% csrf_token %}
             {{ password_form.as_p }}
             <button type="submit" class="btn-primary" name="password_submit">Сохранить</button>
         </form>
+        <div class="capture">
+            <h1 class="title">Изменение пароля</h1>
+            <p class="description">
+                Добро пожаловать в раздел изменения пароля! Мы понимаем, 
+                что безопасность вашей учетной записи является приоритетом, 
+                и регулярное обновление пароля — это важный шаг для защиты ваших личных данных.
+            </p>
+        </div>
     </div>
     <script>selectNavbarItem("settings");</script>
 {% endblock %}
