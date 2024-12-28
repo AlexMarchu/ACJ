@@ -4,7 +4,12 @@ html, body {
     height: 100%;
 }
 
+input, select {
+    font-size: 12.5pt;
+}
+
 body {
+    font-size: 12.5pt;
     font-family: var(--default-font), sans-serif;
     font-weight: 500;
     background-color: #fafafa;
@@ -56,8 +61,8 @@ header #header-actions .default-btn {
     height: 20px;
 }
 
-header #creation-btn {
-    padding-top: 8px;
+header #creation-icon {
+    margin-top: 2px;
 }
 
 main {
@@ -85,24 +90,6 @@ footer #footer-actions {
     flex-direction: row;
     align-items: center;
     column-gap: 3px;
-}
-
-.navbar {
-    padding: 10px 4.5px;
-    background-color: #e5e7eb;
-    width: fit-content;
-    border-radius: 10px;
-}
-
-.navbar .navbar-item {
-    padding: 5px 10px;
-    border-radius: 8px;
-    text-decoration: none;
-    color: currentColor;
-}
-
-.navbar .selected-navbar-item {
-    background-color: #ffffff;
 }
 
 .fi {
@@ -156,6 +143,7 @@ footer #footer-actions {
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     box-sizing: border-box;
     border: 1px solid rgb(228, 228, 228);
+    height: fit-content;
 }
 
 .menu {
@@ -170,4 +158,16 @@ footer #footer-actions {
     width: max-content;
     padding: 6px;
     border-radius: 12px;
+}
+
+.dc-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    column-gap: 20px;
+}
+
+.title {
+    margin: 0px;
+    text-align: center;
 }

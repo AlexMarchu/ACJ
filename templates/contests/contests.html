@@ -1,0 +1,49 @@
+{% extends 'content_base.html' %}
+{% load static %}
+
+{% block title %}
+   Контесты
+{% endblock %}
+
+{% block content %}
+    <link rel="stylesheet" href="{% static 'css/contests.css' %}">
+    <div class="dc-wrapper">
+        <div class="container filters">
+            <h1 class="title">Фильтрация</h1>
+            <form>
+                <input type="search" placeholder="Название контеста..."/>
+                <button type="submit" class="btn-primary"><i class="fi fi-rr-search"></i></button>
+            </form>
+            <div class="categories">
+                <a class="no-decoration default-btn" href="{% url 'home' %}">Все</a>
+                <a class="no-decoration default-btn" href="{% url 'home' %}">Избранные</a>
+            </div>
+        </div>
+        <div class="container contests">
+            <table>
+                <thead>
+                  <tr>
+                    <th width="1%"></th>
+                    <th width="1%"></th>
+                    <th width="42%">Название</th>
+                    <th width="20%">Начало</th>
+                    <th width="18%">Длительность</th>
+                    <th width="18%">Примечание</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    {% for contest in contests %}
+                    <tr>
+                        <td><a class="no-decoration favorite-btn" href="{% url 'home' %}"><i class="fi fi-rr-star"></i></a></td>
+                        <td><a class="no-decoration results-btn" href="{% url 'home' %}"><i class="fi fi-rr-leaderboard-trophy"></i></a></td>  
+                        <td class="title"><a class="no-decoration" href="{% url 'home' %}">{{ contest.title }}</a></td>
+                        <td class="start-time">{{ contest.start_time|date:"Y.m.d H:i" }}</td>
+                        <td class="duration">5:00</td>
+                        <td class="note">?</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>              
+        </div>
+    </div>
+{% endblock %}

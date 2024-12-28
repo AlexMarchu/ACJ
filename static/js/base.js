@@ -1,7 +1,3 @@
-function selectNavbarItem(item) {
-    document.getElementById(`${item}-item`).classList.add("selected-navbar-item");
-}
-
 var menus;
 
 function hideAllMenus() {

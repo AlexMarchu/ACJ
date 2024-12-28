@@ -3,35 +3,33 @@
 .container {
     padding: 4px 0px 20px 20px;
     width: 100%;
-    height: fit-content;
     display: flex;
     flex-direction: row;
 }
 
-.container label {
+form label {
     font-weight: 700;
     display: block;
     margin-bottom: 5px;
 }
 
-.container form {
+form {
     width: 42%;
 }
 
-.container input, .container select {
+form input, form select {
     box-sizing: border-box;
-    font-size: 12pt;
     width: 100%;
     padding: 10px;
     border: 1px solid #cccccc;
     border-radius: 6px;
 }
 
-.container input:focus, .container select:focus {
+form input:focus, form select:focus {
     outline: 1.5px solid var(--primary-color);
 }
 
-.container .capture {
+.capture {
     flex: 1;
     padding: 30px;
     display: flex;
@@ -40,12 +38,7 @@
     align-items: center;
 }
 
-.container .capture .title {
-    text-align: center;
-    margin: 0px;
-}
-
-.container .capture .description {
+.capture .description {
     color: var(--text-muted-color);
     font-size: 14pt;
     text-align: center;

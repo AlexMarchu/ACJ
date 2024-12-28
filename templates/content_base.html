@@ -30,7 +30,7 @@
             {% if user.is_authenticated %}
                 {% if user.is_teacher or user.is_admin %}
                     <div class="menu" id="creation-menu">
-                        <a id="creation-btn" class="no-decoration default-btn menu-trigger"><i class="fi fi-rr-apps-add"></i></a>
+                        <a class="no-decoration default-btn menu-trigger"><i id="creation-icon" class="fi fi-rr-apps-add"></i></a>
                         <div class="container menu-content">
                             <a class="no-decoration default-btn menu-item" href="{% url 'home' %}"><i class="fi fi-rr-star"></i>Создать задачу</a>
                             <a class="no-decoration default-btn menu-item" href="{% url 'home' %}"><i class="fi fi-rr-trophy"></i>Создать контест</a>
