@@ -1,4 +1,4 @@
-var menus;
+let menus;
 
 function hideAllMenus() {
     menus.forEach((element) => {
@@ -12,8 +12,8 @@ function onLoad() {
 
     menus.forEach((element) => {
         element.querySelector(".menu-trigger").addEventListener("click", (event) => {
-            var content = element.querySelector(".menu-content");
-            var display = content.style.display;
+            let content = element.querySelector(".menu-content");
+            let display = content.style.display;
             hideAllMenus();
             if (!display || display === "none") {
                 content.style.display = "block";

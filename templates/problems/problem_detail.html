@@ -111,11 +111,12 @@
             const code = document.getElementById("code-input").value;
             const languageId = document.getElementById("language-select").value;
 
-            axios.post("{% url 'submit_code' %}", {
-                problem_id: {{ problem.id }},
-                code: code,
-                language_id: languageId
-            }, {
+            const url = "{% if contest %}{% url 'submit_contest_code' contest.id problem.id %}{% else %}{% url 'submit_code' %}{% endif %}";
+            const data = {
+                {% if contest %}code: code, language_id: languageId{% else %}problem_id: {{ problem.id }}, code: code, language_id: languageId{% endif %}
+            };
+
+            axios.post(url, data, {
                 headers: {
                     "Content-Type": "application/json",
                     "X-CSRFToken": "{{ csrf_token }}",
@@ -136,7 +137,8 @@
         });
 
         function getSubmissionStatus(submissionId) {
-            axios.get(`{% url 'check_status' %}?submission_id=${submissionId}`)
+            const url = "{% if contest %}/contests/{{ contest.id }}/status/" + submissionId + "/{% else %}{% url 'check_status' %}?submission_id=" + submissionId + "{% endif %}";
+            axios.get(url)
             .then(response => {
                 if (response.data.status === "PENDING") {
                     setTimeout(() => getSubmissionStatus(submissionId), 2000);

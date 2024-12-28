@@ -1,14 +1,12 @@
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
+from django.urls import path
 
-from contests.views import ContestViewSet, ContestParticipantViewSet, ContestSubmissionViewSet, ContestProblemViewSet
-
-router = DefaultRouter()
-router.register(r'contests', ContestViewSet)
-router.register(r'contest-problems', ContestProblemViewSet)
-router.register(r'contest-participants', ContestParticipantViewSet)
-router.register(r'contest-submissions', ContestSubmissionViewSet)
+from contests.views import contests_list, contests_detail, submit_contest_code, check_contest_status, \
+    contest_problem_detail
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path('', contests_list, name='contest_list'),
+    path('<int:contest_id>/', contests_detail, name='contest_detail'),
+    path('<int:contest_id>/problem/<int:problem_id>/', contest_problem_detail, name='contest_problem_detail'),
+    path('<int:contest_id>/submit/<int:problem_id>/', submit_contest_code, name='submit_contest_code'),
+    path('<int:contest_id>/status/<int:submission_id>/', check_contest_status, name='check_contest_status'),
 ]

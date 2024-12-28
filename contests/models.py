@@ -36,9 +36,19 @@ class ContestProblem(models.Model):
     def __str__(self):
         return f"{self.contest} - {self.problem}"
 
+    def get_id(self):
+        return self.problem.id
+
+    def get_title(self):
+        return self.problem.title
+
+    def get_description(self):
+        return self.problem.description
+
 
 class ContestSubmission(models.Model):
     participant = models.ForeignKey(ContestParticipant, on_delete=models.CASCADE, related_name='submissions')
+    contest_problem = models.ForeignKey(ContestProblem, on_delete=models.CASCADE, related_name='submissions', default=1)
     submission = models.ForeignKey(Submission, on_delete=models.CASCADE, related_name='contest_submissions')
     timestamp = models.DateTimeField(auto_now_add=True)
 

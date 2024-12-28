@@ -10,7 +10,6 @@
     <title>ACJ - {% block title %} Home {% endblock %}</title>
 </head>
 <body>
-    <script src="{% static 'js/base.js' %}"></script>
     <header>
         <a id="logo-svg" href="{% url 'home' %}">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0.45 0.06 326.9147 47.4821" height="100%" xmlns:bx="https://boxy-svg.com">
@@ -70,6 +69,7 @@
         </footer>
     {% endblock %}
 
+    <script src="{% static 'js/base.js' %}"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </body>
 </html>

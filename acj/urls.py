@@ -6,7 +6,8 @@ from users.views import ACJUserPasswordResetView, ACJUserPasswordResetConfirmVie
     profile_view, settings_view
 
 urlpatterns = [
-    path('', problem_list, name='home'),
+    path('', home_view, name='home'),
+    path('contests/', include('contests.urls')),
     path('problem/<int:problem_id>/', problem_detail, name='problem_detail'),
     path('admin/', admin.site.urls),
     path('api/', include('problems.urls')),

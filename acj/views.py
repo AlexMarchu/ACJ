@@ -1,12 +1,14 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 
 from problems.models import Problem, Language
 
 
 @login_required(login_url='/auth/login/')
 def home_view(request):
-    return render(request, 'content_base.html')
+    # TODO: add homepage
+    # return render(request, 'content_base.html')
+    return redirect("contest_list")
 
 
 @login_required(login_url='/auth/login/')
