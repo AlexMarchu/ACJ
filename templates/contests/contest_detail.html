@@ -16,13 +16,17 @@
             <table>
                 <thead>
                     <tr>
+                        <th width="1%"></th>
                         <th width="50%">Название</th>
-                        <th width="50%">Статус</th>
+                        <th width="49%">Статус</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for contest_problem in contest_problems %}
                         <tr>
+                            <td class="letter">
+                                {{ contest_problem.letter }}
+                            </td>
                             <td class="title">
                                 <a class="no-decoration" href="{% url 'contest_problem_detail' contest.id contest_problem.get_id %}">
                                     {{ contest_problem.get_title }}
@@ -36,7 +40,7 @@
                                         <span class="status-unsolved">Не решена</span>
                                     {% endif %}
                                 {% else %}
-                                    <span class="status-unknown">Войдите, чтобы увидеть статус</span>
+                                    <span class="status-unknown"></span>
                                 {% endif %}
                             </td>
                         </tr>
@@ -44,5 +48,15 @@
                 </tbody>
             </table>
         </div>
+        {% if request.user.is_authenticated %}
+            {% if not participant %}
+                <form action="{% url 'join_contest' contest.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-primary">Участвовать</button>
+                </form>
+            {% endif %}
+        {% else %}
+            <p>Войдите в аккаунт, чтобы иметь возможность участвовать в турнире</p>
+        {% endif %}
     </div>
 {% endblock %}

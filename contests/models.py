@@ -32,6 +32,13 @@ class ContestParticipant(models.Model):
 class ContestProblem(models.Model):
     contest = models.ForeignKey(Contest, on_delete=models.CASCADE, related_name='problems')
     problem = models.ForeignKey(Problem, on_delete=models.CASCADE, related_name='contests')
+    letter = models.CharField(max_length=3, blank=True, null=True)
+
+    def save(self, *args, **kwargs):
+        if not self.letter:
+            problem_count = ContestProblem.objects.filter(contest=self.contest).count()
+            self.letter = chr(ord('A') + problem_count)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.contest} - {self.problem}"

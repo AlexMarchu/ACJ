@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django_ckeditor_5.fields import CKEditor5Field
 
 User = get_user_model()
 
@@ -11,7 +12,7 @@ class ProblemTag(models.Model):
 class Problem(models.Model):
     title = models.CharField(max_length=255)
     author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name="problems")
-    description = models.TextField()
+    description = CKEditor5Field('description', config_name='extends')
     input_format = models.TextField(blank=True)
     output_format = models.TextField()
     time_limit = models.IntegerField(default=1)
