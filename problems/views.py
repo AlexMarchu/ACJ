@@ -68,23 +68,46 @@ def get_submission_result(submission_token):
     if response.status_code == 200:
         return response.json()
     else:
+        if response.status_code == 400:
+            return {
+                "status": {
+                    "id": 6,  # COMPILATION_ERROR
+                    "description": "Compilation Error"
+                }
+            }
         raise Exception(f"Failed to get submission result. Response code: {str(response.status_code)}")
 
 
 def update_submission_status(submission, tokens):
-    all_passed = True
+    failure_statuses = {
+        4: SubmissionStatus.StatusChoices.WRONG_ANSWER,
+        5: SubmissionStatus.StatusChoices.TIME_LIMIT_EXCEEDED,
+        6: SubmissionStatus.StatusChoices.COMPILATION_ERROR,
+        7: SubmissionStatus.StatusChoices.RUNTIME_ERROR,
+        8: SubmissionStatus.StatusChoices.RUNTIME_ERROR,
+        9: SubmissionStatus.StatusChoices.RUNTIME_ERROR,
+        10: SubmissionStatus.StatusChoices.RUNTIME_ERROR,
+        11: SubmissionStatus.StatusChoices.RUNTIME_ERROR,
+        12: SubmissionStatus.StatusChoices.RUNTIME_ERROR,
+        13: SubmissionStatus.StatusChoices.COMPILATION_ERROR,
+        14: SubmissionStatus.StatusChoices.PRESENTATION_ERROR,
+    }
+
     for token in tokens:
-        result = get_submission_result(token)
-        if result["status"]["id"] != 3:
-            all_passed = False
-            break
-
-    if all_passed:
-        submission.status.status = SubmissionStatus.StatusChoices.ACCEPTED
+        try:
+            result = get_submission_result(token)
+            status_id = result["status"]["id"]
+            if status_id in failure_statuses:
+                submission.status.status = failure_statuses[status_id]
+                submission.status.save()
+                print(f"Updated submission {submission.id} status to {submission.status.status}")
+                break
+        except Exception as exception:
+            print(f"Error while update submission status: {str(exception)}")
     else:
-        submission.status.status = SubmissionStatus.StatusChoices.REJECTED
-
-    submission.status.save()
+        submission.status.status = SubmissionStatus.StatusChoices.ACCEPTED
+        submission.status.save()
+        print(f"All test for submission {submission.id} passed. Status set to ACCEPTED")
 
 
 @csrf_exempt

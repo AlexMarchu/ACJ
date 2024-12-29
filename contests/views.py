@@ -32,14 +32,13 @@ class ContestSubmissionViewSet(viewsets.ModelViewSet):
 
 
 def contests_list(request):
-    contests = Contest.objects.all()
     context = {
-        "contests": contests,
+        "contests": Contest.objects.all(),
     }
     return render(request, "contests/contests.html", context)
 
 
-def contests_detail(request, contest_id):
+def contest_detail(request, contest_id):
     contest = get_object_or_404(Contest, pk=contest_id)
     contest_problems = ContestProblem.objects.filter(contest=contest)
     solved_problems = set()
@@ -76,6 +75,7 @@ def contest_problem_detail(request, contest_id, problem_id):
         "languages": languages,
         "visible_tests": visible_tests,
     }
+
     return render(request, "problems/problem_detail.html", context)
 
 
