@@ -9,19 +9,22 @@
     <link rel="stylesheet" href="{% static 'css/profile.css' %}">
     <div class="dc-wrapper">
         <div class="c-wrapper">
-        <div class="container profile-card">
-            <h1 class="title">{{ profile_owner.username }}</h1>
-            <div class="info">
-                <p><strong>Имя: </strong>{{ profile_owner.last_name }} {{ profile_owner.first_name }}</p>
-                <p><strong>Регион: </strong>{{ profile_owner.country }}, {{ profile_owner.city }}</p>
-                <p><strong>Дата рождения: </strong>{{ profile_owner.birth_date|default_if_none:'Не указано' }}</p>
-                <p><strong>Учебное заведение: </strong>{{ profile_owner.institution|default_if_none:'Не указано' }}</p>
-                <p><strong>Зарегистрирован: </strong>{{ profile_owner.date_joined|timesince }} назад</p>
+            <div class="container profile-card">
+                <h1 class="title">{{ profile_owner.username }}</h1>
+                <div class="info">
+                    <p><strong>Имя: </strong>{{ profile_owner.last_name }} {{ profile_owner.first_name }}</p>
+                    <p><strong>Регион: </strong>{{ profile_owner.country }}, {{ profile_owner.city }}</p>
+                    <p><strong>Дата рождения: </strong>{{ profile_owner.birth_date|default_if_none:'Не указано' }}</p>
+                    <p><strong>Учебное заведение: </strong>{{ profile_owner.institution|default_if_none:'Не указано' }}</p>
+                    <p><strong>Зарегистрирован: </strong>{{ profile_owner.date_joined|timesince }} назад</p>
+                </div>
             </div>
-        </div>
-         {% if profile_owner == user %}
-                <a id="edit-btn" class="no-decoration primary-btn" href="{% url 'settings' %}"><i class="fi fi-rr-edit"></i>Редактировать профиль</a>
-        {% endif %}
+            {% if profile_owner == user %}
+                    <a id="edit-btn" class="no-decoration primary-btn" href="{% url 'settings' %}">
+                        <i class="fi fi-rr-edit"></i>
+                        Редактировать профиль
+                    </a>
+            {% endif %}
         </div>
         <div class="container statistics">
             <h1 class="title">Статистика</h1>

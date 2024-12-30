@@ -50,6 +50,9 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+            'libraries':{
+                'acj_tags': 'templatetags.acj_tags',
+            }
         },
     },
 ]

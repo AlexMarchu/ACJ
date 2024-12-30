@@ -1,0 +1,76 @@
+@import 'context.css';
+
+.container  {
+    padding: 10px 16px 14px 16px;
+}
+
+.filters {
+    width: 28%;
+    display: flex;
+    flex-direction: column;
+    row-gap: 14px;
+}
+
+.contests {
+    flex: 1;
+    height: 600px;
+}
+
+.filters form {
+    display: flex;
+    flex-direction: row;
+    column-gap: 6px;
+}
+
+.filters #search-btn {
+    width: 48px;
+    font-size: 12pt;
+}
+
+.filters .categories {
+    border-top: 1px solid rgb(224, 224, 224);
+    padding-top: 12px;
+}
+
+.filters .categories .default-btn {
+    padding: 8px 10px;
+}
+
+.contests .contests-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.contests .contests-table th {
+    padding: 19px 0px;
+}
+
+.contests .contests-table td {
+    padding: 14px 4px;
+    border-top: 1px solid rgb(224, 224, 224);
+}
+
+.contests .contests-table .title {
+    text-align: left;
+}
+
+.container .contests-table .title a {
+   vertical-align: middle;
+}
+
+.contests .contests-table .start-time, .contests .contests-table .duration, .contests .contests-table .note {
+    text-align: center;
+    color: var(--text-muted-color);
+}
+
+.contests .contests-table tbody tr {
+    transition: background-color 0.2s;
+}
+
+.contests .contests-table tbody tr td:first-child {
+    padding-left: 10px;
+}
+
+.contests .contests-table tbody tr:hover {
+    background-color: #f1f0f0;
+}

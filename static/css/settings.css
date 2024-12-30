@@ -7,26 +7,8 @@
     flex-direction: row;
 }
 
-form label {
-    font-weight: 700;
-    display: block;
-    margin-bottom: 5px;
-}
-
-form {
+.container form {
     width: 42%;
-}
-
-form input, form select {
-    box-sizing: border-box;
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #cccccc;
-    border-radius: 6px;
-}
-
-form input:focus, form select:focus {
-    outline: 1.5px solid var(--primary-color);
 }
 
 .capture {

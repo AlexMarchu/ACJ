@@ -1,18 +1,23 @@
 {% extends 'content_base.html' %}
 {% load static %}
+{% load acj_tags %}
 
 {% block title %}
     {{ contest.title }}
 {% endblock %}
 
 {% block content %}
-    <link rel="stylesheet" href="{% static 'css/contests.css' %}">
-    <div class="contest-detail-container">
-        <h1>{{ contest.title }}</h1>
-        <p><strong>Начало:</strong> {{ contest.start_time|date:"Y.m.d H:i" }}</p>
-        <p><strong>Окончание:</strong> {{ contest.end_time|date:"Y.m.d H:i" }}</p>
+    <link rel="stylesheet" href="{% static 'css/contests/contest_detail.css' %}">
+    <div class="container">
+        <h1 class="title">{{ contest.title }}</h1>
+        <p class="info">{{ contest.start_time|date:"d.m.Y H:i" }}, {% hours_between contest.start_time contest.end_time %}</p>
+        <div class="tabs">
+            <a class="no-decoration tab" href="#">Задачи</a>
+            <a class="no-decoration tab" href="#">Попытки</a>
+            <a class="no-decoration tab" href="#">Результаты</a>
+        </div>
         <div class="problems-table">
-            <h2>Задачи</h2>
+            <h2 class="title">Задачи</h2>
             <table>
                 <thead>
                     <tr>

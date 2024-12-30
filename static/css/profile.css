@@ -2,7 +2,6 @@
 
 .title {
     margin-bottom: 14px;
-    width: 100%;
 }
 
 .container  {
@@ -10,11 +9,13 @@
 }
 
 .c-wrapper {
-    width: 36%;
+    width: 35%;
     row-gap: 10px;
+    align-items: center;
 }
 
 .profile-card {
+    width: 100%;
     height: fit-content;
     display: flex;
     flex-direction: column;
@@ -29,14 +30,10 @@
     margin: 6px 0px;
 }
 
-.profile-card #edit-btn {
-    margin-top: 6px;
-}
-
-.profile-card #edit-icon {
-    font-size: 16pt;
-    display: inline-block;
-    vertical-align: middle;
+#edit-btn {
+    width: 96%;
+    box-sizing: border-box;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
 }
 
 .statistics {

@@ -1,18 +1,19 @@
 {% extends 'content_base.html' %}
 {% load static %}
+{% load acj_tags %}
 
 {% block title %}
    Контесты
 {% endblock %}
 
 {% block content %}
-    <link rel="stylesheet" href="{% static 'css/contests.css' %}">
+    <link rel="stylesheet" href="{% static 'css/contests/contests.css' %}">
     <div class="dc-wrapper">
         <div class="container filters">
             <h1 class="title">Фильтрация</h1>
             <form>
                 <input type="search" placeholder="Название контеста..."/>
-                <button type="submit" class="btn-primary"><i class="fi fi-rr-search"></i></button>
+                <button type="submit" class="primary-btn" id="search-btn"><i class="fi fi-rr-search"></i></button>
             </form>
             <div class="categories">
                 <a class="no-decoration default-btn" href="{% url 'home' %}">Все</a>
@@ -20,7 +21,7 @@
             </div>
         </div>
         <div class="container contests">
-            <table>
+            <table class="contests-table">
                 <thead>
                   <tr>
                     <th width="1%"></th>
@@ -37,13 +38,13 @@
                             <td><a class="no-decoration favorite-btn" href="{% url 'home' %}"><i class="fi fi-rr-star"></i></a></td>
                             <td><a class="no-decoration results-btn" href="{% url 'home' %}"><i class="fi fi-rr-leaderboard-trophy"></i></a></td>  
                             <td class="title"><a class="no-decoration" href="{% url 'contest_detail' contest.id %}">{{ contest.title }}</a></td>
-                            <td class="start-time">{{ contest.start_time|date:"Y.m.d H:i" }}</td>
-                            <td class="duration">5:00</td>
-                            <td class="note">?</td>
+                            <td class="start-time">{{ contest.start_time|date:"d.m.Y H:i" }}</td>
+                            <td class="duration">{% hours_between contest.start_time contest.end_time %}</td>
+                            <td class="note">ДВФУ</td>
                         </tr>
                     {% endfor %}
                 </tbody>
-            </table>              
+            </table>
         </div>
     </div>
 {% endblock %}
