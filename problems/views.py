@@ -107,7 +107,7 @@ def update_submission_status(submission, tokens):
     else:
         submission.status.status = SubmissionStatus.StatusChoices.ACCEPTED
         submission.status.save()
-        print(f"All test for submission {submission.id} passed. Status set to ACCEPTED")
+        print(f"All tests for submission {submission.id} passed. Status set to ACCEPTED")
 
 
 @csrf_exempt

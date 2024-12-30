@@ -1,5 +1,6 @@
+from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from rest_framework import viewsets, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -42,6 +43,7 @@ def contest_detail(request, contest_id):
     contest = get_object_or_404(Contest, pk=contest_id)
     contest_problems = ContestProblem.objects.filter(contest=contest)
     solved_problems = set()
+    participant = None
 
     if request.user.is_authenticated:
         participant = ContestParticipant.objects.filter(contest=contest, user=request.user).first()
@@ -57,6 +59,7 @@ def contest_detail(request, contest_id):
         "contest": contest,
         "contest_problems": contest_problems,
         "solved_problems": solved_problems,
+        "participant": participant,
     }
 
     return render(request, "contests/contest_detail.html", context)
@@ -69,14 +72,28 @@ def contest_problem_detail(request, contest_id, problem_id):
     languages = Language.objects.all()
     visible_tests = problem.tests.all()[:problem.visible_tests_count]
 
+    participant = None
+    if request.user.is_authenticated:
+        participant = ContestParticipant.objects.filter(contest=contest, user=request.user).first()
+
     context = {
         "contest": contest,
         "problem": problem,
         "languages": languages,
         "visible_tests": visible_tests,
+        "participant": participant,
+        "problem_letter": contest_problem.letter,
     }
 
     return render(request, "problems/problem_detail.html", context)
+
+
+@login_required(login_url="/auth/login/")
+def join_contest(request, contest_id):
+    contest = get_object_or_404(Contest, id=contest_id)
+    contest_participant, created = ContestParticipant.objects.get_or_create(contest=contest, user=request.user)
+
+    return redirect("contest_detail", contest_id=contest_id)
 
 
 @api_view(["POST"])
