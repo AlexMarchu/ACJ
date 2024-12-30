@@ -62,6 +62,9 @@ class SubmissionStatus(models.Model):
 
     status = models.CharField(choices=StatusChoices.choices, default=StatusChoices.PENDING, max_length=3)
 
+    def __str__(self):
+        return self.status
+
 
 class Submission(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

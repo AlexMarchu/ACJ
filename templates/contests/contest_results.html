@@ -1,0 +1,48 @@
+{% extends 'content_base.html' %}
+{% load static %}
+{% load acj_tags %}
+
+{% block title %}
+    Результаты контеста {{ contest.title }}
+{% endblock %}
+
+{% block content %}
+    <link rel="stylesheet" href="{% static 'css/contests/contest_results.css' %}">
+    <div class="container">
+        <h1 class="title">Результаты контеста {{ contest.title }}</h1>
+        <table class="results-table">
+            <thead>
+                <tr>
+                    <th>№</th>
+                    <th>Участник</th>
+                    {% for problem in problems %}
+                        <th>{{ problem.letter }}</th>
+                    {% endfor %}
+                    <th>=</th>
+                    <th>Место</th>
+                    <th>Статус</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for result in results %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ result.user.username }}</td>
+                        {% for problem in problems %}
+                            <td>{{ result.problems|get_item:problem.letter }}</td>
+                        {% endfor %}
+                        <td>{{ result.solved_count }}</td>
+                        <td>{{ result.place }}</td>
+                        <td>
+                            {% if result.is_virtual %}
+                                внек.
+                            {% else %}
+                                офиц.
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

@@ -33,9 +33,18 @@ class ContestSubmissionViewSet(viewsets.ModelViewSet):
 
 
 def contests_list(request):
+    contests_data = list()
+
+    for contest in Contest.objects.all():
+        participant = None
+        if request.user.is_authenticated:
+            participant = ContestParticipant.objects.filter(contest=contest, user=request.user).first()
+        contests_data.append((contest, participant))
+
     context = {
-        "contests": Contest.objects.all(),
+        "contests_data": contests_data,
     }
+
     return render(request, "contests/contests.html", context)
 
 
@@ -89,9 +98,71 @@ def contest_problem_detail(request, contest_id, problem_id):
 
 
 @login_required(login_url="/auth/login/")
+def contest_submissions(request, contest_id):
+    contest = get_object_or_404(Contest, id=contest_id)
+    user = request.user
+
+    submissions = ContestSubmission.objects.filter(
+        participant__contest=contest,
+        participant__user=user,
+    ).select_related("submission", "contest_problem", "submission__language", "submission__status")
+
+    context = {
+        "contest": contest,
+        "submissions": submissions,
+    }
+
+    return render(request, "contests/contest_submissions.html", context)
+
+
+def contest_results(request, contest_id):
+    contest = get_object_or_404(Contest, id=contest_id)
+    participants = ContestParticipant.objects.filter(contest=contest).select_related("user")
+    problems = ContestProblem.objects.filter(contest=contest).order_by("letter")
+
+    results = list()
+    for participant in participants:
+        row_data = {
+            "user": participant.user,
+            "status": participant.is_virtual,
+            "problems": dict(),
+            "solved_count": 0,
+        }
+        for problem in problems:
+            submissions = ContestSubmission.objects.filter(
+                participant=participant,
+                contest_problem=problem,
+            ).select_related("submission__status")
+            if submissions.exists():
+                row_data["problems"][problem.letter] = "+" if any(
+                    submission.submission.status.status == SubmissionStatus.StatusChoices.ACCEPTED for submission in
+                    submissions) else "-"
+            else:
+                row_data["problems"][problem.letter] = "."
+        row_data["solved_count"] = list(row_data["problems"].values()).count("+")
+        results.append(row_data)
+
+    results.sort(key=lambda x: x["solved_count"], reverse=True)
+    for index, result in enumerate(results):
+        result["place"] = index + 1
+
+    context = {
+        "contest": contest,
+        "problems": problems,
+        "results": results,
+    }
+
+    return render(request, "contests/contest_results.html", context)
+
+
+@login_required(login_url="/auth/login/")
 def join_contest(request, contest_id):
     contest = get_object_or_404(Contest, id=contest_id)
-    contest_participant, created = ContestParticipant.objects.get_or_create(contest=contest, user=request.user)
+    contest_participant, created = ContestParticipant.objects.get_or_create(
+        contest=contest,
+        user=request.user,
+        defaults={'is_virtual': not contest.is_active()}
+    )
 
     return redirect("contest_detail", contest_id=contest_id)
 

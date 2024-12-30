@@ -13,8 +13,8 @@
         <p class="info">{{ contest.start_time|date:"d.m.Y H:i" }}, {% hours_between contest.start_time contest.end_time %}</p>
         <div class="tabs">
             <a class="no-decoration tab" href="#">Задачи</a>
-            <a class="no-decoration tab" href="#">Попытки</a>
-            <a class="no-decoration tab" href="#">Результаты</a>
+            <a class="no-decoration tab" href="{% url 'contest_submissions' contest.id %}">Попытки</a>
+            <a class="no-decoration tab" href="{% url 'contest_results' contest.id %}">Результаты</a>
         </div>
         <div class="problems-table">
             <h2 class="title">Задачи</h2>
@@ -57,7 +57,12 @@
             {% if not participant %}
                 <form action="{% url 'join_contest' contest.id %}" method="post">
                     {% csrf_token %}
-                    <button type="submit" class="btn-primary">Участвовать</button>
+                    {% if contest.is_active %}
+                        <button type="submit" class="btn-primary">Участвовать</button>
+                    {% else %}
+                        <p>Турнир уже завершился, но вы можете поучаствовать виртуально</p>
+                        <button type="submit" class="btn-primary">Участвовать виртуально</button>
+                    {% endif %}
                 </form>
             {% endif %}
         {% else %}

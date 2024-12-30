@@ -46,7 +46,9 @@ def submit_to_judge0(submission):
             "language_id": submission.language.language_id,
             "source_code": submission.content.content,
             "stdin": test.stdin,
-            "expected_output": test.expected_output
+            "expected_output": test.expected_output,
+            "cpu_time_limit": submission.problem.time_limit,
+            "memory_limit": submission.problem.memory_limit * 1024
         }
         response = requests.post(url, headers=headers, json=payload)
         if response.status_code == 201:
@@ -97,9 +99,23 @@ def update_submission_status(submission, tokens):
         try:
             result = get_submission_result(token)
             status_id = result["status"]["id"]
+
+            if "time" in result:
+                submission.execution_time = float(result["time"]) * 1000
+            if "memory" in result:
+                submission.memory_used = round(float(result["memory"]))
+
+            if submission.memory_used > submission.problem.memory_limit * 1024:
+                submission.status.status = SubmissionStatus.StatusChoices.MEMORY_LIMIT_EXCEEDED
+                submission.status.save()
+                submission.save()
+                print(f"Updated submission {submission.id} status to {submission.status.status}")
+                break
+
             if status_id in failure_statuses:
                 submission.status.status = failure_statuses[status_id]
                 submission.status.save()
+                submission.save()
                 print(f"Updated submission {submission.id} status to {submission.status.status}")
                 break
         except Exception as exception:
@@ -107,6 +123,7 @@ def update_submission_status(submission, tokens):
     else:
         submission.status.status = SubmissionStatus.StatusChoices.ACCEPTED
         submission.status.save()
+        submission.save()
         print(f"All tests for submission {submission.id} passed. Status set to ACCEPTED")
 
 

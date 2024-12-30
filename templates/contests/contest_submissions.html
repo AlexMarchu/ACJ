@@ -1,0 +1,45 @@
+{% extends 'content_base.html' %}
+{% load static %}
+
+{% block title %}
+    попытки в {{ contest.title }}
+{% endblock %}
+
+{% block content %}
+    <link rel="stylesheet" href="{% static 'css/contests/contest_submissions.css' %}">
+    <div class="container">
+        <h1 class="title">Мои попытки в {{ contest.title }}</h1>
+        <table class="submissions-table">
+            <thead>
+                <tr>
+                    <th>№</th>
+                    <th>Когда</th>
+                    <th>Кто</th>
+                    <th>Задача</th>
+                    <th>Язык</th>
+                    <th>Вердикт</th>
+                    <th>Время</th>
+                    <th>Память</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for submission in submissions %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ submission.timestamp|date:"d.m.Y H:i" }}</td>
+                        <td>{{ submission.participant.user.username }}</td>
+                        <td>{{ submission.contest_problem.letter }} - {{ submission.contest_problem.problem }}</td>
+                        <td>{{ submission.submission.language.name }}</td>
+                        <td class="verdict">{{ submission.submission.status.status }}</td>
+                        <td>{{ submission.submission.execution_time|default_if_none:"-" }} мс</td>
+                        <td>{{ submission.submission.memory_used|default_if_none:"-" }} КБ</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="8" class="no-submissions">Нет попыток</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

@@ -1,0 +1,26 @@
+.container {
+    width: 100%;
+    padding: 20px;
+}
+
+.title {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.results-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.results-table th, .results-table td {
+    padding: 12px;
+    border: 1px solid #e0e0e0;
+    text-align: center;
+}
+
+.results-table th {
+    background-color: #f9f9f9;
+    font-weight: 600;
+}

@@ -3,6 +3,7 @@ from datetime import datetime
 
 register = template.Library()
 
+
 @register.simple_tag
 def hours_between(start_date, end_date):
     delta = end_date - start_date
@@ -10,3 +11,8 @@ def hours_between(start_date, end_date):
     minutes = r // 60
 
     return f'{int(hours):02}:{int(minutes):02}'
+
+
+@register.filter
+def get_item(dictionary, key):
+    return dictionary.get(key, '')
