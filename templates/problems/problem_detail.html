@@ -8,7 +8,7 @@
 {% block content %}
     <link rel="stylesheet" href="{% static 'css/problems.css' %}">
     <div class="problem-detail-container">
-        <h1>Задача {{ problem.id }}. {{ problem.title }}</h1>
+        <h1>Задача {% if problem_letter %}{{ problem_letter }}{% else %}{{ problem.id }}{% endif %}. {{ problem.title }}</h1>
         <div class="problem-info">
             <p><strong>Автор:</strong> {{ problem.author.username }}</p>
             <p><strong>Ограничение по времени:</strong> {{ problem.time_limit }} сек</p>
@@ -16,7 +16,7 @@
         </div>
         <div class="problem-description">
             <h2>Условие</h2>
-            <p>{{ problem.description }}</p>
+            <p>{{ problem.description|safe }}</p>
         </div>
         <div class="problem-formats">
             <h2>Формат входных данных</h2>
@@ -57,9 +57,13 @@
             </span>
             <textarea id="code-input"></textarea>
             {% if request.user.is_authenticated %}
-                <button id="submit-code">Отправить</button>
+                {% if participant or not contest %}
+                    <button id="submit-code">Отправить</button>
+                {% else %}
+                    <p>Присоединитесь к турниру, чтобы иметь возможность отправлять решения</p>
+                {% endif %}
             {% else %}
-                <p>Войдите в аккаунт, чтобы отправить решение</p>
+                <p>Войдите в аккаунт, чтобы получить возможность отправить решение</p>
             {% endif %}
         </div>
         <div id="submission-status"></div>
