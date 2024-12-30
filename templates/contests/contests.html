@@ -33,14 +33,14 @@
                 </thead>
                 <tbody>
                     {% for contest in contests %}
-                    <tr>
-                        <td><a class="no-decoration favorite-btn" href="{% url 'home' %}"><i class="fi fi-rr-star"></i></a></td>
-                        <td><a class="no-decoration results-btn" href="{% url 'home' %}"><i class="fi fi-rr-leaderboard-trophy"></i></a></td>  
-                        <td class="title"><a class="no-decoration" href="{% url 'contest_detail' contest.id %}">{{ contest.title }}</a></td>
-                        <td class="start-time">{{ contest.start_time|date:"Y.m.d H:i" }}</td>
-                        <td class="duration">5:00</td>
-                        <td class="note">?</td>
-                    </tr>
+                        <tr>
+                            <td><a class="no-decoration favorite-btn" href="{% url 'home' %}"><i class="fi fi-rr-star"></i></a></td>
+                            <td><a class="no-decoration results-btn" href="{% url 'home' %}"><i class="fi fi-rr-leaderboard-trophy"></i></a></td>  
+                            <td class="title"><a class="no-decoration" href="{% url 'contest_detail' contest.id %}">{{ contest.title }}</a></td>
+                            <td class="start-time">{{ contest.start_time|date:"Y.m.d H:i" }}</td>
+                            <td class="duration">5:00</td>
+                            <td class="note">?</td>
+                        </tr>
                     {% endfor %}
                 </tbody>
             </table>              

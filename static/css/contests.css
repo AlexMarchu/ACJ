@@ -55,7 +55,6 @@
 .contests table td {
     padding: 14px 4px;
     border-top: 1px solid rgb(224, 224, 224);
-    font-weight: 400;
 }
 
 .contests table .title {
@@ -68,7 +67,6 @@
 
 .contests table .start-time, .contests table .duration, .contests table .note {
     text-align: center;
-    font-weight: 400;
     color: rgb(101, 101, 101);
 }
 
