@@ -4,6 +4,8 @@
 :root {
     --default-font: Nunito;
     --primary-color: #6e4cf9;
+    --background-color: #fafafa;
+    --link-color: #4b4bf3;
     --side-padding: 38px;
     --text-muted-color: #939393;
 }

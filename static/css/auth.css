@@ -1,69 +1,40 @@
 @import 'context.css';
 
-html, body {
-    height: 100%;
-}
-
 body {
-    font-family: var(--default-font), sans-serif;
-    background-color: #fafafa;
-    margin: 0;
-    padding: 0;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
 .container {
-    background-color: #ffffff;
+    margin: 25px;
     padding: 25px;
-    border-radius: 8px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-    width: 340px;
+    width: 400px;
 }
 
-.container ul {
+.container .title {
+    margin-bottom: 20px;
+}
+
+.container form ul {
+    font-size: 11.5pt;
     list-style-type: none;
     text-align: center;
     padding: 0;
 }
 
-.container h2 {
-    text-align: center;
-    margin-top: 0;
-    margin-bottom: 20px;
-}
-
-.container label {
+.container form label {
     font-weight: 700;
     display: block;
     margin-bottom: 5px;
 }
 
-input[type="text"], input[type="password"], input[type="email"] {
-    box-sizing: border-box;
-    font-size: 12pt;
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
+.container form input {
+    font-size: 11.5pt;
 }
 
-input[type="submit"] {
+.container .primary-btn {
     width: 100%;
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
-    padding: 12px;
-    border-radius: 10px;
-    cursor: pointer;
-    font-size: 12pt;
-    transition: opacity 300ms ease;
-    margin-top: 6px;
-}
-
-input[type="submit"]:hover {
-    opacity: 0.8;
 }
 
 .container .auth-link {
@@ -80,5 +51,5 @@ input[type="submit"]:hover {
 }
 
 .container .auth-link a {
-    color: rgb(75, 75, 243);
+    color: var(--link-color);
 }

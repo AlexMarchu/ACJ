@@ -6,8 +6,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="{% static 'favicon.ico' %}">
+    <link rel="stylesheet" href="{% static 'css/general.css' %}">
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
-    <title>ACJ - {% block title %} Home {% endblock %}</title>
+    <title>ACJ - {% block title %} {% endblock %}</title>
     <!-- MathJax -->
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -15,6 +16,7 @@
 <body>
     <header>
         <a id="logo-svg" href="{% url 'home' %}">
+            <!-- Svg Logo -->
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0.45 0.06 326.9147 47.4821" height="100%" xmlns:bx="https://boxy-svg.com">
                 <defs>
                   <style bx:fonts="Aldrich">@import url(https://fonts.googleapis.com/css2?family=Aldrich%3Aital%2Cwght%400%2C400&amp;display=swap);</style>
@@ -38,7 +40,7 @@
                             <a class="no-decoration default-btn menu-item" href="{% url 'home' %}"><i class="fi fi-rr-trophy"></i>Создать контест</a>
                         </div>
                     </div>
-                    <div class="separator">|</div>
+                    <div class="v-separator">|</div>
                 {% endif %}
                 <div class="menu" id="profile-menu">
                     <a class="no-decoration default-btn menu-trigger">{{ user.username }}</a>
@@ -50,7 +52,7 @@
                 </div>
             {% else %}
                 <a class="no-decoration default-btn" href="{% url 'login' %}">Войти</a>
-                <div class="separator">|</div>
+                <div class="v-separator">|</div>
                 <a class="no-decoration default-btn" href="{% url 'register' %}">Зарегистрироваться</a>
             {% endif %}
         </div>
@@ -61,18 +63,16 @@
         {% endblock %}
     </main>
 
-    {% block footer %}
-        <footer>
-            <p>&copy; Дальневосточный федеральный университет 2024</p>
-            <div id="footer-actions">
-                <a class="no-decoration default-btn" href="https://github.com/AlexMarchu/ACJ">Документация</a>
-                <div class="separator">|</div>
-                <a class="no-decoration default-btn" href="https://github.com/AlexMarchu/ACJ">Разработка</a>
-            </div>
-        </footer>
-    {% endblock %}
+    <footer>
+        <p>&copy; Дальневосточный федеральный университет 2024</p>
+        <div id="footer-actions">
+            <a class="no-decoration default-btn" href="https://github.com/AlexMarchu/ACJ/wiki">Документация</a>
+            <div class="v-separator">|</div>
+            <a class="no-decoration default-btn" href="https://github.com/AlexMarchu/ACJ">Разработка</a>
+        </div>
+    </footer>
 
-    <script src="{% static 'js/base.js' %}"></script>
+    <script src="{% static 'js/menu.js' %}"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </body>
 </html>

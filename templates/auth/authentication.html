@@ -5,11 +5,11 @@
 {% endblock %}
 
 {% block container-content %}
-    <h2>Вход</h2>
+    <h2 class="title">Вход</h2>
     <form method="POST" action="{% url 'login' %}">
         {% csrf_token %}
         {{ form.as_p }}
-        <input type="submit" value="Войти">
+        <input class="primary-btn" type="submit" value="Войти">
     </form>
     <div class="auth-link">
         <p>Забыли пароль? <a href="{% url 'password_reset' %}">Восстановить</a></p>

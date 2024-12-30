@@ -2,19 +2,19 @@
 
 .title {
     margin-bottom: 14px;
+    width: 100%;
 }
 
 .container  {
     padding: 10px 20px 14px 20px;
 }
 
-.statistics {
-    flex: 1;
-    height: 600px;
+.c-wrapper {
+    width: 36%;
+    row-gap: 10px;
 }
 
 .profile-card {
-    width: 36%;
     height: fit-content;
     display: flex;
     flex-direction: column;
@@ -31,4 +31,15 @@
 
 .profile-card #edit-btn {
     margin-top: 6px;
+}
+
+.profile-card #edit-icon {
+    font-size: 16pt;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.statistics {
+    flex: 1;
+    height: 600px;
 }

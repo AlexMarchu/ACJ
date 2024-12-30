@@ -5,11 +5,11 @@
 {% endblock %}
 
 {% block container-content %}
-    <h2>Регистрация</h2>
+    <h2 class="title">Регистрация</h2>
     <form method="POST" action="{% url 'register' %}">
         {% csrf_token %}
         {{ form.as_p }}
-        <input type="submit" value="Зарегистрироваться">
+        <input class="primary-btn" type="submit" value="Зарегистрироваться">
     </form>
     <div class="auth-link">
         <p>Уже есть аккаунт? <a href="{% url 'login' %}">Войти</a></p>
