@@ -48,9 +48,13 @@ def contests_list(request):
     return render(request, "contests/contests_list.html", context)
 
 
-def contest_detail(request, contest_id):
+def contest_view(request, contest_id):
+    return redirect("contest_problems", contest_id=contest_id)
+
+
+def contest_problems(request, contest_id):
     contest = get_object_or_404(Contest, pk=contest_id)
-    contest_problems = ContestProblem.objects.filter(contest=contest)
+    problems = ContestProblem.objects.filter(contest=contest)
     solved_problems = set()
     participant = None
 
@@ -59,19 +63,19 @@ def contest_detail(request, contest_id):
         if participant:
             accepted_submissions = ContestSubmission.objects.filter(
                 participant=participant,
-                contest_problem__in=contest_problems,
+                contest_problem__in=problems,
                 submission__status__status=SubmissionStatus.StatusChoices.ACCEPTED
             ).values_list('contest_problem__problem_id', flat=True)
             solved_problems = set(accepted_submissions)
 
     context = {
         "contest": contest,
-        "contest_problems": contest_problems,
+        "problems": problems,
         "solved_problems": solved_problems,
         "participant": participant,
     }
 
-    return render(request, "contests/contest_detail.html", context)
+    return render(request, "contests/contest_problems.html", context)
 
 
 def contest_problem_detail(request, contest_id, problem_id):

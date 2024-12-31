@@ -117,3 +117,43 @@ form label {
     margin: 0px;
     text-align: center;
 }
+
+.text-center {
+    text-align: center;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.default-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.default-table th {
+    background-color: #f9f9f9;
+    font-weight: 600;
+}
+
+.default-table th, .default-table td {
+    padding: 12px 14px;
+    border: 1px solid #e0e0e0;
+}
+
+.default-table a {
+    color: var(--link-color);
+}
+
+.default-table a:hover {
+    text-decoration: underline;
+}
+
+.td-forced {
+    white-space: nowrap;
+    width: 1%;
+}

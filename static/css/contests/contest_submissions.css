@@ -1,35 +1,10 @@
-.container {
-    width: 100%;
-    padding: 20px;
-}
+@import '../context.css';
 
-.title {
-    text-align: left;
-    margin-bottom: 20px;
-}
-
-.submissions-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-}
-
-.submissions-table th, .submissions-table td {
-    padding: 12px;
-    border: 1px solid #e0e0e0;
+.default-table td, .default-table th {
     text-align: center;
 }
 
-.submissions-table th {
-    background-color: #f9f9f9;
-    font-weight: 600;
-}
-
-.submissions-table .verdict {
-    text-align: center;
-}
-
-.submissions-table .no-submissions {
+.default-table .no-submissions {
     text-align: center;
     color: #6c757d;
     font-style: italic;

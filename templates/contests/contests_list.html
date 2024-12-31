@@ -37,11 +37,10 @@
                         <tr>
                             <td><a class="no-decoration favorite-btn" href="{% url 'home' %}"><i class="fi fi-rr-star"></i></a></td>
                             <td><a class="no-decoration results-btn" href="{% url 'home' %}"><i class="fi fi-rr-leaderboard-trophy"></i></a></td>  
-                            <td class="title"><a class="no-decoration" href="{% url 'contest_detail' contest.id %}">{{ contest.title }}</a></td>
+                            <td class="title"><a class="no-decoration" href="{% url 'contest' contest.id %}">{{ contest.title }}</a></td>
                             <td class="start-time">{{ contest.start_time|date:"d.m.Y H:i" }}</td>
                             <td class="duration">{% hours_between contest.start_time contest.end_time %}</td>
                             <td class="note">
-                                ДВФУ
                                 {% if participant %}
                                     {% if participant.is_virtual %}
                                         виртуальный участник

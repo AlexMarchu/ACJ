@@ -53,6 +53,12 @@ class ContestProblem(models.Model):
 
     def get_description(self):
         return self.problem.description
+    
+    def get_memory_limit(self):
+        return self.problem.memory_limit
+    
+    def get_time_limit(self):
+        return self.problem.time_limit
 
 
 class ContestSubmission(models.Model):

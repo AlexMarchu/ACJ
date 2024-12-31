@@ -1,4 +1,4 @@
-@import 'context.css';
+@import '../context.css';
 
 body {
     display: flex;

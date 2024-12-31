@@ -1,0 +1,47 @@
+@import '../context.css';
+
+.container {
+    width: 100%;
+    padding: 20px;
+    padding-top: 12px;
+}
+
+.title {
+    text-align: left;
+}
+
+.info {
+   margin: 2px 0px;
+   color: var(--text-muted-color);
+}
+
+.tabs {
+    width: 100%;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: row;
+}
+
+.tabs .tab {
+    padding: 8px 12px;
+    border-bottom: 1px solid rgb(218, 218, 218);
+}
+
+.tabs .tab:last-child {
+    width: 100%;
+}
+
+.tabs .active-tab {
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border: 1px solid rgb(218, 218, 218);
+    border-bottom: none;
+}
+
+h2.title {
+    margin-top: 20px;
+}
+
+.default-table {
+    margin-top: 10px;
+}

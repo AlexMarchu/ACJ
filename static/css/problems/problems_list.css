@@ -1,3 +1,5 @@
+@import '../context.css';
+
 .problems-container {
     display: flex;
     flex-wrap: wrap;

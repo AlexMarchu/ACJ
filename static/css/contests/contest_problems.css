@@ -1,0 +1,15 @@
+@import '../context.css';
+
+.status-solved {
+    color: #28a745;
+    font-weight: 600;
+}
+
+.status-unsolved {
+    color: #dc3545;
+    font-weight: 600;
+}
+
+.status-unknown {
+    color: #6c757d;
+}
