@@ -16,7 +16,7 @@ urlpatterns = [
     path('auth/', include('users.urls')),
     path('password_reset/', ACJUserPasswordResetView.as_view(), name='password_reset'),
     path('password_reset/confirm/<uidb64>/<token>/', ACJUserPasswordResetConfirmView.as_view(),
-         name='password_reset_confirm'),
+        name='password_reset_confirm'),
     path('password_reset/complete', PasswordResetCompleteView.as_view(), name='password_reset_complete'),
     path('profiles/<str:username>/', profile_view, name='profile'),
     path('settings/', settings_view, name='settings'),

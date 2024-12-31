@@ -45,7 +45,7 @@ def contests_list(request):
         "contests_data": contests_data,
     }
 
-    return render(request, "contests/contests.html", context)
+    return render(request, "contests/contests_list.html", context)
 
 
 def contest_detail(request, contest_id):

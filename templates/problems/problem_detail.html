@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block content %}
-    <link rel="stylesheet" href="{% static 'css/problems.css' %}">
+    <link rel="stylesheet" href="{% static 'css/problems/problems_list.css' %}">
     <div class="problem-detail-container">
         <h1>Задача {% if problem_letter %}{{ problem_letter }}{% else %}{{ problem.id }}{% endif %}. {{ problem.title }}</h1>
         <div class="problem-info">

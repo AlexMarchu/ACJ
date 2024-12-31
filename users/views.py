@@ -50,7 +50,7 @@ class ACJUserRegistrationView(CreateView):
         except Exception as e:
             print(f'Ошибка при отправке: {e}')
 
-        return render(self.request, 'auth/request_email_confirmation.html', {'user': user})
+        return render(self.request, 'auth/email_confirmation.html', {'user': user})
 
 
 def logout_view(request):
@@ -76,7 +76,7 @@ class EmailConfirmationView(View):
 
 
 class ACJUserPasswordResetView(generic.View):
-    template_name = 'auth/password_reset.html'
+    template_name = 'auth/password_reset/password_reset.html'
     form_class = ACJUserPasswordResetForm
     success_url = reverse_lazy('password_reset_done')
 
@@ -120,19 +120,19 @@ class ACJUserPasswordResetView(generic.View):
             except Exception as e:
                 print(f'Ошибка при отправке письма: {e}')
 
-            return render(request, 'auth/password_reset_done.html')
+            return render(request, 'auth/password_reset/password_reset_request.html')
 
         return render(request, self.template_name, {'form': form})
 
 
 class ACJUserPasswordResetConfirmView(PasswordResetConfirmView):
     form_class = ACJUserSetPasswordForm
-    template_name = 'auth/password_reset_confirm.html'
+    template_name = 'auth/password_reset/password_reset_confirm.html'
     success_url = reverse_lazy('password_reset_complete')
 
 
 class PasswordResetCompleteView(TemplateView):
-    template_name = 'auth/password_reset_complete.html'
+    template_name = 'auth/password_reset/password_reset_complete.html'
 
 
 @login_required(login_url='/auth/login/')
@@ -182,4 +182,4 @@ def settings_view(request):
         "password_form": password_form,
     }
 
-    return render(request, 'profiles/settings.html', context)
+    return render(request, 'settings/settings.html', context)
