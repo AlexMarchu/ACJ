@@ -68,6 +68,9 @@ def contest_problems(request, contest_id):
             ).values_list('contest_problem__problem_id', flat=True)
             solved_problems = set(accepted_submissions)
 
+    if not contest.is_active() and contest.hide_problems_until_start:
+        problems = ContestProblem.objects.none()
+
     context = {
         "contest": contest,
         "problems": problems,
@@ -165,10 +168,10 @@ def join_contest(request, contest_id):
     contest_participant, created = ContestParticipant.objects.get_or_create(
         contest=contest,
         user=request.user,
-        defaults={'is_virtual': not contest.is_active()}
+        defaults={'is_virtual': contest.is_finished()}
     )
 
-    return redirect("contest_detail", contest_id=contest_id)
+    return redirect("contest", contest_id=contest_id)
 
 
 @api_view(["POST"])

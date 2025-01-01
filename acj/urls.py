@@ -3,13 +3,14 @@ from django.contrib import admin
 from django.urls import path, include
 
 from acj import settings
-from acj.views import home_view, problem_detail
+from acj.views import home_view, problem_detail, problem_list
 from users.views import ACJUserPasswordResetView, ACJUserPasswordResetConfirmView, PasswordResetCompleteView, \
     profile_view, settings_view
 
 urlpatterns = [
     path('', home_view, name='home'),
     path('contests/', include('contests.urls')),
+    path('problems/', problem_list, name='problem_list'),
     path('problem/<int:problem_id>/', problem_detail, name='problem_detail'),
     path('admin/', admin.site.urls),
     path('api/', include('problems.urls')),

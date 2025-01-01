@@ -12,13 +12,16 @@ class Contest(models.Model):
     end_time = models.DateTimeField()
     is_public = models.BooleanField(default=True)
     participants = models.ManyToManyField(ACJUser, related_name='contests', through='ContestParticipant')
+    hide_problems_until_start = models.BooleanField(default=False)
 
     def __str__(self):
         return self.title
 
     def is_active(self):
-        now = timezone.now()
-        return self.start_time <= now <= self.end_time
+        return self.start_time <= timezone.now() <= self.end_time
+
+    def is_finished(self):
+        return timezone.now() >= self.end_time
 
 
 class ContestParticipant(models.Model):
@@ -59,6 +62,9 @@ class ContestProblem(models.Model):
     
     def get_time_limit(self):
         return self.problem.time_limit
+
+    def is_visible(self):
+        return self.contest.is_active() or not self.contest.hide_problems_until_start
 
 
 class ContestSubmission(models.Model):

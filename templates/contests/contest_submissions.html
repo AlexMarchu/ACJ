@@ -28,7 +28,7 @@
                         </a>
                     </td>
                     <td>
-                        <a class="no-decoration" href="{% url 'contest_problem_detail' submission.contest_problem.contest.id submission.contest_problem.id %}">
+                        <a class="no-decoration" href="{% url 'contest_problem_detail' submission.contest_problem.contest.id submission.contest_problem.problem.id %}">
                             {{ submission.contest_problem.letter }} - {{ submission.contest_problem.problem }}
                         </a>
                     </td>

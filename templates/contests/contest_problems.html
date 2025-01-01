@@ -4,49 +4,54 @@
 {% block inner-content %}
     <link rel="stylesheet" href="{% static 'css/contests/contest_problems.css' %}">
     <h2 class="title">Задачи</h2>
-    <table class="default-table">
-        <thead>
-            <tr>
-                <th class="td-forced text-center">#</th>
-                <th class="text-left">Название</th>
-                <th class="td-forced text-center">Статус</th>
-                <th class="td-forced text-center">Время</th>
-                <th class="td-forced text-center">Память</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for problem in problems %}
+
+    {% if not contest.is_active and contest.hide_problems_until_start %}
+        <p>Задачи скрыты до начала турнира</p>
+    {% else %}
+        <table class="default-table">
+            <thead>
                 <tr>
-                    <td class="td-forced text-center letter">{{ problem.letter }}</td>
-                    <td class="title">
-                        <a class="no-decoration" href="{% url 'contest_problem_detail' contest.id problem.get_id %}">
-                            {{ problem.get_title }}
-                        </a>
-                    </td>
-                    <td class="td-forced text-center status">
-                        {% if request.user.is_authenticated %}
-                            {% if problem.problem.id in solved_problems %}
-                                <span class="status-solved">Решена</span>
-                            {% else %}
-                                <span class="status-unsolved">Не решена</span>
-                            {% endif %}
-                        {% else %}
-                            <span class="status-unknown"></span>
-                        {% endif %}
-                    </td>
-                    <td class="td-forced text-center">{{ problem.get_time_limit }} сек</td>
-                    <td class="td-forced text-center">{{ problem.get_memory_limit }} МБ</td>
+                    <th class="td-forced text-center">#</th>
+                    <th class="text-left">Название</th>
+                    <th class="td-forced text-center">Статус</th>
+                    <th class="td-forced text-center">Время</th>
+                    <th class="td-forced text-center">Память</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for problem in problems %}
+                    <tr>
+                        <td class="td-forced text-center letter">{{ problem.letter }}</td>
+                        <td class="title">
+                            <a class="no-decoration" href="{% url 'contest_problem_detail' contest.id problem.get_id %}">
+                                {{ problem.get_title }}
+                            </a>
+                        </td>
+                        <td class="td-forced text-center status">
+                            {% if request.user.is_authenticated %}
+                                {% if problem.problem.id in solved_problems %}
+                                    <span class="status-solved">Решена</span>
+                                {% else %}
+                                    <span class="status-unsolved">Не решена</span>
+                                {% endif %}
+                            {% else %}
+                                <span class="status-unknown"></span>
+                            {% endif %}
+                        </td>
+                        <td class="td-forced text-center">{{ problem.get_time_limit }} сек</td>
+                        <td class="td-forced text-center">{{ problem.get_memory_limit }} МБ</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
     {% if request.user.is_authenticated %}
         {% if not participant %}
             <form action="{% url 'join_contest' contest.id %}" method="post">
                 {% csrf_token %}
-                {% if contest.is_active %}
-                    <button type="submit" class="btn-primary">Участвовать</button>
-                {% else %}
+                <button type="submit" class="btn-primary">Участвовать</button>
+                {% if contest.is_finished %}
                     <p>Турнир уже завершился, но вы можете поучаствовать виртуально</p>
                     <button type="submit" class="btn-primary">Участвовать виртуально</button>
                 {% endif %}

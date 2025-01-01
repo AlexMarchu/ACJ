@@ -1,14 +1,31 @@
 import requests
 from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
+from contests.models import Contest, ContestProblem
 from problems.models import SubmissionStatus, Language, Problem, Test, SubmissionContent, Submission
 from problems.permissions import IsAdminOrTeacher
 from problems.serializers import ProblemSerializer, TestSerializer
+
+
+def problem_list(request):
+    queryset = Problem.objects.filter(contests__isnull=True)
+
+    visible_contests = Contest.objects.filter(hide_problems_until_start=False)
+    visible_contest_problems = ContestProblem.objects.filter(contest__in=visible_contests)
+    visible_problems_ids = visible_contest_problems.values_list("problem_id", flat=True)
+
+    queryset = queryset | Problem.objects.filter(id__in=visible_problems_ids)
+
+    context = {
+        "problems": list(queryset),
+    }
+
+    return render(request, "problems/problem_list.html", context)
 
 
 class ProblemViewSet(viewsets.ModelViewSet):
