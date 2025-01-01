@@ -1,3 +1,5 @@
+from unittest import TestResult
+
 from django.contrib.auth.decorators import login_required
 from django.db.models.functions import Lower
 from django.http import JsonResponse
@@ -95,7 +97,7 @@ def contest_problems(request, contest_id):
             ).values_list('contest_problem__problem_id', flat=True)
             solved_problems = set(accepted_submissions)
 
-    if not contest.is_active() and contest.hide_problems_until_start:
+    if not contest.is_started() and contest.hide_problems_until_start:
         problems = ContestProblem.objects.none()
 
     context = {
@@ -202,6 +204,34 @@ def join_contest(request, contest_id):
 
 
 @api_view(["POST"])
+@permission_classes([IsAuthenticated])
+@csrf_exempt
+def toggle_favorite_contest(request, contest_id):
+    contest = get_object_or_404(Contest, id=contest_id)
+    favorite, created = FavoriteContest.objects.get_or_create(user=request.user, contest=contest)
+    if not created:
+        favorite.delete()
+        return JsonResponse({"status": "deleted"}, status=status.HTTP_200_OK)
+    return JsonResponse({"status": "created"}, status=status.HTTP_201_CREATED)
+
+
+@login_required(login_url="/auth/login")
+def submission_detail(request, contest_id, submission_id):
+    contest_submission = get_object_or_404(ContestSubmission, submission_id=submission_id,
+                                           participant__contest_id=contest_id)
+    submission = contest_submission.submission
+    tests = submission.test_results.exclude(status=SubmissionStatus.StatusChoices.PENDING)
+
+    context = {
+        "contest": contest_submission.contest_problem.contest,
+        "submission": submission,
+        "tests": tests,
+    }
+
+    return render(request, "contests/submission_detail.html", context)
+
+
+@api_view(["POST"])
 def submit_contest_code(request, contest_id, problem_id):
     contest = get_object_or_404(Contest, id=contest_id)
     contest_problem = get_object_or_404(ContestProblem, contest=contest, problem_id=problem_id)
@@ -247,15 +277,3 @@ def submit_contest_code(request, contest_id, problem_id):
 def check_contest_status(request, contest_id, submission_id):
     submission = get_object_or_404(ContestSubmission, submission_id=submission_id, participant__contest_id=contest_id)
     return JsonResponse({"status": submission.submission.status.status})
-
-
-@api_view(["POST"])
-@permission_classes([IsAuthenticated])
-@csrf_exempt
-def toggle_favorite_contest(request, contest_id):
-    contest = get_object_or_404(Contest, id=contest_id)
-    favorite, created = FavoriteContest.objects.get_or_create(user=request.user, contest=contest)
-    if not created:
-        favorite.delete()
-        return JsonResponse({"status": "deleted"}, status=status.HTTP_200_OK)
-    return JsonResponse({"status": "created"}, status=status.HTTP_201_CREATED)

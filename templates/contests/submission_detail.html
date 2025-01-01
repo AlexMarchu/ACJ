@@ -1,0 +1,67 @@
+{% extends 'content_base.html' %}
+{% load static %}
+
+{% block title %}
+    Детали
+{% endblock %}
+
+{% block content %}
+    <link rel="stylesheet" href="{% static 'css/problems/problems_list.css' %}">
+    <div class="problem-detail-container">
+        <table class="results-table">
+            <tr>
+                <th>ID</th>
+                <td>{{ submission.id }}</td>
+            </tr>
+            <tr>
+                <th>Пользователь</th>
+                <td>{{ submission.user.username }}</td>
+            </tr>
+            <tr>
+                <th>Время</th>
+                <td>{{ submission.timestamp }}</td>
+            </tr>
+            <tr>
+                <th>Турнир</th>
+                <td>{{ contest.title }}</td>
+            </tr>
+            <tr>
+                <th>Задача</th>
+                <td>{{ submission.problem.title }}</td>
+            </tr>
+            <tr>
+                <th>Ограничения</th>
+                <td>Время: {{ submission.problem.time_limit }} сек, Память: {{ submission.problem.memory_limit }} МБ</td>
+            </tr>
+            <tr>
+                <th>Состояние</th>
+                <td>{{ submission.status.status }}</td>
+            </tr>
+        </table>
+
+        <h2>Код</h2>
+        <textarea id="code-input" readonly>{{ submission.content.content }}</textarea>
+
+        <h2>Тесты</h2>
+        <table class="results-table">
+            <thead>
+                <tr>
+                    <th width="10%">Тест</th>
+                    <th width="15%">Вердикт</th>
+                    <th>Время</th>
+                    <th>Память</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for test in tests %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ test.status }}</td>
+                        <td>{{ test.execution_time }}</td>
+                        <td>{{ test.memory_used }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

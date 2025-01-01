@@ -78,3 +78,15 @@ class Submission(models.Model):
 
     def __str__(self):
         return f"Submission by {self.user.username} for {self.problem.title}"
+
+
+class SubmissionTestResult(models.Model):
+    submission = models.ForeignKey(Submission, on_delete=models.CASCADE, related_name="test_results")
+    test = models.ForeignKey(Test, on_delete=models.CASCADE)
+    status = models.CharField(choices=SubmissionStatus.StatusChoices.choices, max_length=3, default=SubmissionStatus.StatusChoices.PENDING)
+    execution_time = models.FloatField(null=True, blank=True)
+    memory_used = models.FloatField(null=True, blank=True)
+    output = models.TextField(null=True, blank=True)
+
+    def __str__(self):
+        return f"Test {self.test} for submission {self.submission} - {self.status}"

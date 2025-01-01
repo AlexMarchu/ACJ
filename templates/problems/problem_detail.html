@@ -128,7 +128,9 @@
             })
             .then(response => {
                 if (response.data.status === "success") {
-                    document.getElementById("submission-status").innerText = "Решение отправлено на проверку";
+                    const submissionId = response.data.submission_id;
+                    const submissionDetailUrl = "{% if contest %}{% url 'submission_detail' contest.id 0 %}{% else %}#{% endif %}".replace("0", submissionId);
+                    document.getElementById("submission-status").innerText = `Решение отправлено на проверку. <a href="${submissionDetailUrl}">Результаты</a>`;
                     getSubmissionStatus(response.data.submission_id);
                 } else {
                     document.getElementById("submission-status").innerText = "Ошибка при отправке решения";
