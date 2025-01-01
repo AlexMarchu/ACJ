@@ -2,7 +2,8 @@ from django.contrib import admin
 from django import forms
 from django_ckeditor_5.widgets import CKEditor5Widget
 
-from problems.models import Test, Problem, ProblemTag, SubmissionStatus, SubmissionContent, Submission, Language
+from problems.models import Test, Problem, ProblemTag, SubmissionStatus, SubmissionContent, Submission, Language, \
+    SubmissionTestResult
 
 
 class TestInline(admin.TabularInline):
@@ -34,3 +35,4 @@ admin.site.register(ProblemTag)
 admin.site.register(SubmissionStatus)
 admin.site.register(Submission)
 admin.site.register(Language)
+admin.site.register(SubmissionTestResult)

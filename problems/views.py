@@ -7,7 +7,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from contests.models import Contest, ContestProblem
-from problems.models import SubmissionStatus, Language, Problem, Test, SubmissionContent, Submission
+from problems.models import SubmissionStatus, Language, Problem, Test, SubmissionContent, Submission, \
+    SubmissionTestResult
 from problems.permissions import IsAdminOrTeacher
 from problems.serializers import ProblemSerializer, TestSerializer
 
@@ -70,7 +71,7 @@ def submit_to_judge0(submission):
         response = requests.post(url, headers=headers, json=payload)
         if response.status_code == 201:
             submission_token = response.json()["token"]
-            submission_tokens.append(submission_token)
+            submission_tokens.append((test.id, submission_token))
         else:
             raise Exception(f"Failed to submit to Judge0. Response code: {str(response.status_code)}")
     return submission_tokens
@@ -112,17 +113,21 @@ def update_submission_status(submission, tokens):
         14: SubmissionStatus.StatusChoices.PRESENTATION_ERROR,
     }
 
-    for token in tokens:
+    for test_id, token in tokens:
         try:
             result = get_submission_result(token)
             status_id = result["status"]["id"]
 
-            if "time" in result:
-                submission.execution_time = float(result["time"]) * 1000
-            if "memory" in result:
-                submission.memory_used = round(float(result["memory"]))
+            test_result = SubmissionTestResult.objects.create(
+                submission=submission,
+                test_id=test_id,
+                status=failure_statuses.get(status_id, SubmissionStatus.StatusChoices.ACCEPTED),
+                execution_time=float(result.get("time", 0)) * 1000,
+                memory_used=float(result.get("memory", 0)),
+                output=result.get("stdout", ""),
+            )
 
-            if submission.memory_used > submission.problem.memory_limit * 1024:
+            if test_result.memory_used > submission.problem.memory_limit * 1024:
                 submission.status.status = SubmissionStatus.StatusChoices.MEMORY_LIMIT_EXCEEDED
                 submission.status.save()
                 submission.save()
