@@ -66,13 +66,12 @@
                                 {% endif %}
                             </td>
                         </tr>
-                    {% empty %}
-                        <tr>
-                            <td colspan="6" class="no-contests">Нет контестов</td>
-                        </tr>
                     {% endfor %}
                 </tbody>
             </table>
+            {% if not contests_data %}
+                <p class="no-contests">Нет контестов</p>
+            {% endif %}
         </div>
     </div>
     <script src="{% static 'js/favorites.js' %}"></script>

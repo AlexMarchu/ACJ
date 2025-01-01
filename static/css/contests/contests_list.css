@@ -74,10 +74,8 @@
     background-color: #f1f0f0;
 }
 
-.contests-table .no-contests {
-    text-align: center;
-    color: var(--text-muted-color);
-    font-style: italic;
+.contests-table tbody tr:last-child td {
+    border-bottom: none;
 }
 
 .fi.fi-rr-star {
@@ -86,4 +84,11 @@
 
 .fi.fi-rr-star.favorite {
     color: gold;
+}
+
+.no-contests {
+    margin: 14px 0px 3px 0px;
+    text-align: center;
+    color: var(--text-muted-color);
+    font-style: italic;
 }
