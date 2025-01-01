@@ -1,11 +1,11 @@
 @import '../context.css';
 
-.default-table td, .default-table th {
+.default-table td {
     text-align: center;
 }
 
 .default-table .no-submissions {
     text-align: center;
-    color: #6c757d;
+    color: var(--text-muted-color);
     font-style: italic;
 }

@@ -77,6 +77,15 @@ class ContestSubmission(models.Model):
 
     def __str__(self):
         return f"ContestSubmission by {self.participant} in {self.participant.contest}"
+    
+    def get_participant_username(self):
+        return self.participant.user.username
+    
+    def get_contest_id(self):
+        return self.contest_problem.contest.id
+    
+    def get_problem_id(self):
+        return self.contest_problem.problem.id
 
 
 class FavoriteContest(models.Model):

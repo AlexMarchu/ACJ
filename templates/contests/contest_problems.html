@@ -11,23 +11,23 @@
         <table class="default-table">
             <thead>
                 <tr>
-                    <th class="td-forced text-center">#</th>
+                    <th class="td-forced">#</th>
                     <th class="text-left">Название</th>
-                    <th class="td-forced text-center">Статус</th>
-                    <th class="td-forced text-center">Время</th>
-                    <th class="td-forced text-center">Память</th>
+                    <th class="td-forced">Статус</th>
+                    <th class="td-forced">Время</th>
+                    <th class="td-forced">Память</th>
                 </tr>
             </thead>
             <tbody>
                 {% for problem in problems %}
                     <tr>
-                        <td class="td-forced text-center letter">{{ problem.letter }}</td>
+                        <td class="td-forced">{{ problem.letter }}</td>
                         <td class="title">
                             <a class="no-decoration" href="{% url 'contest_problem_detail' contest.id problem.get_id %}">
                                 {{ problem.get_title }}
                             </a>
                         </td>
-                        <td class="td-forced text-center status">
+                        <td class="td-forced">
                             {% if request.user.is_authenticated %}
                                 {% if problem.problem.id in solved_problems %}
                                     <span class="status-solved">Решена</span>
@@ -38,28 +38,28 @@
                                 <span class="status-unknown"></span>
                             {% endif %}
                         </td>
-                        <td class="td-forced text-center">{{ problem.get_time_limit }} сек</td>
-                        <td class="td-forced text-center">{{ problem.get_memory_limit }} МБ</td>
+                        <td class="td-forced">{{ problem.get_time_limit }} сек</td>
+                        <td class="td-forced">{{ problem.get_memory_limit }} МБ</td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
     {% endif %}
-
+    
     {% if request.user.is_authenticated %}
         {% if not participant %}
-            <form action="{% url 'join_contest' contest.id %}" method="post">
+            <form class="participantion-form" action="{% url 'join_contest' contest.id %}" method="post">
                 {% csrf_token %}
                 {% if not contest.is_finished %}
-                <button type="submit" class="btn-primary">Участвовать</button>
+                    <button type="submit" class="primary-btn">Участвовать</button>
                 {% else %}
-                    <p>Турнир уже завершился, но вы можете поучаствовать виртуально</p>
-                    <button type="submit" class="btn-primary">Участвовать виртуально</button>
+                    <p class="italic">Турнир уже завершился, но вы можете поучаствовать виртуально.</p>
+                    <button type="submit" class="primary-btn">Участвовать виртуально</button>
                 {% endif %}
             </form>
         {% endif %}
     {% else %}
-        <p>Войдите в аккаунт, чтобы иметь возможность участвовать в турнире</p>
+        <p class="login-to-participate italic">Войдите в аккаунт, чтобы иметь возможность участвовать в турнире.</p>
     {% endif %}
     <script>setActiveTab("problems");</script>
 {% endblock %}

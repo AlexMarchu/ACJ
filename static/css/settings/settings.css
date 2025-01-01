@@ -21,7 +21,6 @@
 }
 
 .capture .description {
-    color: var(--text-muted-color);
     font-size: 14pt;
     text-align: center;
 }

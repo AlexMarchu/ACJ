@@ -6,7 +6,7 @@ function hideAllMenus() {
     });
 }
 
-function onLoad() {
+function setupMenus() {
     menus = document.querySelectorAll(".menu");
     document.addEventListener("click", hideAllMenus);
 
@@ -25,4 +25,4 @@ function onLoad() {
     });
 }
 
-window.addEventListener("load", onLoad);
+window.addEventListener("load", setupMenus);

@@ -9,8 +9,8 @@
 {% block content %}
     <link rel="stylesheet" href="{% static 'css/contests/contests_list.css' %}">
     <div class="dc-wrapper">
-        <div class="container filters">
-            <h1 class="title">Фильтрация</h1>
+        <div class="container search">
+            <h1 class="title">Поиск</h1>
             <form method="get" action="{% url 'contests_list' %}">
                 <input type="search" name="title" placeholder="Название контеста..." value="{{ search_query }}"/>
                 <button type="submit" class="primary-btn" id="search-btn"><i class="fi fi-rr-search"></i></button>
@@ -24,25 +24,34 @@
             <table class="contests-table">
                 <thead>
                   <tr>
-                    <th width="1%"></th>
-                    <th width="1%"></th>
-                    <th width="42%">Название</th>
+                    <th width="2.6%"></th>
+                    <th width="2%"></th>
+                    <th class="text-left">Название</th>
                     <th width="20%">Начало</th>
-                    <th width="18%">Длительность</th>
+                    <th width="16%">Длительность</th>
                     <th width="18%">Примечание</th>
                   </tr>
                 </thead>
                 <tbody>
                     {% for contest, participant in contests_data %}
                         <tr>
-                            <td><a class="no-decoration favorite-btn" href="{% url 'toggle_favorite_contest' contest.id %}"
-                                   data-contest-id="{{ contest.id }}" data-csrf-token="{{ csrf_token }}">
-                                <i class="fi fi-rr-star{% if contest.id in favorite_contests %} favorite{% endif %}"></i></a></td>
-                            <td><a class="no-decoration results-btn" href="{% url 'home' %}"><i class="fi fi-rr-leaderboard-trophy"></i></a></td>
-                            <td class="title"><a class="no-decoration" href="{% url 'contest' contest.id %}">{{ contest.title }}</a></td>
-                            <td class="start-time">{{ contest.start_time|date:"d.m.Y H:i" }}</td>
-                            <td class="duration">{% hours_between contest.start_time contest.end_time %}</td>
-                            <td class="note">
+                            <td class="icon">
+                                <a class="no-decoration favorite-btn" href="{% url 'toggle_favorite_contest' contest.id %}"
+                                    data-contest-id="{{ contest.id }}" data-csrf-token="{{ csrf_token }}">
+                                    <i class="fi fi-rr-star {% if contest.id in favorite_contests %}favorite{% endif %}"></i>
+                                </a>
+                            </td>
+                            <td class="icon">
+                                <a class="no-decoration results-btn" href="{% url 'contest_results' contest.id %}">
+                                    <i class="fi fi-rr-leaderboard-trophy"></i>
+                                </a>
+                            </td>
+                            <td class="title">
+                                <a class="no-decoration" href="{% url 'contest' contest.id %}">{{ contest.title }}</a>
+                            </td>
+                            <td class="text-muted">{{ contest.start_time|date:"d.m.Y H:i" }}</td>
+                            <td class="text-muted">{% hours_between contest.start_time contest.end_time %}</td>
+                            <td class="text-muted">
                                 {% if contest.is_finished %}
                                     завершен
                                 {% elif not contest.is_public %}
@@ -56,6 +65,10 @@
                                     {% endif %}
                                 {% endif %}
                             </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="6" class="no-contests">Нет контестов</td>
                         </tr>
                     {% endfor %}
                 </tbody>

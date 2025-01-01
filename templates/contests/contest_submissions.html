@@ -7,8 +7,8 @@
     <table class="default-table">
         <thead>
             <tr>
-                <th>№</th>
-                <th>Когда</th>
+                <th class="td-forced">ID</th>
+                <th class="td-forced">Когда</th>
                 <th>Пользователь</th>
                 <th>Задача</th>
                 <th>Язык</th>
@@ -20,15 +20,15 @@
         <tbody>
             {% for submission in submissions %}
                 <tr>
-                    <td>{{ forloop.counter }}</td>
-                    <td>{{ submission.timestamp|date:"d.m.Y H:i" }}</td>
+                    <td class="td-forced">{{ forloop.counter }}</td>
+                    <td class="td-forced">{{ submission.timestamp|date:"d.m.Y H:i" }}</td>
                     <td>
-                        <a class="no-decoration" href="{% url 'profile' submission.participant.user.username %}">
+                        <a class="no-decoration" href="{% url 'profile' submission.get_participant_username %}">
                             {{ submission.participant.user.username }}
                         </a>
                     </td>
                     <td>
-                        <a class="no-decoration" href="{% url 'contest_problem_detail' submission.contest_problem.contest.id submission.contest_problem.problem.id %}">
+                        <a class="no-decoration" href="{% url 'contest_problem_detail' submission.get_contest_id submission.get_problem_id %}">
                             {{ submission.contest_problem.letter }} - {{ submission.contest_problem.problem }}
                         </a>
                     </td>

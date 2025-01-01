@@ -1,5 +1,13 @@
 @import '../context.css';
 
+.default-table td {
+    text-align: center;
+}
+
+.default-table .title {
+    text-align: left;
+}
+
 .status-solved {
     color: #28a745;
     font-weight: 600;
@@ -12,4 +20,19 @@
 
 .status-unknown {
     color: #6c757d;
+}
+
+.participantion-form, .login-to-participate {
+    margin: 0px;
+    margin-top: 20px;
+}
+
+.participantion-form {
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+}
+
+.participantion-form p {
+    margin: 0px;
 }

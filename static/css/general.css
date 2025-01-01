@@ -113,6 +113,10 @@ form label {
     flex-direction: column;
 }
 
+.text-muted {
+    color: var(--text-muted-color);
+}
+
 .title {
     margin: 0px;
     text-align: center;
@@ -120,6 +124,10 @@ form label {
 
 .text-center {
     text-align: center;
+}
+
+.italic {
+    font-style: italic;
 }
 
 .text-left {
