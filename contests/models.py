@@ -42,7 +42,9 @@ class ContestProblem(models.Model):
     def save(self, *args, **kwargs):
         if not self.letter:
             problem_count = ContestProblem.objects.filter(contest=self.contest).count()
-            self.letter = chr(ord('A') + problem_count)
+            letter = chr(ord('A') + problem_count % 26)
+            number = problem_count // 26
+            self.letter = letter if number == 0 else f"{letter}{number}"
         super().save(*args, **kwargs)
 
     def __str__(self):
@@ -56,10 +58,10 @@ class ContestProblem(models.Model):
 
     def get_description(self):
         return self.problem.description
-    
+
     def get_memory_limit(self):
         return self.problem.memory_limit
-    
+
     def get_time_limit(self):
         return self.problem.time_limit
 
@@ -75,3 +77,11 @@ class ContestSubmission(models.Model):
 
     def __str__(self):
         return f"ContestSubmission by {self.participant} in {self.participant.contest}"
+
+
+class FavoriteContest(models.Model):
+    user = models.ForeignKey(ACJUser, on_delete=models.CASCADE, related_name='favorite_contests')
+    contest = models.ForeignKey(Contest, on_delete=models.CASCADE, related_name='favorited_by')
+
+    def __str__(self):
+        return f"{self.user.username} — {self.contest.title}"

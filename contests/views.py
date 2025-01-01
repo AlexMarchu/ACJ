@@ -1,11 +1,14 @@
 from django.contrib.auth.decorators import login_required
+from django.db.models.functions import Lower
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework import viewsets, status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from contests.models import Contest, ContestProblem, ContestParticipant, ContestSubmission
+from contests.models import Contest, ContestProblem, ContestParticipant, ContestSubmission, FavoriteContest
 from contests.serializers import ContestSerializer, ContestProblemSerializer, ContestParticipantSerializer, \
     ContestSubmissionSerializer
 from problems.models import Submission, SubmissionStatus, SubmissionContent, Language
@@ -34,15 +37,39 @@ class ContestSubmissionViewSet(viewsets.ModelViewSet):
 
 def contests_list(request):
     contests_data = list()
+    search_query = request.GET.get("title", "").strip()
+    show_favorites = request.GET.get("favorites", "").strip() == "true"
 
-    for contest in Contest.objects.all():
+    contests = Contest.objects.all()
+    favorite_contests = set()
+
+    if request.user.is_authenticated:
+        favorite_contests = FavoriteContest.objects.filter(user=request.user).values_list("contest", flat=True)
+        if show_favorites:
+            contests = contests.filter(id__in=favorite_contests)
+        favorite_contests = set(favorite_contests)
+
+    if search_query:
+        # this doesn't works so now we have O(N) search by contest titles
+        # contests = Contest.objects.annotate(lower_title=Lower('title'))
+        # .filter(lower_title__icontains=search_query.lower())
+        contests = list(filter(lambda contest: search_query.lower() in contest.title.lower(), Contest.objects.all()))
+
+    for contest in contests:
         participant = None
         if request.user.is_authenticated:
             participant = ContestParticipant.objects.filter(contest=contest, user=request.user).first()
+            if not contest.is_public and not (request.user.is_admin() or request.user.is_teacher()):
+                continue
+        elif not contest.is_public:
+            continue
+
         contests_data.append((contest, participant))
 
     context = {
         "contests_data": contests_data,
+        "search_query": search_query,
+        "favorite_contests": favorite_contests,
     }
 
     return render(request, "contests/contests_list.html", context)
@@ -220,3 +247,15 @@ def submit_contest_code(request, contest_id, problem_id):
 def check_contest_status(request, contest_id, submission_id):
     submission = get_object_or_404(ContestSubmission, submission_id=submission_id, participant__contest_id=contest_id)
     return JsonResponse({"status": submission.submission.status.status})
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+@csrf_exempt
+def toggle_favorite_contest(request, contest_id):
+    contest = get_object_or_404(Contest, id=contest_id)
+    favorite, created = FavoriteContest.objects.get_or_create(user=request.user, contest=contest)
+    if not created:
+        favorite.delete()
+        return JsonResponse({"status": "deleted"}, status=status.HTTP_200_OK)
+    return JsonResponse({"status": "created"}, status=status.HTTP_201_CREATED)

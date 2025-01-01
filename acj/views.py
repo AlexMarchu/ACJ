@@ -8,7 +8,7 @@ from problems.models import Problem, Language
 def home_view(request):
     # TODO: add homepage
     # return render(request, 'content_base.html')
-    return redirect("contest_list")
+    return redirect("contests_list")
 
 
 @login_required(login_url='/auth/login/')

@@ -74,3 +74,11 @@
 .contests .contests-table tbody tr:hover {
     background-color: #f1f0f0;
 }
+
+.fi.fi-rr-star {
+    transition: color 0.3s ease;
+}
+
+.fi.fi-rr-star.favorite {
+    color: gold;
+}

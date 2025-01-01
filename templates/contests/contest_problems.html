@@ -50,8 +50,9 @@
         {% if not participant %}
             <form action="{% url 'join_contest' contest.id %}" method="post">
                 {% csrf_token %}
+                {% if not contest.is_finished %}
                 <button type="submit" class="btn-primary">Участвовать</button>
-                {% if contest.is_finished %}
+                {% else %}
                     <p>Турнир уже завершился, но вы можете поучаствовать виртуально</p>
                     <button type="submit" class="btn-primary">Участвовать виртуально</button>
                 {% endif %}
