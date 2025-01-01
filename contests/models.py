@@ -17,6 +17,9 @@ class Contest(models.Model):
     def __str__(self):
         return self.title
 
+    def is_started(self):
+        return timezone.now() >= self.start_time
+
     def is_active(self):
         return self.start_time <= timezone.now() <= self.end_time
 

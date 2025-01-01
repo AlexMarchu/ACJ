@@ -95,7 +95,7 @@ def contest_problems(request, contest_id):
             ).values_list('contest_problem__problem_id', flat=True)
             solved_problems = set(accepted_submissions)
 
-    if not contest.is_active() and contest.hide_problems_until_start:
+    if not contest.is_started() and contest.hide_problems_until_start:
         problems = ContestProblem.objects.none()
 
     context = {
