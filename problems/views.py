@@ -5,6 +5,8 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
 
 from contests.models import Contest, ContestProblem
 from problems.models import SubmissionStatus, Language, Problem, Test, SubmissionContent, Submission, \
@@ -127,6 +129,9 @@ def update_submission_status(submission, tokens):
                 output=result.get("stdout", ""),
             )
 
+            submission.execution_time = test_result.execution_time
+            submission.memory_used = test_result.memory_used
+
             if test_result.memory_used > submission.problem.memory_limit * 1024:
                 submission.status.status = SubmissionStatus.StatusChoices.MEMORY_LIMIT_EXCEEDED
                 submission.status.save()
@@ -140,6 +145,19 @@ def update_submission_status(submission, tokens):
                 submission.save()
                 print(f"Updated submission {submission.id} status to {submission.status.status}")
                 break
+
+            async_to_sync(get_channel_layer().group_send)(
+                f"submission_{submission.id}",
+                {
+                    "type": "send_test_results",
+                    "data": {
+                        "test_id": test_id,
+                        "test_status": test_result.status,
+                        "test_execution_time": test_result.execution_time,
+                        "test_memory_used": test_result.memory_used,
+                    }
+                }
+            )
         except Exception as exception:
             print(f"Error while update submission status: {str(exception)}")
     else:

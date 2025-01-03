@@ -11,6 +11,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -20,10 +21,12 @@ INSTALLED_APPS = [
     'rest_framework',
     'djoser',
     'django_ckeditor_5',
+    'channels',
     'users',
     'problems',
     'celery_app',
     'contests',
+    'channels_app',
 ]
 
 MIDDLEWARE = [
@@ -62,6 +65,7 @@ STATICFILES_DIRS = [
 ]
 
 WSGI_APPLICATION = 'acj.wsgi.application'
+ASGI_APPLICATION = "acj.asgi.application"
 
 DATABASES = {
     'default': {
@@ -101,6 +105,12 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
     ],
+}
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }
 }
 
 EMAIL_HOST = 'smtp.yandex.ru'
