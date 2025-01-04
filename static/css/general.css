@@ -137,6 +137,9 @@ form label {
 .default-table th, .default-table td {
     padding: 12px 14px;
     border: 1px solid #e0e0e0;
+}
+
+.default-table td {
     text-align: center;
 }
 
@@ -169,4 +172,12 @@ form label {
 
 .text-right {
     text-align: right;
+}
+
+.fi.fi-rr-star {
+    transition: color 0.2s;
+}
+
+.fi.fi-rr-star.golden {
+    color: gold;
 }

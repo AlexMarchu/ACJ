@@ -8,7 +8,7 @@
 {% block content %}
     <link rel="stylesheet" href="{% static 'css/settings/settings.css' %}">
     <div class="container">
-        <form method="post">
+        <form method="POST">
             {% csrf_token %}
             {{ profile_form.as_p }}
             <button type="submit" class="primary-btn" name="profile_submit">Сохранить</button>
@@ -22,7 +22,7 @@
         </div>
     </div>
     <div class="container">
-        <form method="post">
+        <form method="POST">
             {% csrf_token %}
             {{ password_form.as_p }}
             <button type="submit" class="primary-btn" name="password_submit">Изменить пароль</button>

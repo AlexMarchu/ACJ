@@ -10,7 +10,13 @@
     <link rel="stylesheet" href="{% static 'css/contests/contest_base.css' %}">
     <script src="{% static 'js/tabs.js' %}"></script>
     <div class="container">
-        <h1 class="title">{{ contest.title }}</h1>
+        <div class="dc-wrapper heading">
+            <h1 class="title text-left">{{ contest.title }}</h1>
+            <a class="no-decoration favorite-btn" href="{% url 'toggle_favorite_contest' contest.id %}"
+                            data-contest-id="{{ contest.id }}" data-csrf-token="{{ csrf_token }}">
+                <i class="fi fi-rr-star {% if contest.id in favorite_contests %}golden{% endif %}"></i>
+            </a>
+        </div>
         <p class="info">{{ contest.start_time|date:"d.m.Y H:i" }}, {% hours_between contest.start_time contest.end_time %}</p>
         <div class="tabs">
             <a class="no-decoration tab" id="problems-tab" href="{% url 'contest_problems' contest.id %}">Задачи</a>
@@ -21,4 +27,5 @@
         {% block inner-content %}
         {% endblock %}
     </div>
+    <script src="{% static 'js/favorites.js' %}"></script>
 {% endblock %}

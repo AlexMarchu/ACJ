@@ -12,9 +12,9 @@ function setupFavoriteButtons() {
         })
         .then(response => {
             if (response.data.status === "created") {
-                button.querySelector("i").classList.add("favorite");
+                button.querySelector("i").classList.add("golden");
             } else {
-                button.querySelector("i").classList.remove("favorite");
+                button.querySelector("i").classList.remove("golden");
             }
         })
         .catch(error => {

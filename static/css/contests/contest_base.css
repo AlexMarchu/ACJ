@@ -6,8 +6,13 @@
     padding-top: 12px;
 }
 
-.title {
-    text-align: left;
+.heading {
+    justify-content: space-between;
+    align-items: center;
+}
+
+.heading .favorite-btn {
+    font-size: 16pt;
 }
 
 .info {

@@ -78,14 +78,6 @@
     border-bottom: none;
 }
 
-.fi.fi-rr-star {
-    transition: color 0.2s;
-}
-
-.fi.fi-rr-star.favorite {
-    color: gold;
-}
-
 .no-contests {
     margin: 14px 0px 3px 0px;
     text-align: center;

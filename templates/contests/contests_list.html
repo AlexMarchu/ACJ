@@ -10,8 +10,8 @@
     <link rel="stylesheet" href="{% static 'css/contests/contests_list.css' %}">
     <div class="dc-wrapper">
         <div class="container search">
-            <h1 class="title">Поиск</h1>
-            <form method="get" action="{% url 'contests_list' %}">
+            <h1 class="title text-center">Поиск</h1>
+            <form method="GET" action="{% url 'contests_list' %}">
                 <input type="search" name="title" placeholder="Название контеста..." value="{{ search_query }}"/>
                 <button type="submit" class="primary-btn" id="search-btn"><i class="fi fi-rr-search"></i></button>
             </form>
@@ -38,7 +38,7 @@
                             <td class="icon">
                                 <a class="no-decoration favorite-btn" href="{% url 'toggle_favorite_contest' contest.id %}"
                                     data-contest-id="{{ contest.id }}" data-csrf-token="{{ csrf_token }}">
-                                    <i class="fi fi-rr-star {% if contest.id in favorite_contests %}favorite{% endif %}"></i>
+                                    <i class="fi fi-rr-star {% if contest.id in favorite_contests %}golden{% endif %}"></i>
                                 </a>
                             </td>
                             <td class="icon">

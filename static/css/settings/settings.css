@@ -21,6 +21,7 @@
 }
 
 .capture .description {
+    margin-top: 10px;
     font-size: 14pt;
     text-align: center;
 }
