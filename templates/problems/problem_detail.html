@@ -6,30 +6,32 @@
 {% endblock %}
 
 {% block content %}
-    <link rel="stylesheet" href="{% static 'css/problems/problems_list.css' %}">
-    <div class="problem-detail-container">
-        <h1>Задача {% if problem_letter %}{{ problem_letter }}{% else %}{{ problem.id }}{% endif %}. {{ problem.title }}</h1>
-        <div class="problem-info">
-            <p><strong>Автор:</strong> {{ problem.author.username }}</p>
-            <p><strong>Ограничение по времени:</strong> {{ problem.time_limit }} сек</p>
-            <p><strong>Ограничение по памяти:</strong> {{ problem.memory_limit }} МБ</p>
+    <link rel="stylesheet" href="{% static 'css/problems/problem_detail.css' %}">
+    <div class="container">
+        <div class="info">
+            <h1 class="title">Задача {% if problem_letter %}{{ problem_letter }}{% else %}{{ problem.id }}{% endif %}. {{ problem.title }}</h1>
+            <p><strong>Автор: </strong>{{ problem.author.username }}</p>
+            <p><strong>Ограничение по времени: </strong>{{ problem.time_limit }} сек</p>
+            <p><strong>Ограничение по памяти: </strong>{{ problem.memory_limit }} МБ</p>
         </div>
-        <div class="problem-description">
-            <h2>Условие</h2>
+        <div class="description">
+            <h2 class="title">Условие</h2>
             <p>{{ problem.description|safe }}</p>
         </div>
-        <div class="problem-formats">
-            <h2>Формат входных данных</h2>
+        <div class="input-format">
+            <h2 class="title">Формат входных данных</h2>
             <p>{{ problem.input_format }}</p>
-            <h2>Формат выходных данных</h2>
+        </div>
+        <div  class="output-format">
+            <h2 class="title">Формат выходных данных</h2>
             <p>{{ problem.output_format }}</p>
         </div>
-        <div class="problem-tests">
-            <h2>Примеры тестов</h2>
-            <table>
+        <div class="tests">
+            <h2 class="title">Примеры тестов</h2>
+            <table class="default-table tests-table">
                 <thead>
                     <tr>
-                        <th>№</th>
+                        <th class="td-forced">№</th>
                         <th>Стандартный вход</th>
                         <th>Стандартный выход</th>
                     </tr>
@@ -37,7 +39,7 @@
                 <tbody>
                     {% for test in visible_tests %}
                         <tr>
-                            <td>{{ forloop.counter }}</td>
+                            <td class="td-forced">{{ forloop.counter }}</td>
                             <td><pre>{{ test.stdin }}</pre></td>
                             <td><pre>{{ test.expected_output }}</pre></td>
                         </tr>
@@ -45,8 +47,8 @@
                 </tbody>
             </table>
         </div>
-        <div class="code-editor">
-            <span>
+        <div class="submission">
+            <div class="dc-wrapper">
                 <select id="language-select">
                     {% for language in languages %}
                         <option value="{{ language.language_id }}">{{ language.name }}</option>
@@ -54,11 +56,12 @@
                 </select>
                 <input type="file" id="code-file-input"
                        accept=".c,.cs,.cpp,.go,.hs,.java,.js,.pas,.php,.py,.rs,.ts,.kt,.sql,.pl">
-            </span>
+                <label for="code-file-input" class="primary-btn file-upload-btn">Выбрать файл</label>
+            </div>
             <textarea id="code-input"></textarea>
             {% if request.user.is_authenticated %}
                 {% if participant or not contest %}
-                    <button id="submit-code">Отправить</button>
+                    <button class="primary-btn" id="submit-code">Отправить</button>
                 {% else %}
                     <p>Присоединитесь к турниру, чтобы иметь возможность отправлять решения</p>
                 {% endif %}
@@ -158,8 +161,4 @@
             });
         }
     </script>
-{% endblock %}
-
-{% block footer %}
-
 {% endblock %}

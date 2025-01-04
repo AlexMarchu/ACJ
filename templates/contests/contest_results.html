@@ -5,10 +5,10 @@
 {% block inner-content %}
     <link rel="stylesheet" href="{% static 'css/contests/contest_results.css' %}">
     <h2 class="title">Результаты</h2>
-    <table class="results-table">
+    <table class="default-table">
         <thead>
             <tr>
-                <th>№</th>
+                <th class="td-forced">#</th>
                 <th>Участник</th>
                 {% for problem in problems %}
                     <th>{{ problem.letter }}</th>
@@ -21,7 +21,7 @@
         <tbody>
             {% for result in results %}
                 <tr>
-                    <td>{{ forloop.counter }}</td>
+                    <td class="td-forced">{{ forloop.counter }}</td>
                     <td>{{ result.user.username }}</td>
                     {% for problem in problems %}
                         <td>{{ result.problems|get_item:problem.letter }}</td>
@@ -35,6 +35,10 @@
                             офиц.
                         {% endif %}
                     </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="100%" class="no-data">Нет участников</td>
                 </tr>
             {% endfor %}
         </tbody>

@@ -1,0 +1,78 @@
+@import '../context.css';
+
+.container {
+    padding: 20px;
+    padding-top: 12px;
+    display: flex;
+    flex-direction: column;
+    row-gap: 12px;
+}
+
+p {
+    margin: 0px;
+}
+
+h2.title {
+    margin-bottom: 6px;
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px solid #e0e0e0;
+    row-gap: 6px;
+    padding-bottom: 10px;
+}
+
+.tests-table {
+    width: 40%;
+    margin-top: 10px;
+}
+
+.tests-table td {
+    text-align: left;
+}
+
+.tests-table pre {
+    margin: 0;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.submission {
+    display: flex;
+    flex-direction: column;
+    row-gap: 12px;
+}
+
+.submission .dc-wrapper {
+    column-gap: 8px;
+}
+
+.submission select {
+    padding: 8px 12px;
+}
+
+.submission #language-select {
+    width: 215px;
+}
+
+.submission #code-file-input {
+    display: none;
+}
+
+.submission #code-input {
+    box-sizing: border-box;
+    width: 700px;
+    height: 230px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-family: monospace;
+    font-size: 10.5pt;
+    resize: none;
+}
+
+.submission #submission-status {
+    margin-top: 10px;
+}

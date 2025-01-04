@@ -119,23 +119,10 @@ form label {
 
 .title {
     margin: 0px;
-    text-align: center;
-}
-
-.text-center {
-    text-align: center;
 }
 
 .italic {
     font-style: italic;
-}
-
-.text-left {
-    text-align: left;
-}
-
-.text-right {
-    text-align: right;
 }
 
 .default-table {
@@ -145,12 +132,12 @@ form label {
 
 .default-table th {
     background-color: #f9f9f9;
-    font-weight: 600;
 }
 
 .default-table th, .default-table td {
     padding: 12px 14px;
     border: 1px solid #e0e0e0;
+    text-align: center;
 }
 
 .default-table a {
@@ -161,7 +148,25 @@ form label {
     text-decoration: underline;
 }
 
+.default-table .no-data {
+    text-align: center;
+    color: var(--text-muted-color);
+    font-style: italic;
+}
+
 .td-forced {
     white-space: nowrap;
     width: 1%;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.text-right {
+    text-align: right;
 }

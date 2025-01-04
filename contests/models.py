@@ -89,6 +89,9 @@ class ContestSubmission(models.Model):
     
     def get_problem_id(self):
         return self.contest_problem.problem.id
+    
+    def get_submission_id(self):
+        return self.submission.id
 
 
 class FavoriteContest(models.Model):
