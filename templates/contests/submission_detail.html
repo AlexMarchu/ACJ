@@ -35,7 +35,7 @@
             </tr>
             <tr>
                 <th>Состояние</th>
-                <td>{{ submission.status.status }}</td>
+                <td id="submission-status">{{ submission.status.status }}</td>
             </tr>
         </table>
 
@@ -54,7 +54,7 @@
             </thead>
             <tbody>
                 {% for test in tests %}
-                    <tr>
+                    <tr id="test-{{ test.id }}">
                         <td>{{ forloop.counter }}</td>
                         <td>{{ test.status }}</td>
                         <td>{{ test.execution_time }}</td>
@@ -64,4 +64,37 @@
             </tbody>
         </table>
     </div>
+
+    <script>
+        const submissionId = {{ submission.id }};
+        const wsProtocol = window.location.protocol === "https:" ? "wss://" : "ws://";
+        const wsPath = wsProtocol + window.location.host + "/ws/submission/" + submissionId + "/";
+
+        const socket = new WebSocket(wsPath);
+
+        socket.onopen = function(event) {
+            console.log("WebSocket successfully opened");
+        };
+
+        socket.onmessage = function(event) {
+            const data = JSON.parse(event.data);
+            const testRow = document.getElementById(`test-${data.test_id}`);
+            if (testRow) {
+                testRow.cells[1].textContent = data.test_status;
+                testRow.cells[2].textContent = data.test_execution_time;
+                testRow.cells[3].textContent = data.test_memory_used;
+            }
+
+            const submissionStatus = document.getElementById("submission-status");
+            submissionStatus.textContent = data.test_status;
+        };
+
+        socket.onclose = function(event) {
+            console.log("Socket closed", event);
+        };
+
+        socket.onerror = function(event) {
+            console.error("Socker error: ", error);
+        };
+    </script>
 {% endblock %}

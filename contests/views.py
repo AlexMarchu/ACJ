@@ -1,5 +1,3 @@
-from unittest import TestResult
-
 from django.contrib.auth.decorators import login_required
 from django.db.models.functions import Lower
 from django.http import JsonResponse
