@@ -7,6 +7,7 @@
 
 {% block content %}
     <link rel="stylesheet" href="{% static 'css/problems/problems_list.css' %}">
+    <div id="data-translator" data-submission-id="{{ submission.id }}" data-is-checking="{{ is_checking }}"></div>
     <div class="problem-detail-container">
         <table class="results-table">
             <tr>
@@ -65,36 +66,5 @@
         </table>
     </div>
 
-    <script>
-        const submissionId = {{ submission.id }};
-        const wsProtocol = window.location.protocol === "https:" ? "wss://" : "ws://";
-        const wsPath = wsProtocol + window.location.host + "/ws/submission/" + submissionId + "/";
-
-        const socket = new WebSocket(wsPath);
-
-        socket.onopen = function(event) {
-            console.log("WebSocket successfully opened");
-        };
-
-        socket.onmessage = function(event) {
-            const data = JSON.parse(event.data);
-            const testRow = document.getElementById(`test-${data.test_id}`);
-            if (testRow) {
-                testRow.cells[1].textContent = data.test_status;
-                testRow.cells[2].textContent = data.test_execution_time;
-                testRow.cells[3].textContent = data.test_memory_used;
-            }
-
-            const submissionStatus = document.getElementById("submission-status");
-            submissionStatus.textContent = data.test_status;
-        };
-
-        socket.onclose = function(event) {
-            console.log("Socket closed", event);
-        };
-
-        socket.onerror = function(event) {
-            console.error("Socket error: ", event.data);
-        };
-    </script>
+    <script src="{% static 'js/sockets.js' %}"></script>
 {% endblock %}

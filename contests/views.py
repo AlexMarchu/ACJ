@@ -156,10 +156,14 @@ def contest_results(request, contest_id):
     participants = ContestParticipant.objects.filter(contest=contest).select_related("user")
     problems = ContestProblem.objects.filter(contest=contest).order_by("letter")
 
+    hide_virtual = request.GET.get("hide_virtual", "true").lower() == "true"
+    if hide_virtual:
+        participants = participants.filter(is_virtual=False)
+
     results = list()
     for participant in participants:
         row_data = {
-            "user": participant.user,
+            "participant": participant,
             "status": participant.is_virtual,
             "problems": dict(),
             "solved_count": 0,
@@ -168,25 +172,34 @@ def contest_results(request, contest_id):
             submissions = ContestSubmission.objects.filter(
                 participant=participant,
                 contest_problem=problem,
-            ).select_related("submission__status")
-            if submissions.exists():
-                row_data["problems"][problem.letter] = "+" if any(
-                    submission.submission.status.status == SubmissionStatus.StatusChoices.ACCEPTED for submission in
-                    submissions) else "-"
+            ).select_related("submission__status").order_by("timestamp")
+
+            submissions_count = submissions.count()
+            accepted_submission_number = None
+
+            for number, submission in enumerate(submissions, start=1):
+                if (submission.submission.status.status == SubmissionStatus.StatusChoices.ACCEPTED):
+                    accepted_submission_number = number
+                    break
+
+            if accepted_submission_number is not None:
+                row_data["problems"][problem.letter] = f"+{accepted_submission_number if accepted_submission_number != 1 else ''}"
             else:
-                row_data["problems"][problem.letter] = "."
-        row_data["solved_count"] = list(row_data["problems"].values()).count("+")
+                row_data["problems"][problem.letter] = f"-{submissions_count}" if submissions_count else "."
+
+        row_data["solved_count"] = sum(map(lambda x: x.startswith("+"), row_data["problems"].values()))
         results.append(row_data)
 
     results.sort(key=lambda x: x["solved_count"], reverse=True)
-    for index, result in enumerate(results):
-        result["place"] = index + 1
+    for number, result in enumerate(results):
+        result["place"] = number + 1
 
     context = {
         "contest": contest,
         "problems": problems,
         "results": results,
         "is_favorite": FavoriteContest.objects.filter(user=request.user, contest=contest).exists(),
+        "hide_virtual": hide_virtual,
     }
 
     return render(request, "contests/contest_results.html", context)
@@ -222,11 +235,13 @@ def submission_detail(request, contest_id, submission_id):
                                            participant__contest_id=contest_id)
     submission = contest_submission.submission
     tests = submission.test_results.exclude(status=SubmissionStatus.StatusChoices.PENDING)
+    is_checking = submission.status.status == SubmissionStatus.StatusChoices.PENDING
 
     context = {
         "contest": contest_submission.contest_problem.contest,
         "submission": submission,
         "tests": tests,
+        "is_checking": is_checking,
     }
 
     return render(request, "contests/submission_detail.html", context)
