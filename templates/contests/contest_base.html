@@ -14,7 +14,7 @@
             <h1 class="title text-left">{{ contest.title }}</h1>
             <a class="no-decoration favorite-btn" href="{% url 'toggle_favorite_contest' contest.id %}"
                             data-contest-id="{{ contest.id }}" data-csrf-token="{{ csrf_token }}">
-                <i class="fi fi-rr-star {% if contest.id in favorite_contests %}golden{% endif %}"></i>
+                <i class="fi fi-rr-star {% if contest.id in favorite_contests or is_favorite %}golden{% endif %}"></i>
             </a>
         </div>
         <p class="info">{{ contest.start_time|date:"d.m.Y H:i" }}, {% hours_between contest.start_time contest.end_time %}</p>

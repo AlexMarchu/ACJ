@@ -103,6 +103,7 @@ def contest_problems(request, contest_id):
         "problems": problems,
         "solved_problems": solved_problems,
         "participant": participant,
+        "is_favorite": FavoriteContest.objects.filter(user=request.user, contest=contest).exists(),
     }
 
     return render(request, "contests/contest_problems.html", context)
@@ -144,6 +145,7 @@ def contest_submissions(request, contest_id):
     context = {
         "contest": contest,
         "submissions": submissions,
+        "is_favorite": FavoriteContest.objects.filter(user=request.user, contest=contest).exists(),
     }
 
     return render(request, "contests/contest_submissions.html", context)
@@ -184,6 +186,7 @@ def contest_results(request, contest_id):
         "contest": contest,
         "problems": problems,
         "results": results,
+        "is_favorite": FavoriteContest.objects.filter(user=request.user, contest=contest).exists(),
     }
 
     return render(request, "contests/contest_results.html", context)
