@@ -1,48 +1,7 @@
 @import '../context.css';
 
-.problems-container {
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
-    padding: 20px;
-    margin-bottom: 50px;
-}
-
-.problem-card {
-    background-color: #ffffff;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    width: 320px;
-    text-align: center;
-    transition: transform 0.3s ease;
-}
-
-.problem-card h3 {
-    margin-top: 0;
-}
-
-.problem-card p {
-    color: #555;
-}
-
-.problem-card a {
-    display: inline-block;
-    margin-top: 10px;
-    padding: 8px 16px;
-    background-color: rgb(75, 75, 243);
-    color: white;
-    text-decoration: none;
-    border-radius: 6px;
-    transition: background-color 0.3s ease;
-}
-
-.problem-card a:hover {
-    background-color: #5a3de6;
+.default-table td {
+    text-align: left;
 }
 
 .problem-detail-container {

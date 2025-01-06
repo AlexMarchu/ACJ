@@ -7,11 +7,13 @@ from problems.models import Test, Problem, ProblemTag, SubmissionStatus, Submiss
 
 
 class TestInline(admin.TabularInline):
+
     model = Test
     extra = 1
 
 
 class ProblemAdminForm(forms.ModelForm):
+
     description = forms.CharField(widget=CKEditor5Widget(config_name='default'))
 
     class Meta:
@@ -20,6 +22,7 @@ class ProblemAdminForm(forms.ModelForm):
 
 
 class ProblemAdmin(admin.ModelAdmin):
+    
     form = ProblemAdminForm
 
     class Media:

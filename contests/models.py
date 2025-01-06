@@ -6,6 +6,7 @@ from problems.models import Problem, Submission
 
 
 class Contest(models.Model):
+
     title = models.CharField(max_length=150)
     description = models.TextField(null=True, blank=True)
     start_time = models.DateTimeField(default=timezone.now)
@@ -28,6 +29,7 @@ class Contest(models.Model):
 
 
 class ContestParticipant(models.Model):
+
     contest = models.ForeignKey(Contest, on_delete=models.CASCADE, related_name='participants_info')
     user = models.ForeignKey(ACJUser, on_delete=models.CASCADE, related_name='contests_participations')
     joined_at = models.DateTimeField(auto_now_add=True)
@@ -38,6 +40,7 @@ class ContestParticipant(models.Model):
 
 
 class ContestProblem(models.Model):
+
     contest = models.ForeignKey(Contest, on_delete=models.CASCADE, related_name='problems')
     problem = models.ForeignKey(Problem, on_delete=models.CASCADE, related_name='contests')
     letter = models.CharField(max_length=3, blank=True, null=True)
@@ -73,6 +76,7 @@ class ContestProblem(models.Model):
 
 
 class ContestSubmission(models.Model):
+
     participant = models.ForeignKey(ContestParticipant, on_delete=models.CASCADE, related_name='submissions')
     contest_problem = models.ForeignKey(ContestProblem, on_delete=models.CASCADE, related_name='submissions', default=1)
     submission = models.ForeignKey(Submission, on_delete=models.CASCADE, related_name='contest_submissions')
@@ -95,6 +99,7 @@ class ContestSubmission(models.Model):
 
 
 class FavoriteContest(models.Model):
+    
     user = models.ForeignKey(ACJUser, on_delete=models.CASCADE, related_name='favorite_contests')
     contest = models.ForeignKey(Contest, on_delete=models.CASCADE, related_name='favorited_by')
 

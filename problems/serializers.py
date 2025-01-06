@@ -4,12 +4,14 @@ from problems.models import Problem, Test, ProblemTag
 
 
 class ProblemTagSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = ProblemTag
         fields = ["id", "name"]
 
 
 class TestSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Test
         fields = ["id", "problem", "stdin", "expected_output"]
@@ -19,6 +21,7 @@ class TestSerializer(serializers.ModelSerializer):
 
 
 class ProblemSerializer(serializers.ModelSerializer):
+    
     class Meta:
         model = Problem
         fields = ["id", "title", "description", "input_format", "output_format", "time_limit",

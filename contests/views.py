@@ -16,21 +16,25 @@ from problems.views import submit_to_judge0, update_submission_status
 
 
 class ContestViewSet(viewsets.ModelViewSet):
+
     queryset = Contest.objects.all()
     serializer_class = ContestSerializer
 
 
 class ContestProblemViewSet(viewsets.ModelViewSet):
+
     queryset = ContestProblem.objects.all()
     serializer_class = ContestProblemSerializer
 
 
 class ContestParticipantViewSet(viewsets.ModelViewSet):
+
     queryset = ContestParticipant.objects.all()
     serializer_class = ContestParticipantSerializer
 
 
 class ContestSubmissionViewSet(viewsets.ModelViewSet):
+    
     queryset = ContestSubmission.objects.all()
     serializer_class = ContestSubmissionSerializer
 
@@ -53,7 +57,7 @@ def contests_list(request):
         # this doesn't works so now we have O(N) search by contest titles
         # contests = Contest.objects.annotate(lower_title=Lower('title'))
         # .filter(lower_title__icontains=search_query.lower())
-        contests = list(filter(lambda contest: search_query.lower() in contest.title.lower(), Contest.objects.all()))
+        contests = list(filter(lambda contest: search_query.lower() in contest.title.lower(), contests))
 
     for contest in contests:
         participant = None
@@ -168,6 +172,7 @@ def contest_results(request, contest_id):
             "problems": dict(),
             "solved_count": 0,
         }
+        
         for problem in problems:
             submissions = ContestSubmission.objects.filter(
                 participant=participant,
@@ -191,8 +196,8 @@ def contest_results(request, contest_id):
         results.append(row_data)
 
     results.sort(key=lambda x: x["solved_count"], reverse=True)
-    for number, result in enumerate(results):
-        result["place"] = number + 1
+    for number, result in enumerate(results, start=1):
+        result["place"] = number
 
     context = {
         "contest": contest,

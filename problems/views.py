@@ -2,6 +2,8 @@ import requests
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.views.decorators.csrf import csrf_exempt
+from django.db.models import Q
+from django.utils import timezone
 from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -15,23 +17,8 @@ from problems.permissions import IsAdminOrTeacher
 from problems.serializers import ProblemSerializer, TestSerializer
 
 
-def problem_list(request):
-    queryset = Problem.objects.filter(contests__isnull=True)
-
-    visible_contests = Contest.objects.filter(hide_problems_until_start=False)
-    visible_contest_problems = ContestProblem.objects.filter(contest__in=visible_contests)
-    visible_problems_ids = visible_contest_problems.values_list("problem_id", flat=True)
-
-    queryset = queryset | Problem.objects.filter(id__in=visible_problems_ids)
-
-    context = {
-        "problems": list(queryset),
-    }
-
-    return render(request, "problems/problem_list.html", context)
-
-
 class ProblemViewSet(viewsets.ModelViewSet):
+
     queryset = Problem.objects.all()
     serializer_class = ProblemSerializer
 
@@ -42,6 +29,7 @@ class ProblemViewSet(viewsets.ModelViewSet):
 
 
 class TestViewSet(viewsets.ModelViewSet):
+
     queryset = Test.objects.all()
     serializer_class = TestSerializer
 
@@ -49,6 +37,24 @@ class TestViewSet(viewsets.ModelViewSet):
         if self.action in ["create", "update", "partial_update", "destroy"]:
             return [permissions.IsAuthenticated(), IsAdminOrTeacher()]
         return [permissions.IsAuthenticated()]
+
+
+def problem_list(request):
+    queryset = Problem.objects.filter(contests__isnull=True)
+
+    visible_contests = Contest.objects.filter(
+        Q(hide_problems_until_start=False) | Q(start_time__lte=timezone.now())
+    )
+    visible_contest_problems = ContestProblem.objects.filter(contest__in=visible_contests)
+    visible_problems_ids = visible_contest_problems.values_list("problem_id", flat=True)
+
+    queryset = queryset | Problem.objects.filter(id__in=visible_problems_ids)
+
+    context = {
+        "problems": list(queryset),
+    }
+
+    return render(request, "problems/problem_list.html", context)
 
 
 def submit_to_judge0(submission):

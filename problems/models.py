@@ -6,10 +6,12 @@ User = get_user_model()
 
 
 class ProblemTag(models.Model):
+
     name = models.CharField(max_length=128)
 
 
 class Problem(models.Model):
+
     title = models.CharField(max_length=255)
     author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name="problems")
     description = CKEditor5Field('description', config_name='extends')
@@ -28,12 +30,14 @@ class Problem(models.Model):
 
 
 class Test(models.Model):
+
     problem = models.ForeignKey(Problem, on_delete=models.CASCADE, related_name="tests")
     stdin = models.TextField(blank=True)
     expected_output = models.TextField()
 
 
 class Language(models.Model):
+
     name = models.CharField(max_length=128, unique=True)
     language_id = models.IntegerField(unique=True)
 
@@ -42,11 +46,14 @@ class Language(models.Model):
 
 
 class SubmissionContent(models.Model):
+
     content = models.TextField(verbose_name="Код")
 
 
 class SubmissionStatus(models.Model):
+
     class StatusChoices(models.TextChoices):
+
         PENDING = "NP", "PENDING"
         ACCEPTED = "OK", "ACCEPTED"
         REJECTED = "RJ", "REJECTED"
@@ -67,6 +74,7 @@ class SubmissionStatus(models.Model):
 
 
 class Submission(models.Model):
+
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     problem = models.ForeignKey(Problem, on_delete=models.CASCADE)
     language = models.ForeignKey(Language, on_delete=models.CASCADE)
@@ -81,6 +89,7 @@ class Submission(models.Model):
 
 
 class SubmissionTestResult(models.Model):
+    
     submission = models.ForeignKey(Submission, on_delete=models.CASCADE, related_name="test_results")
     test = models.ForeignKey(Test, on_delete=models.CASCADE)
     status = models.CharField(choices=SubmissionStatus.StatusChoices.choices, max_length=3, default=SubmissionStatus.StatusChoices.PENDING)

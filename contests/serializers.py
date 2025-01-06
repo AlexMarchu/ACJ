@@ -5,6 +5,7 @@ from problems.serializers import ProblemSerializer
 
 
 class ContestProblemSerializer(serializers.ModelSerializer):
+
     problem = ProblemSerializer()
 
     class Meta:
@@ -13,6 +14,7 @@ class ContestProblemSerializer(serializers.ModelSerializer):
 
 
 class ContestSerializer(serializers.ModelSerializer):
+
     problems = ContestProblemSerializer(many=True, read_only=True)
 
     class Meta:
@@ -21,12 +23,14 @@ class ContestSerializer(serializers.ModelSerializer):
 
 
 class ContestParticipantSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = ContestParticipant
         fields = ["id", "user", "contest", "joined_at"]
 
 
 class ContestSubmissionSerializer(serializers.ModelSerializer):
+    
     class Meta:
         model = ContestSubmission
         fields = ["id", "participant", "submission", "timestamp"]
