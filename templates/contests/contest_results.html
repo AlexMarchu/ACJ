@@ -4,14 +4,18 @@
 
 {% block inner-content %}
     <link rel="stylesheet" href="{% static 'css/contests/contest_results.css' %}">
-    <h2 class="title">Результаты</h2>
-    <a class="no-decoration" href="?hide_virtual={{ hide_virtual|yesno:'false,true' }}">
-        {% if hide_virtual %}
-            Показать виртуальные
-        {% else %}
-            Скрыть виртуальные
-        {% endif %}
-    </a>
+    <div class="top-panel">
+        <h2 class="title">Результаты</h2>
+        <div class="filters">
+            <a class="no-decoration default-btn" href="?hide_virtual={{ hide_virtual|yesno:'false,true' }}">
+                {{ hide_virtual|yesno:'Показать виртуальные,Скрыть виртуальные' }}
+            </a>
+            <div class="v-separator">|</div>
+            <a class="no-decoration default-btn" href="?hide_official={{ hide_official|yesno:'false,true' }}">
+                {{ hide_official|yesno:'Показать оффициальные,Скрыть оффициальные' }}
+            </a>
+        </div>
+    </div>
     <table class="default-table">
         <thead>
             <tr>

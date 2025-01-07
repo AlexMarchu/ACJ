@@ -1,1 +1,19 @@
 @import '../context.css';
+
+.top-panel {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.top-panel .title {
+    margin: 0px;
+}
+
+.filters {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    column-gap: 3px;
+}
