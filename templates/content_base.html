@@ -31,21 +31,22 @@
             </svg>
         </a>
         <div id="header-actions">
+            <a class="no-decoration default-btn" href="{% url 'contests_list' %}">Контесты</a>
+            <div class="v-separator">|</div>
+            <a class="no-decoration default-btn" href="{% url 'problem_list' %}">Задачи</a>
+            <div class="v-separator">|</div>
+
             {% if user.is_authenticated %}
                 {% if user.is_teacher or user.is_admin %}
                     <div class="menu" id="creation-menu">
                         <a class="no-decoration default-btn menu-trigger"><i id="creation-icon" class="fi fi-rr-apps-add"></i></a>
                         <div class="container menu-content">
-                            <a class="no-decoration default-btn menu-item" href="{% url 'home' %}"><i class="fi fi-rr-star"></i>Создать задачу</a>
                             <a class="no-decoration default-btn menu-item" href="{% url 'home' %}"><i class="fi fi-rr-trophy"></i>Создать контест</a>
+                            <a class="no-decoration default-btn menu-item" href="{% url 'home' %}"><i class="fi fi-rr-star"></i>Создать задачу</a>
                         </div>
                     </div>
+                    <div class="v-separator">|</div>
                 {% endif %}
-                <a class="no-decoration default-btn menu-trigger" href="{% url 'problem_list' %}">Задачи</a>
-                <div class="v-separator">|</div>
-                <a class="no-decoration default-btn menu-trigger" href="{% url 'contests_list' %}">Турниры</a>
-                <div class="v-separator">|</div>
-
                 <div class="menu" id="profile-menu">
                     <a class="no-decoration default-btn menu-trigger">{{ user.username }}</a>
                     <div class="container menu-content">
@@ -55,14 +56,7 @@
                     </div>
                 </div>
             {% else %}
-                <a class="no-decoration default-btn menu-trigger" href="{% url 'problem_list' %}">Задачи</a>
-                <div class="v-separator">|</div>
-                <a class="no-decoration default-btn menu-trigger" href="{% url 'contests_list' %}">Турниры</a>
-                <div class="v-separator">|</div>
-                
                 <a class="no-decoration default-btn" href="{% url 'login' %}">Войти</a>
-                <div class="v-separator">|</div>
-                <a class="no-decoration default-btn" href="{% url 'register' %}">Зарегистрироваться</a>
             {% endif %}
         </div>
     </header>

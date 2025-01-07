@@ -4,10 +4,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from problems.models import Problem, Language
 
 
-@login_required(login_url='/auth/login/')
 def home_view(request):
-    # TODO: add homepage
-    # return render(request, 'content_base.html')
     return redirect("contests_list")
 
 

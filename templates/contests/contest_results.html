@@ -4,14 +4,14 @@
 
 {% block inner-content %}
     <link rel="stylesheet" href="{% static 'css/contests/contest_results.css' %}">
-    <a href="?hide_virtual={{ hide_virtual|yesno:'false,true' }}" class="no-decoration">
+    <h2 class="title">Результаты</h2>
+    <a class="no-decoration" href="?hide_virtual={{ hide_virtual|yesno:'false,true' }}">
         {% if hide_virtual %}
             Показать виртуальные
         {% else %}
             Скрыть виртуальные
         {% endif %}
     </a>
-    <h2 class="title">Результаты</h2>
     <table class="default-table">
         <thead>
             <tr>
@@ -29,9 +29,15 @@
             {% for result in results %}
                 <tr>
                     <td class="td-forced">{{ forloop.counter }}</td>
-                    <td>{{ result.participant.user.username }}</td>
+                    <td>
+                        <a class="no-decoration" href="{% url 'profile' result.participant.user.username %}">
+                            {{ result.participant.user.username }}
+                        </a>
+                    </td>
                     {% for problem in problems %}
-                        <td>{{ result.problems|get_item:problem.letter }}</td>
+                        <td class="{{ result.problems|get_item:problem.letter|get_result_class_color }}">
+                            {{ result.problems|get_item:problem.letter }}
+                        </td>
                     {% endfor %}
                     <td>{{ result.solved_count }}</td>
                     <td>{{ result.place }}</td>

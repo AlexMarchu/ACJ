@@ -16,3 +16,9 @@ def hours_between(start_date, end_date):
 @register.filter
 def get_item(dictionary, key):
     return dictionary.get(key, '')
+
+@register.filter
+def get_result_class_color(result):
+    if result == '.':
+        return 'black'
+    return 'green' if result[0] == '+' else 'red'
