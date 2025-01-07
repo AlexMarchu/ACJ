@@ -3,8 +3,8 @@ from django.contrib import admin
 from django.urls import path, include
 
 from acj import settings
-from acj.views import home_view, problem_detail
-from problems.views import problem_list
+from acj.views import home_view
+from problems.views import problem_list, problem_detail
 from users.views import ACJUserPasswordResetView, ACJUserPasswordResetConfirmView, PasswordResetCompleteView, \
     profile_view, settings_view
 

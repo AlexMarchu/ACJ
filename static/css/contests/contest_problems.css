@@ -4,18 +4,41 @@
     text-align: left;
 }
 
-.status-solved {
-    color: #28a745;
-    font-weight: 600;
+.status-ok,
+.status-aw {
+    color: green;
 }
 
-.status-unsolved {
-    color: #dc3545;
-    font-weight: 600;
+.status-wa,
+.status-mr {
+    color: red;
 }
 
-.status-unknown {
-    color: #6c757d;
+.status-tl,
+.status-ml {
+    color: orange;
+}
+
+.status-pe {
+    color: yellow;
+}
+
+.status-ce {
+    color: blue;
+}
+
+.status-re {
+    color: purple;
+}
+
+.status-ba {
+    color: black;
+}
+
+.status-unknown,
+.status-np {
+    color: gray;
+    font-style: italic;
 }
 
 .participantion-form, .login-to-participate {

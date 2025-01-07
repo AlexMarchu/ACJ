@@ -13,6 +13,9 @@
             <h1 class="title text-center">Поиск</h1>
             <form method="GET" action="{% url 'contests_list' %}">
                 <input type="search" name="title" placeholder="Название контеста..." value="{{ search_query }}"/>
+                {% if show_favorites %}
+                    <input type="hidden" name="favorites" value="true" />
+                {% endif %}
                 <button type="submit" class="primary-btn" id="search-btn"><i class="fi fi-rr-search"></i></button>
             </form>
             <div class="categories">

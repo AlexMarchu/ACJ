@@ -44,7 +44,7 @@ def contests_list(request):
     search_query = request.GET.get("title", "").strip()
     show_favorites = request.GET.get("favorites", "").strip() == "true"
 
-    contests = Contest.objects.all()
+    contests = Contest.objects.all().order_by("-start_time")
     favorite_contests = set()
 
     if request.user.is_authenticated:
@@ -74,6 +74,7 @@ def contests_list(request):
         "contests_data": contests_data,
         "search_query": search_query,
         "favorite_contests": favorite_contests,
+        "show_favorites": show_favorites,
     }
 
     return render(request, "contests/contests_list.html", context)
@@ -86,18 +87,26 @@ def contest_view(request, contest_id):
 def contest_problems(request, contest_id):
     contest = get_object_or_404(Contest, pk=contest_id)
     problems = ContestProblem.objects.filter(contest=contest)
-    solved_problems = set()
+    problem_statuses = dict() # problem_id: (status, submission_id)
     participant = None
 
     if request.user.is_authenticated:
         participant = ContestParticipant.objects.filter(contest=contest, user=request.user).first()
         if participant:
-            accepted_submissions = ContestSubmission.objects.filter(
+            submissions = ContestSubmission.objects.filter(
                 participant=participant,
                 contest_problem__in=problems,
-                submission__status__status=SubmissionStatus.StatusChoices.ACCEPTED
-            ).values_list('contest_problem__problem_id', flat=True)
-            solved_problems = set(accepted_submissions)
+            ).select_related("submission__status").order_by("-timestamp")
+            for problem in problems:
+                problem_submissions = submissions.filter(contest_problem=problem)
+                if problem_submissions.exists():
+                    last_submission = problem_submissions.first()
+                    problem_statuses[problem.get_id()] = (
+                        last_submission.submission.status.status,
+                        last_submission.submission.id
+                    )
+
+
 
     if not contest.is_started() and contest.hide_problems_until_start:
         problems = ContestProblem.objects.none()
@@ -105,7 +114,7 @@ def contest_problems(request, contest_id):
     context = {
         "contest": contest,
         "problems": problems,
-        "solved_problems": solved_problems,
+        "problem_statuses": problem_statuses,
         "participant": participant,
         "is_favorite": FavoriteContest.objects.filter(user=request.user, contest=contest).exists(),
     }
@@ -144,7 +153,7 @@ def contest_submissions(request, contest_id):
     submissions = ContestSubmission.objects.filter(
         participant__contest=contest,
         participant__user=user,
-    ).select_related("submission", "contest_problem", "submission__language", "submission__status")
+    ).select_related("submission", "contest_problem", "submission__language", "submission__status").order_by("-timestamp")
 
     context = {
         "contest": contest,
@@ -161,8 +170,12 @@ def contest_results(request, contest_id):
     problems = ContestProblem.objects.filter(contest=contest).order_by("letter")
 
     hide_virtual = request.GET.get("hide_virtual", "true").lower() == "true"
+    hide_official = request.GET.get("hide_official", "false").lower() == "true"
+
     if hide_virtual:
         participants = participants.filter(is_virtual=False)
+    if hide_official:
+        participants = participants.filter(is_virtual=True)
 
     results = list()
     for participant in participants:
@@ -205,6 +218,7 @@ def contest_results(request, contest_id):
         "results": results,
         "is_favorite": FavoriteContest.objects.filter(user=request.user, contest=contest).exists(),
         "hide_virtual": hide_virtual,
+        "hide_official": hide_official,
     }
 
     return render(request, "contests/contest_results.html", context)

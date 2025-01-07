@@ -1,5 +1,6 @@
 {% extends 'contests/contest_base.html' %}
 {% load static %}
+{% load acj_tags %}
 
 {% block inner-content %}
     <link rel="stylesheet" href="{% static 'css/contests/contest_problems.css' %}">
@@ -29,10 +30,16 @@
                         </td>
                         <td class="td-forced">
                             {% if request.user.is_authenticated %}
-                                {% if problem.problem.id in solved_problems %}
-                                    <span class="status-solved">Решена</span>
+                                {% if problem.get_id in problem_statuses %}
+                                    {% with status=problem_statuses|get_item:problem.get_id %}
+                                        {% with submission_status=status.0 submission_id=status.1 %}
+                                            <a class="no-decoration no-decoration-link" href="{% url 'submission_detail' contest.id submission_id %}">
+                                                <span class="status-{{ submission_status|lower }}">{{ submission_status }}</span>
+                                            </a>
+                                        {% endwith %}
+                                    {% endwith %}
                                 {% else %}
-                                    <span class="status-unsolved">Не решена</span>
+                                    <span class="status-unknown">-</span>
                                 {% endif %}
                             {% else %}
                                 <span class="status-unknown"></span>

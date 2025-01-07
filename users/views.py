@@ -15,6 +15,7 @@ from django.conf import settings
 from users.forms import ACJUserAuthenticationForm, ACJUserCreationForm, ACJUserPasswordResetForm, \
     ACJUserSetPasswordForm, ProfileEditForm, ACJPasswordChangeForm
 from users.models import EmailConfirmationToken, ACJUser
+from contests.models import ContestParticipant
 
 
 class ACJUserAuthenticationView(LoginView):
@@ -149,10 +150,16 @@ def profile_view(request, username):
     else:
         form = ProfileEditForm(instance=profile_owner)
 
+    owner_participations = profile_owner.contests_participations.all().order_by("-joined_at")
+    for participation in owner_participations:
+        participation.solved_count = participation.get_solved_problems_count()
+        participation.problems_count = participation.contest.get_problems_count()
+
     context = {
         'profile_owner': profile_owner,
         'is_owner': is_owner,
         'form': form,
+        'owner_participations': owner_participations,
     }
 
     return render(request, 'profiles/profile.html', context)

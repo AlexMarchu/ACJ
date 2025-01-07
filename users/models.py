@@ -7,7 +7,9 @@ from users.managers import ACJUserManager
 
 
 class UserRole(models.Model):
+
     class RoleChoices(models.TextChoices):
+
         ADMIN = "admin", "Admin"
         TEACHER = "teacher", "Teacher"
         STUDENT = "student", "Student"
@@ -23,6 +25,7 @@ class UserRole(models.Model):
 
 
 class Country(models.Model):
+
     name = models.CharField(max_length=100, unique=True)
     code = models.CharField(max_length=2, unique=True)
 
@@ -31,6 +34,7 @@ class Country(models.Model):
 
 
 class ACJUser(AbstractUser):
+
     role = models.ForeignKey(UserRole, on_delete=models.CASCADE, default=3)
     email = models.EmailField(unique=True)
     country = models.ForeignKey(Country, on_delete=models.SET_NULL, null=True, blank=True)
@@ -54,6 +58,7 @@ class ACJUser(AbstractUser):
 
 
 class EmailConfirmationToken(models.Model):
+    
     user = models.OneToOneField('ACJUser', on_delete=models.CASCADE)
     token = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
     created_at = models.DateTimeField(auto_now_add=True)

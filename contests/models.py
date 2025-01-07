@@ -26,6 +26,9 @@ class Contest(models.Model):
 
     def is_finished(self):
         return timezone.now() >= self.end_time
+    
+    def get_problems_count(self):
+        return self.problems.count()
 
 
 class ContestParticipant(models.Model):
@@ -37,6 +40,21 @@ class ContestParticipant(models.Model):
 
     def __str__(self):
         return f"{self.contest} - {self.user}"
+    
+    def get_status(self):
+        return ["офиц.", "внек."][self.is_virtual]
+    
+    def get_contest_id(self):
+        return self.contest.id
+
+    def get_solved_problems_count(self):
+        from problems.models import SubmissionStatus
+        return sum(ContestSubmission.objects.filter(
+            participant=self,
+            contest_problem=problem,
+            submission__status__status=SubmissionStatus.StatusChoices.ACCEPTED
+        ).exists() for problem in self.contest.problems.all())
+
 
 
 class ContestProblem(models.Model):

@@ -7,12 +7,12 @@
     <div class="top-panel">
         <h2 class="title">Результаты</h2>
         <div class="filters">
-            <a class="no-decoration default-btn" href="?hide_virtual={{ hide_virtual|yesno:'false,true' }}">
+            <a class="no-decoration default-btn" href="?hide_virtual={{ hide_virtual|yesno:'false,true' }}&hide_official={{ hide_official|lower }}">
                 {{ hide_virtual|yesno:'Показать виртуальные,Скрыть виртуальные' }}
             </a>
             <div class="v-separator">|</div>
-            <a class="no-decoration default-btn" href="?hide_official={{ hide_official|yesno:'false,true' }}">
-                {{ hide_official|yesno:'Показать оффициальные,Скрыть оффициальные' }}
+            <a class="no-decoration default-btn" href="?hide_virtual={{ hide_virtual|lower }}&hide_official={{ hide_official|yesno:'false,true' }}">
+                {{ hide_official|yesno:'Показать официальные,Скрыть официальные' }}
             </a>
         </div>
     </div>
@@ -22,7 +22,11 @@
                 <th class="td-forced">#</th>
                 <th>Участник</th>
                 {% for problem in problems %}
-                    <th>{{ problem.letter }}</th>
+                    <th>
+                        <a class="no-decoration no-decoration-link" href="{% url 'contest_problem_detail' contest.id problem.get_id %}">
+                            {{ problem.letter }}
+                        </a>
+                    </th>
                 {% endfor %}
                 <th>=</th>
                 <th>Место</th>
@@ -45,13 +49,7 @@
                     {% endfor %}
                     <td>{{ result.solved_count }}</td>
                     <td>{{ result.place }}</td>
-                    <td>
-                        {% if result.participant.is_virtual %}
-                            внек.
-                        {% else %}
-                            офиц.
-                        {% endif %}
-                    </td>
+                    <td>{{ result.participant.get_status }}</td>
                 </tr>
             {% empty %}
                 <tr>

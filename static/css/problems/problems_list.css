@@ -4,6 +4,17 @@
     text-align: left;
 }
 
+.problems {
+    padding: 10px 16px 14px 16px;
+    width: 100%;
+}
+
+#title h2 {
+    font-size: 32px;
+    margin-bottom: 6px;
+    margin-top: 6px;
+}
+
 .problem-detail-container {
     width: 98%;
     display: flex;

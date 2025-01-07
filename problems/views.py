@@ -39,6 +39,20 @@ class TestViewSet(viewsets.ModelViewSet):
         return [permissions.IsAuthenticated()]
 
 
+def problem_detail(request, problem_id):
+    problem = get_object_or_404(Problem, id=problem_id)
+    languages = Language.objects.all()
+    visible_tests = problem.tests.all()[:problem.visible_tests_count]
+
+    context = {
+        'problem': problem,
+        'languages': languages,
+        'visible_tests': visible_tests,
+    }
+
+    return render(request, 'problems/problem_detail.html', context)
+
+
 def problem_list(request):
     queryset = Problem.objects.filter(contests__isnull=True)
 
@@ -51,7 +65,7 @@ def problem_list(request):
     queryset = queryset | Problem.objects.filter(id__in=visible_problems_ids)
 
     context = {
-        "problems": list(queryset),
+        "problems": queryset.order_by("title"),
     }
 
     return render(request, "problems/problem_list.html", context)
