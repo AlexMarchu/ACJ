@@ -53,7 +53,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
-            'libraries':{
+            'libraries': {
                 'acj_tags': 'templatetags.acj_tags',
             }
         },
@@ -122,7 +122,6 @@ EMAIL_HOST_USER = 'varcekcool1242@yandex.ru'
 EMAIL_HOST_PASSWORD = 'tpifydamkmtbxfia'
 DEFAULT_FROM_EMAIL = 'varcekcool1242@yandex.ru'
 
-# Celery Configuration Options
 CELERY_TIMEZONE = 'Asia/Vladivostok'
 CELERY_BROKER_URL = 'redis://redis:6379/0'
 CELERY_RESULT_BACKEND = 'redis://redis:6379/0'

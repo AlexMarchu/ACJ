@@ -63,7 +63,7 @@
                         <tr>
                             <td>{{ participation.joined_at|format_date }}</td>
                             <td><a class="no-decoration" href="{% url 'contest' participation.get_contest_id %}">{{ participation.contest }}</a></td>
-                            <td>{{ participation.solved_count }}/{{participation.problems_count }}</td>
+                            <td>{{ participation.solved_count }}/{{ participation.problems_count }}</td>
                             <td>{{ participation.get_status }}</td>
                         </tr>
                     {% endfor %}

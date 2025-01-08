@@ -89,6 +89,7 @@ def contest_problems(request, contest_id):
     problems = ContestProblem.objects.filter(contest=contest)
     problem_statuses = dict() # problem_id: (status, submission_id)
     participant = None
+    have_permission = contest.is_public
 
     if request.user.is_authenticated:
         participant = ContestParticipant.objects.filter(contest=contest, user=request.user).first()
@@ -102,10 +103,11 @@ def contest_problems(request, contest_id):
                 if problem_submissions.exists():
                     last_submission = problem_submissions.first()
                     problem_statuses[problem.get_id()] = (
-                        last_submission.submission.status.status,
+                        last_submission.get_submission_status(),
                         last_submission.submission.id
                     )
-
+        if not contest.is_public:
+            have_permission = not request.user.is_student() or participant
 
 
     if not contest.is_started() and contest.hide_problems_until_start:
@@ -117,6 +119,7 @@ def contest_problems(request, contest_id):
         "problem_statuses": problem_statuses,
         "participant": participant,
         "is_favorite": FavoriteContest.objects.filter(user=request.user, contest=contest).exists(),
+        "have_permission": have_permission,
     }
 
     return render(request, "contests/contest_problems.html", context)
@@ -202,10 +205,10 @@ def contest_results(request, contest_id):
 
             if accepted_submission_number is not None:
                 row_data["problems"][problem.letter] = f"+{accepted_submission_number if accepted_submission_number != 1 else ''}"
+                row_data["solved_count"] += 1
             else:
                 row_data["problems"][problem.letter] = f"-{submissions_count}" if submissions_count else "."
 
-        row_data["solved_count"] = sum(map(lambda x: x.startswith("+"), row_data["problems"].values()))
         results.append(row_data)
 
     results.sort(key=lambda x: x["solved_count"], reverse=True)

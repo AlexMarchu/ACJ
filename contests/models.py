@@ -114,6 +114,9 @@ class ContestSubmission(models.Model):
     
     def get_submission_id(self):
         return self.submission.id
+    
+    def get_submission_status(self):
+        return self.submission.status.status
 
 
 class FavoriteContest(models.Model):
