@@ -15,8 +15,7 @@ from django.conf import settings
 from users.forms import ACJUserAuthenticationForm, ACJUserCreationForm, ACJUserPasswordResetForm, \
     ACJUserSetPasswordForm, ProfileEditForm, ACJPasswordChangeForm
 from users.models import EmailConfirmationToken, ACJUser
-from contests.models import ContestParticipant
-
+from celery_app.tasks import send_mail_async
 
 class ACJUserAuthenticationView(LoginView):
     form_class = ACJUserAuthenticationForm
@@ -47,6 +46,7 @@ class ACJUserRegistrationView(CreateView):
 
         try:
             send_mail(subject, content, settings.DEFAULT_FROM_EMAIL, [user.email])
+            # send_mail_async.delay(subject, content, settings.DEFAULT_FROM_EMAIL, [user.email])
             print('Письмо успешно отправлено')
         except Exception as e:
             print(f'Ошибка при отправке: {e}')
@@ -117,6 +117,7 @@ class ACJUserPasswordResetView(generic.View):
 
             try:
                 send_mail(subject, content, from_email, recipient_list)
+                # send_mail_async.delay(subject, content, from_email, recipient_list)
                 print('Письмо успешно отправлено')
             except Exception as e:
                 print(f'Ошибка при отправке письма: {e}')
