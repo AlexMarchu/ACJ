@@ -1,8 +1,11 @@
 from django.contrib.auth.decorators import login_required
 from django.db.models.functions import Lower
 from django.http import JsonResponse
+from django.urls import reverse_lazy
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.mixins import UserPassesTestMixin
+from django.views.generic import CreateView
 from rest_framework import viewsets, status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -11,7 +14,8 @@ from rest_framework.response import Response
 from contests.models import Contest, ContestProblem, ContestParticipant, ContestSubmission, FavoriteContest
 from contests.serializers import ContestSerializer, ContestProblemSerializer, ContestParticipantSerializer, \
     ContestSubmissionSerializer
-from problems.models import Submission, SubmissionStatus, SubmissionContent, Language
+from contests.forms import CreateContestForm, ContestProblemFormSet
+from problems.models import Submission, SubmissionStatus, SubmissionContent, Language, Problem
 from problems.views import submit_to_judge0, update_submission_status
 
 
@@ -37,6 +41,36 @@ class ContestSubmissionViewSet(viewsets.ModelViewSet):
     
     queryset = ContestSubmission.objects.all()
     serializer_class = ContestSubmissionSerializer
+
+
+class CreateContestView(UserPassesTestMixin, CreateView):
+    model = Contest
+    form_class = CreateContestForm
+    template_name = "contests/create_contest.html"
+    success_url = reverse_lazy("home")
+
+    def test_func(self):
+        return self.request.user.is_teacher() or self.request.user.is_admin()
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.POST:
+            context['contest_problem_formset'] = ContestProblemFormSet(self.request.POST)
+        else:
+            context['contest_problem_formset'] = ContestProblemFormSet()
+        context['problems'] = Problem.objects.all()
+        return context
+    
+    def form_valid(self, form):
+        context = self.get_context_data()
+        contest_problem_formset = context['contest_problem_formset']
+        if contest_problem_formset.is_valid():
+            self.object = form.save()
+            contest_problem_formset.instance = self.object
+            contest_problem_formset.save()
+            return super().form_valid(form)
+        else:
+            return self.form_invalid(form)
 
 
 def contests_list(request):

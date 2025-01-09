@@ -14,7 +14,7 @@ class TestInline(admin.TabularInline):
 
 class ProblemAdminForm(forms.ModelForm):
 
-    description = forms.CharField(widget=CKEditor5Widget(config_name='default'))
+    description = forms.CharField(widget=CKEditor5Widget(config_name='extends'))
 
     class Meta:
         model = Problem

@@ -1,9 +1,12 @@
 import requests
 from django.http import JsonResponse
+from django.urls import reverse_lazy
 from django.shortcuts import get_object_or_404, render
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 from django.utils import timezone
+from django.contrib.auth.mixins import UserPassesTestMixin
+from django.views.generic import CreateView
 from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -15,6 +18,7 @@ from problems.models import SubmissionStatus, Language, Problem, Test, Submissio
     SubmissionTestResult
 from problems.permissions import IsAdminOrTeacher
 from problems.serializers import ProblemSerializer, TestSerializer
+from problems.forms import ProblemForm, TestFormSet
 
 
 class ProblemViewSet(viewsets.ModelViewSet):
@@ -37,6 +41,38 @@ class TestViewSet(viewsets.ModelViewSet):
         if self.action in ["create", "update", "partial_update", "destroy"]:
             return [permissions.IsAuthenticated(), IsAdminOrTeacher()]
         return [permissions.IsAuthenticated()]
+
+
+class CreateProblemView(UserPassesTestMixin, CreateView):
+    model = Problem
+    form_class = ProblemForm
+    template_name = "problems/create_problem.html"
+    success_url = reverse_lazy("home")
+
+    def test_func(self):
+        return self.request.user.is_teacher() or self.request.user.is_admin()
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.POST:
+            context["test_formset"] = TestFormSet(self.request.POST)
+        else:
+            context["test_formset"] = TestFormSet()
+        return context
+    
+    def form_valid(self, form):
+        context = self.get_context_data()
+        test_formset = context["test_formset"]
+        if test_formset.is_valid():
+            self.object = form.save(commit=False)
+            self.object.author = self.request.user
+            self.object.save()
+
+            test_formset.instance = self.object
+            test_formset.save()
+            return super().form_valid(form)
+        else:
+            return self.form_invalid(form)
 
 
 def problem_detail(request, problem_id):

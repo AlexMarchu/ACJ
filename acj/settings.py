@@ -148,4 +148,15 @@ CKEDITOR_5_CONFIGS = {
             'styles': {},
         },
     },
+    'extends': {
+        'toolbar': ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'imageUpload', 'blockQuote', 'undo', 'redo'],
+        'image': {
+            'toolbar': ['imageTextAlternative', '|', 'imageStyle:alignLeft', 'imageStyle:full', 'imageStyle:alignRight'],
+            'styles': [
+                'full',
+                'alignLeft',
+                'alignRight',
+            ],
+        },
+    },
 }
