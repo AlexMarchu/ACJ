@@ -53,7 +53,7 @@ def problem_detail(request, problem_id):
     return render(request, 'problems/problem_detail.html', context)
 
 
-def problem_list(request):
+def problems_list(request):
     queryset = Problem.objects.filter(contests__isnull=True)
 
     visible_contests = Contest.objects.filter(
@@ -68,7 +68,7 @@ def problem_list(request):
         "problems": queryset.order_by("title"),
     }
 
-    return render(request, "problems/problem_list.html", context)
+    return render(request, "problems/problems_list.html", context)
 
 
 def submit_to_judge0(submission):

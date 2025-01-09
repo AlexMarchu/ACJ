@@ -4,43 +4,6 @@
     text-align: left;
 }
 
-.status-ok,
-.status-aw {
-    color: green;
-}
-
-.status-wa,
-.status-mr {
-    color: red;
-}
-
-.status-tl,
-.status-ml {
-    color: orange;
-}
-
-.status-pe {
-    color: yellow;
-}
-
-.status-ce {
-    color: aqua;
-}
-
-.status-re {
-    color: purple;
-}
-
-.status-ba {
-    color: black;
-}
-
-.status-unknown,
-.status-np {
-    color: gray;
-    font-style: italic;
-}
-
 .participantion-form, .login-to-participate {
     margin: 0px;
     margin-top: 20px;

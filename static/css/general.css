@@ -121,6 +121,11 @@ form label {
     flex-direction: column;
 }
 
+.r-wrapper {
+    display: flex;
+    flex-direction: row;
+}
+
 .text-muted {
     color: var(--text-muted-color);
 }
@@ -206,10 +211,39 @@ form label {
     font-weight: 700;
 }
 
-.green {
-    color: #28a745;
+.status-ok,
+.status-aw {
+    color: #30b04e;
 }
 
-.red {
+.status-wa,
+.status-mr {
     color: #dc3545;
+}
+
+.status-tl,
+.status-ml {
+    color: rgb(235, 152, 0);
+}
+
+.status-pe {
+    color: rgb(236, 236, 0);
+}
+
+.status-ce {
+    color: rgb(0, 234, 234);
+}
+
+.status-re {
+    color: rgb(218, 0, 218);
+}
+
+.status-ba {
+    color: black;
+}
+
+.status-unknown,
+.status-np {
+    color: gray;
+    font-style: italic;
 }

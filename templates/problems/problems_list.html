@@ -1,0 +1,59 @@
+{% extends 'content_base.html' %}
+{% load static %}
+
+{% block title %}
+    Задачи
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/problems/problems_list.css' %}">
+<div class="dc-wrapper">
+    <div class="container search">
+        <h1 class="title text-center">Поиск</h1>
+        <form method="GET" action="{% url 'problems_list' %}">
+            <div class="r-wrapper">
+                <input type="search" name="title" placeholder="Название задачи..." value="{{ search_query }}"/>
+                <button type="submit" class="primary-btn" id="search-btn"><i class="fi fi-rr-search"></i></button>
+            </div>
+            <select>
+                <option>Все</option>
+                <option>alg.dynamic</option>
+                <option>cmp.simple</option>
+            </select>
+        </form>
+    </div>
+    <div class="container problems">
+        <table class="problems-table">
+            <thead>
+                <tr>
+                    <th class="text-left">Название</th>
+                    <th width="9%">Статус</th>
+                    <th width="9%">Время</th>
+                    <th width="9%">Память</th>
+                    <th width="26%">Тэги</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for problem in problems %}
+                    <tr>
+                        <td class="title">
+                            <a class="no-decoration" href="{% url 'problem_detail' problem.id %}">
+                                {{ problem.title }}
+                            </a>
+                        </td>
+                        <td>
+                            <span class="status-ok">OK</span>
+                        </td>
+                        <td class="text-muted">{{ problem.time_limit }} сек</td>
+                        <td class="text-muted">{{ problem.memory_limit }} МБ</td>
+                        <td class="text-muted">cmp.simple alg.dynamic</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% if not problems %}
+            <p class="no-problems">Нет задач</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

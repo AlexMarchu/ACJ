@@ -37,7 +37,9 @@
                         </a>
                     </td>
                     <td>{{ submission.submission.language.name }}</td>
-                    <td class="verdict">{{ submission.submission.status.status }}</td>
+                    <td>
+                        <span class="status-{{ submission.submission.status.status|lower }}">{{ submission.submission.status.status }}</span>
+                    </td>
                     <td>{{ submission.submission.execution_time|default_if_none:"-" }} мс</td>
                     <td>{{ submission.submission.memory_used|default_if_none:"-" }} КБ</td>
                 </tr>

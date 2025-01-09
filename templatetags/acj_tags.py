@@ -21,8 +21,8 @@ def get_item(dictionary, key):
 @register.filter
 def get_result_class_color(result):
     if result == '.':
-        return 'black'
-    return 'green' if result[0] == '+' else 'red'
+        return ''
+    return 'status-ok' if result[0] == '+' else 'status-wa'
 
 
 @register.filter

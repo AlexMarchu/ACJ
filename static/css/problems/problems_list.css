@@ -1,138 +1,81 @@
 @import '../context.css';
 
-.default-table td {
-    text-align: left;
+.container  {
+    padding: 10px 16px 14px 16px;
+}
+
+.search {
+    width: 28%;
+    display: flex;
+    flex-direction: column;
+    row-gap: 14px;
 }
 
 .problems {
-    padding: 10px 16px 14px 16px;
+    flex: 1;
+}
+
+.search form .r-wrapper {
+    column-gap: 6px;
+}
+
+.search form {
+    display: flex;
+    flex-direction: column;
+    row-gap: 9px;
+}
+
+.search #search-btn {
+    width: 48px;
+    font-size: 12pt;
+}
+
+.problems-table {
     width: 100%;
-}
-
-#title h2 {
-    font-size: 32px;
-    margin-bottom: 6px;
-    margin-top: 6px;
-}
-
-.problem-detail-container {
-    width: 98%;
-    display: flex;
-    flex-direction: column;
-    padding: 20px;
-    background-color: #ffffff;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    margin: 0 auto;
-}
-
-.problem-detail-container h1 {
-    margin-bottom: 0;
-}
-
-.problem-info {
-    display: flex;
-    flex-direction: column;
-    border-bottom: 1px solid #e0e0e0;
-    padding-bottom: 10px;
-}
-
-p {
-    margin-bottom: 0;
-}
-
-h2 {
-    margin-bottom: 0;
-}
-
-.problem-description .problem-formats {
-    display: flex;
-    flex-direction: column;
-}
-
-.problem-tests {
-    margin-top: 10px;
-}
-
-.problem-tests table {
-    width: 30%;
     border-collapse: collapse;
-    margin-top: 10px;
+    table-layout: fixed;
 }
 
-.problem-tests th, .problem-tests td {
-    border: 1px solid #e0e0e0;
-    padding: 10px;
+.problems-table th, .problems-table td {
+    border-bottom: 1px solid rgb(224, 224, 224);
+}
+
+.problems-table th {
+    padding: 20px 4px;
+}
+
+.problems-table td {
+    padding: 14px 4px;
+    text-align: center;
+}
+
+.problems-table .title {
     text-align: left;
 }
 
-.problem-tests pre {
-    margin: 0;
-    white-space: pre-wrap;
-    word-wrap: break-word;
+.problems-table .title a {
+   vertical-align: middle;
 }
 
-.code-editor {
-    margin-top: 10px;
-    display: flex;
-    flex-direction: column;
+.problems-table tbody tr {
+    transition: background-color 0.2s;
 }
 
-.results-table {
-    width: 30%;
-    border-collapse: collapse;
-    margin-top: 10px;
+.problems-table tbody tr td:first-child {
+    padding-left: 10px;
 }
 
-.results-table th, .results-table td {
-    padding: 12px;
-    border: 1px solid #e0e0e0;
+.problems-table tbody tr:hover {
+    background-color: #f1f0f0;
+}
+
+.problems-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.no-problems {
+    margin: 14px 0px 3px 0px;
     text-align: center;
-}
-
-.results-table th {
-    background-color: #f9f9f9;
-    font-weight: 600;
-}
-
-#code-input {
-    width: 100%;
-    max-width: 700px;
-    height: 200px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-family: monospace;
-    font-size: 14px;
-    resize: none;
-}
-
-#language-select {
-    width: 200px;
-    margin-top: 3px;
-    margin-bottom: 10px;
-    margin-right: 10px;
-}
-
-#submit-code {
-    margin-top: 10px;
-    padding: 10px 20px;
-    background-color: rgb(75, 75, 243);
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    max-width: 120px;
-    text-align: center;
-}
-
-#submit-code:hover {
-    background-color: #5a3de6;
-}
-
-#submission-status {
-    margin-top: 10px;
-    font-weight: lighter;
+    color: var(--text-muted-color);
+    font-style: italic;
 }
