@@ -1,5 +1,6 @@
 {% extends 'content_base.html' %}
 {% load static %}
+{% load acj_tags %}
 
 {% block title %}
     {{ problem.title }}
@@ -10,7 +11,7 @@
     <div class="container">
         <div class="info">
             <h1 class="title">Задача {% if problem_letter %}{{ problem_letter }}{% else %}{{ problem.id }}{% endif %}. {{ problem.title }}</h1>
-            <p><strong>Автор: </strong>{{ problem.author.username }}</p>
+            <p><strong>Автор: </strong>{{ problem.author.get_name|abbreviated_name|default:"Кучерявый перец" }}</p>
             <p><strong>Ограничение по времени: </strong>{{ problem.time_limit }} сек</p>
             <p><strong>Ограничение по памяти: </strong>{{ problem.memory_limit }} МБ</p>
         </div>

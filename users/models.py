@@ -55,6 +55,13 @@ class ACJUser(AbstractUser):
 
     def is_student(self):
         return self.role.role == UserRole.RoleChoices.STUDENT
+    
+    def get_name(self):
+        if self.first_name and self.last_name:
+            return f"{self.last_name} {self.first_name}"
+        elif self.first_name:
+            return self.first_name
+        return self.username
 
 
 class EmailConfirmationToken(models.Model):

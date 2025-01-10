@@ -106,6 +106,9 @@ class ContestSubmission(models.Model):
     def get_participant_username(self):
         return self.participant.user.username
     
+    def get_participant_name(self):
+        return self.participant.user.get_name()
+    
     def get_contest_id(self):
         return self.contest_problem.contest.id
     

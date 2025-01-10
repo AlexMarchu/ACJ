@@ -39,7 +39,7 @@
                     <td class="td-forced">{{ forloop.counter }}</td>
                     <td>
                         <a class="no-decoration" href="{% url 'profile' result.participant.user.username %}">
-                            {{ result.participant.user.username }}
+                            {{ result.participant.user.get_name }}
                         </a>
                     </td>
                     {% for problem in problems %}

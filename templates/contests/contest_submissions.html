@@ -28,7 +28,7 @@
                     <td>{{ submission.timestamp|date:"d.m.Y H:i" }}</td>
                     <td>
                         <a class="no-decoration" href="{% url 'profile' submission.get_participant_username %}">
-                            {{ submission.get_participant_username }}
+                            {{ submission.get_participant_name }}
                         </a>
                     </td>
                     <td>
