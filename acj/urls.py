@@ -4,7 +4,7 @@ from django.urls import path, include
 
 from acj import settings
 from acj.views import home_view
-from problems.views import problems_list, problem_detail
+from problems.views import problems_list, problem_detail, problem_submission_detail
 from users.views import ACJUserPasswordResetView, ACJUserPasswordResetConfirmView, PasswordResetCompleteView, \
     profile_view, settings_view
 
@@ -13,6 +13,7 @@ urlpatterns = [
     path('contests/', include('contests.urls')),
     path('problems/', problems_list, name='problems_list'),
     path('problem/<int:problem_id>/', problem_detail, name='problem_detail'),
+    path('problems/submission/<int:submission_id>', problem_submission_detail, name='problem_submission_detail'),
     path('admin/', admin.site.urls),
     path('api/', include('problems.urls')),
     path('auth/', include('users.urls')),

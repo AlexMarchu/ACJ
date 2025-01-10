@@ -1,5 +1,6 @@
 {% extends 'content_base.html' %}
 {% load static %}
+{% load acj_tags %}
 
 {% block title %}
     Задачи
@@ -15,10 +16,13 @@
                 <input type="search" name="title" placeholder="Название задачи..." value="{{ search_query }}"/>
                 <button type="submit" class="primary-btn" id="search-btn"><i class="fi fi-rr-search"></i></button>
             </div>
-            <select>
-                <option>Все</option>
-                <option>alg.dynamic</option>
-                <option>cmp.simple</option>
+            <select name="tag">
+                <option value="">Все</option>
+                {% for tag in tags %}
+                    <option value="{{ tag.name }}" {% if selected_tag == tag.name %}selected{% endif %}>
+                        {{ tag.name }}
+                    </option>
+                {% endfor %}
             </select>
         </form>
     </div>
@@ -42,11 +46,23 @@
                             </a>
                         </td>
                         <td>
-                            <span class="status-ok">OK</span>
+                             {% if request.user.is_authenticated %}
+                                {% if problem.id in problem_submissions %}
+                                    {% with submission=problem_submissions|get_item:problem.id %}
+                                        <a class="no-decoration no-decoration-link" href="{% url 'problem_submission_detail' submission.id %}">
+                                            <span class="status-{{ submission.status|lower }}">{{ submission.status }}</span>
+                                        </a>
+                                    {% endwith %}
+                                {% endif %}
+                             {% endif %}
                         </td>
                         <td class="text-muted">{{ problem.time_limit }} сек</td>
                         <td class="text-muted">{{ problem.memory_limit }} МБ</td>
-                        <td class="text-muted">cmp.simple alg.dynamic</td>
+                        <td class="text-muted">
+                            {% for tag in problem.fetch_tags %}
+                                {{ tag.name }}
+                            {% endfor %}
+                        </td>
                     </tr>
                 {% endfor %}
             </tbody>

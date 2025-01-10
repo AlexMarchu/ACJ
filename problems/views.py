@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.shortcuts import get_object_or_404, render
 from django.views.decorators.csrf import csrf_exempt
-from django.db.models import Q
+from django.db.models import Q, Prefetch
 from django.utils import timezone
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.views.generic import CreateView
@@ -15,7 +15,7 @@ from asgiref.sync import async_to_sync
 
 from contests.models import Contest, ContestProblem
 from problems.models import SubmissionStatus, Language, Problem, Test, SubmissionContent, Submission, \
-    SubmissionTestResult
+    SubmissionTestResult, ProblemTag
 from problems.permissions import IsAdminOrTeacher
 from problems.serializers import ProblemSerializer, TestSerializer
 from problems.forms import ProblemForm, TestFormSet
@@ -44,6 +44,7 @@ class TestViewSet(viewsets.ModelViewSet):
 
 
 class CreateProblemView(UserPassesTestMixin, CreateView):
+    
     model = Problem
     form_class = ProblemForm
     template_name = "problems/create_problem.html"
@@ -90,7 +91,12 @@ def problem_detail(request, problem_id):
 
 
 def problems_list(request):
-    queryset = Problem.objects.filter(contests__isnull=True)
+    problems = Problem.objects.filter(contests__isnull=True)
+    tags = ProblemTag.objects.all().order_by("name")
+    problem_submissions = dict()
+    
+    search_query = request.GET.get("title", "").lower().strip().replace("ё", "е")
+    selected_tag = request.GET.get("tag", "").strip()
 
     visible_contests = Contest.objects.filter(
         Q(hide_problems_until_start=False) | Q(start_time__lte=timezone.now())
@@ -98,13 +104,50 @@ def problems_list(request):
     visible_contest_problems = ContestProblem.objects.filter(contest__in=visible_contests)
     visible_problems_ids = visible_contest_problems.values_list("problem_id", flat=True)
 
-    queryset = queryset | Problem.objects.filter(id__in=visible_problems_ids)
+    problems = (problems | Problem.objects.filter(id__in=visible_problems_ids)).distinct().order_by("title")
+
+    if selected_tag:
+        problems = problems.filter(tags__name=selected_tag)
+
+    if request.user.is_authenticated:
+        problems = problems.prefetch_related(
+            Prefetch(
+                "submission_set",
+                queryset=Submission.objects.filter(user=request.user).order_by("-timestamp"),
+                to_attr="user_submissions"
+            )
+        )
+        
+        for problem in problems:
+            if hasattr(problem, "user_submissions") and problem.user_submissions:
+                problem_submissions[problem.id] = problem.user_submissions[0]
+
+    if search_query:
+        problems = list(filter(lambda x: search_query in x.title.lower(), problems))
 
     context = {
-        "problems": queryset.order_by("title"),
+        "problems": problems,
+        "tags": tags,
+        "problem_submissions": problem_submissions,
+        "search_query": search_query,
+        "selected_tag": selected_tag,
     }
 
     return render(request, "problems/problems_list.html", context)
+
+
+def problem_submission_detail(request, submission_id):
+    submission = get_object_or_404(Submission, id=submission_id)
+    tests = submission.test_results.exclude(status=SubmissionStatus.StatusChoices.PENDING)
+    is_checking = submission.status.status == SubmissionStatus.StatusChoices.PENDING
+
+    context = {
+        "submission": submission,
+        "tests": tests,
+        "is_checking": is_checking,
+    }
+
+    return render(request, "contests/submission_detail.html", context)
 
 
 def submit_to_judge0(submission):

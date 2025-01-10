@@ -6,6 +6,7 @@ from problems.models import Problem
 class CreateContestForm(forms.ModelForm):
 
     class Meta:
+        
         model = Contest
         fields = ["title", "description", "start_time", "end_time", "is_public", "hide_problems_until_start"]
         labels = {
@@ -23,7 +24,9 @@ class CreateContestForm(forms.ModelForm):
 
 
 class ContestProblemForm(forms.ModelForm):
+
     class Meta:
+
         model = ContestProblem
         fields = ["problem"]
         labels = {

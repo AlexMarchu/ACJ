@@ -7,6 +7,7 @@ from problems.models import Problem, Test
 class ProblemForm(forms.ModelForm):
 
     class Meta:
+
         model = Problem
         fields = ["title", "description", "input_format", "output_format", "time_limit", "memory_limit", "tags"]
         labels = {
@@ -31,6 +32,7 @@ class ProblemForm(forms.ModelForm):
 class TestForm(forms.ModelForm):
 
     class Meta:
+        
         model = Test
         fields = ["stdin", "expected_output"]
         labels = {

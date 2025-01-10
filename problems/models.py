@@ -30,6 +30,9 @@ class Problem(models.Model):
 
     def fetch_tests(self):
         return Test.objects.filter(problem=self)
+    
+    def fetch_tags(self):
+        return self.tags.all().order_by("name")
 
 
 class Test(models.Model):

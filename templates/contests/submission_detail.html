@@ -22,10 +22,12 @@
                 <th>Время</th>
                 <td>{{ submission.timestamp }}</td>
             </tr>
-            <tr>
-                <th>Турнир</th>
-                <td>{{ contest.title }}</td>
-            </tr>
+            {% if contest %}
+                <tr>
+                    <th>Турнир</th>
+                    <td>{{ contest.title }}</td>
+                </tr>
+            {% endif %}
             <tr>
                 <th>Задача</th>
                 <td>{{ submission.problem.title }}</td>

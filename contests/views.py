@@ -44,6 +44,7 @@ class ContestSubmissionViewSet(viewsets.ModelViewSet):
 
 
 class CreateContestView(UserPassesTestMixin, CreateView):
+    
     model = Contest
     form_class = CreateContestForm
     template_name = "contests/create_contest.html"
@@ -75,7 +76,7 @@ class CreateContestView(UserPassesTestMixin, CreateView):
 
 def contests_list(request):
     contests_data = list()
-    search_query = request.GET.get("title", "").strip()
+    search_query = request.GET.get("title", "").lower().strip().replace("ё", "е")
     show_favorites = request.GET.get("favorites", "").strip() == "true"
 
     contests = Contest.objects.all().order_by("-start_time")
@@ -91,7 +92,7 @@ def contests_list(request):
         # this doesn't works so now we have O(N) search by contest titles
         # contests = Contest.objects.annotate(lower_title=Lower('title'))
         # .filter(lower_title__icontains=search_query.lower())
-        contests = list(filter(lambda contest: search_query.lower() in contest.title.lower(), contests))
+        contests = list(filter(lambda contest: search_query in contest.title.lower(), contests))
 
     for contest in contests:
         participant = None
@@ -131,14 +132,17 @@ def contest_problems(request, contest_id):
             submissions = ContestSubmission.objects.filter(
                 participant=participant,
                 contest_problem__in=problems,
-            ).select_related("submission__status").order_by("-timestamp")
-            for problem in problems:
-                problem_submissions = submissions.filter(contest_problem=problem)
-                if problem_submissions.exists():
-                    last_submission = problem_submissions.first()
-                    problem_statuses[problem.get_id()] = (
-                        last_submission.get_submission_status(),
-                        last_submission.submission.id
+            ).select_related(
+                "submission__status",
+                "contest_problem",
+            ).order_by("-timestamp")
+
+            for submission in submissions:
+                problem_id = submission.contest_problem.get_id()
+                if problem_id not in problem_statuses:
+                    problem_statuses[problem_id] = (
+                        submission.get_submission_status(),
+                        submission.submission.id
                     )
         if not contest.is_public:
             have_permission = not request.user.is_student() or participant
