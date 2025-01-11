@@ -1,0 +1,33 @@
+{% extends 'content_base.html' %}
+{% load static %}
+
+{% block title %}
+    {{ problem.title }} - настройки
+{% endblock %}
+
+{% block content %}
+    <h2 class="title">Тесты</h2>
+    <table class="default-table">
+        <thead>
+            <tr>
+                <th>Тест</th>
+                <th>Действие</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for test in tests %}
+                <tr>
+                    <td>
+                        {{ test }}
+                    </td> 
+                    <td>
+                        <form method="post" action="{% url 'delete_problem_test' problem.id test.id %}">
+                            {% csrf_token %}
+                            <button type="submit">Удалить</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

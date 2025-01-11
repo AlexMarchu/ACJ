@@ -11,8 +11,14 @@
     align-items: center;
 }
 
+.heading .settings-btn {
+    font-size: 18pt;
+    margin-right: auto;
+    margin-top: 7px;
+}
+
 .heading .favorite-btn {
-    font-size: 16pt;
+    font-size: 18pt;
 }
 
 .info {

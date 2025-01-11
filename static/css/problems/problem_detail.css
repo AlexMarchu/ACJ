@@ -25,6 +25,20 @@ h2.title {
     padding-bottom: 10px;
 }
 
+.title-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+}
+
+.title-container .settings-btn {
+    font-size: 18pt;
+    margin-right: auto;
+    margin-top: 7px;
+    margin-left: 10pt;
+}
+
 .tests-table {
     width: 40%;
     margin-top: 10px;

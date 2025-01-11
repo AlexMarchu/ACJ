@@ -11,7 +11,7 @@ class CreateContestForm(forms.ModelForm):
         fields = ["title", "description", "start_time", "end_time", "is_public", "hide_problems_until_start"]
         labels = {
             "title": "Название",
-            "description": "Условие",
+            "description": "Описание",
             "start_time": "Дата начала",
             "end_time": "Дата конца",
             "is_public": "Открытый",

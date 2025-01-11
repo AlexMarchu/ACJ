@@ -6,6 +6,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.views.generic import CreateView
+from django.views.decorators.http import require_POST
 from rest_framework import viewsets, status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -17,6 +18,7 @@ from contests.serializers import ContestSerializer, ContestProblemSerializer, Co
 from contests.forms import CreateContestForm, ContestProblemFormSet
 from problems.models import Submission, SubmissionStatus, SubmissionContent, Language, Problem
 from problems.views import submit_to_judge0, update_submission_status
+from problems.permissions import IsAdminOrTeacher
 
 
 class ContestViewSet(viewsets.ModelViewSet):
@@ -124,9 +126,11 @@ def contest_problems(request, contest_id):
     problems = ContestProblem.objects.filter(contest=contest)
     problem_statuses = dict() # problem_id: (status, submission_id)
     participant = None
+    is_favorite = False
     have_permission = contest.is_public
 
     if request.user.is_authenticated:
+        is_favorite = FavoriteContest.objects.filter(user=request.user, contest=contest).exists()
         participant = ContestParticipant.objects.filter(contest=contest, user=request.user).first()
         if participant:
             submissions = ContestSubmission.objects.filter(
@@ -156,7 +160,7 @@ def contest_problems(request, contest_id):
         "problems": problems,
         "problem_statuses": problem_statuses,
         "participant": participant,
-        "is_favorite": FavoriteContest.objects.filter(user=request.user, contest=contest).exists(),
+        "is_favorite": is_favorite,
         "have_permission": have_permission,
     }
 
@@ -263,6 +267,30 @@ def contest_results(request, contest_id):
     }
 
     return render(request, "contests/contest_results.html", context)
+
+
+def contest_settings(request, contest_id):
+    if not request.user.is_authenticated or not (request.user.is_admin() or request.user.is_teacher()):
+        from django.http import HttpResponseForbidden
+        return HttpResponseForbidden("Forbidden")
+    
+    contest = get_object_or_404(Contest, id=contest_id)
+    problems = contest.problems.all()
+
+    context = {
+        "contest": contest,
+        "problems": problems,
+    }
+
+    return render(request, "contests/contest_settings.html", context)
+
+
+@require_POST
+def delete_contest_problem(request, contest_id, problem_id):
+    if not request.user.is_authenticated or not (request.user.is_admin() or request.user.is_teacher()):
+        from django.http import HttpResponseForbidden
+        return HttpResponseForbidden("Forbidden")
+    pass
 
 
 @login_required(login_url="/auth/login/")

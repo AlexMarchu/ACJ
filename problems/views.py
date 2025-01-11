@@ -3,6 +3,7 @@ from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.shortcuts import get_object_or_404, render
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 from django.db.models import Q, Prefetch
 from django.utils import timezone
 from django.contrib.auth.mixins import UserPassesTestMixin
@@ -148,6 +149,30 @@ def problem_submission_detail(request, submission_id):
     }
 
     return render(request, "contests/submission_detail.html", context)
+
+
+def problem_settings(request, problem_id):
+    if not request.user.is_authenticated or not (request.user.is_admin() or request.user.is_teacher()):
+        from django.http import HttpResponseForbidden
+        return HttpResponseForbidden("Forbidden")
+    
+    problem = get_object_or_404(Problem, id=problem_id)
+    tests = problem.fetch_tests
+
+    context = {
+        "problem": problem,
+        "tests": tests,
+    }
+
+    return render(request, "problems/problem_settings.html", context)
+
+
+@require_POST
+def delete_problem_test(request, problem_id, test_id):
+    if not request.user.is_authenticated or not (request.user.is_admin() or request.user.is_teacher()):
+        from django.http import HttpResponseForbidden
+        return HttpResponseForbidden("Forbidden")
+    pass
 
 
 def submit_to_judge0(submission):

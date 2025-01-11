@@ -1,0 +1,35 @@
+{% extends 'content_base.html' %}
+{% load static %}
+
+{% block title %}
+    {{ contest.title }} - настройки
+{% endblock %}
+
+{% block content %}
+    <h2 class="title">Задачи</h2>
+    <table class="default-table">
+        <thead>
+            <tr>
+                <th>Задача</th>
+                <th>Действие</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for problem in problems %}
+                <tr>
+                    <td>
+                        <a class="no-decoration" href="{% url 'contest_problem_detail' contest.id problem.get_id %}">
+                            {{ problem.letter }}. {{ problem.get_title }}
+                        </a>
+                    </td> 
+                    <td>
+                        <form method="post" action="{% url 'delete_contest_problem' contest.id problem.id %}">
+                            {% csrf_token %}
+                            <button type="submit">Удалить</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
