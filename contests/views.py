@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.db.models.functions import Lower
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseForbidden
 from django.urls import reverse_lazy
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.csrf import csrf_exempt
@@ -19,6 +19,8 @@ from contests.forms import CreateContestForm, ContestProblemFormSet
 from problems.models import Submission, SubmissionStatus, SubmissionContent, Language, Problem
 from problems.views import submit_to_judge0, update_submission_status
 from problems.permissions import IsAdminOrTeacher
+import locale
+from django.utils.translation import get_language
 
 
 class ContestViewSet(viewsets.ModelViewSet):
@@ -267,32 +269,84 @@ def contest_results(request, contest_id):
     }
 
     return render(request, "contests/contest_results.html", context)
-
+import locale
+from django.utils.translation import get_language
 
 def contest_settings(request, contest_id):
-    if not request.user.is_authenticated or not (request.user.is_admin() or request.user.is_teacher()):
-        from django.http import HttpResponseForbidden
-        return HttpResponseForbidden("Forbidden")
-    
     contest = get_object_or_404(Contest, id=contest_id)
-    problems = contest.problems.all()
 
-    context = {
-        "contest": contest,
-        "problems": problems,
-    }
+    all_problems = list(Problem.objects.all())
 
-    return render(request, "contests/contest_settings.html", context)
+    try:
+        locale.setlocale(locale.LC_COLLATE, (get_language(), 'UTF-8'))
+    except locale.Error:
+        pass
 
+    all_problems.sort(key=lambda x: locale.strxfrm(x.title))
+
+    contest_problems = set(
+        ContestProblem.objects.filter(contest=contest).values_list('problem_id', flat=True)
+    )
+
+    for problem in all_problems:
+        problem.in_contest = problem.id in contest_problems
+
+    if request.method == 'POST':
+        contest_form = CreateContestForm(request.POST, instance=contest)
+        if contest_form.is_valid():
+            contest_form.save()
+    else:
+        contest_form = CreateContestForm(instance=contest)
+
+    return render(request, 'contests/contest_settings.html', {
+        'contest': contest,
+        'contest_form': contest_form,
+        'all_problems': all_problems,
+    })
+
+@require_POST
+def add_contest_problem(request, contest_id, problem_id):
+    contest = get_object_or_404(Contest, id=contest_id)
+    problem = get_object_or_404(Problem, id=problem_id)
+
+    if not ContestProblem.objects.filter(contest=contest, problem=problem).exists():
+        ContestProblem.objects.create(contest=contest, problem=problem)
+        problem.in_contest = True
+        return JsonResponse({
+            'status': 'success',
+            'message': 'Задача добавлена',
+            'problem_id': problem.id,
+            'contest_id': contest_id,
+            'in_contest': problem.in_contest,
+        })
+    return JsonResponse({
+        'status': 'error',
+        'message': 'Задача уже добавлена',
+        'problem_id': problem.id,
+        'contest_id': contest_id,
+        'in_contest': False,
+    })
 
 @require_POST
 def delete_contest_problem(request, contest_id, problem_id):
-    if not request.user.is_authenticated or not (request.user.is_admin() or request.user.is_teacher()):
-        from django.http import HttpResponseForbidden
-        return HttpResponseForbidden("Forbidden")
-    pass
+    contest = get_object_or_404(Contest, id=contest_id)
+    problem = get_object_or_404(Problem, id=problem_id)
 
+    contest_problem = ContestProblem.objects.filter(contest=contest, problem=problem).first()
 
+    if contest_problem:
+        contest_problem.delete()
+        return JsonResponse({'status': 'success',
+                             'message': 'Задача удалена',
+                             'problem_id': problem.id,
+                             'contest_id': contest.id,
+                             })
+
+    return JsonResponse({'status': 'error',
+                         'message': 'Задачи нет в турнире',
+                         'problem_id': problem.id,
+                         'contest_id': contest.id,
+                         })
 @login_required(login_url="/auth/login/")
 def join_contest(request, contest_id):
     contest = get_object_or_404(Contest, id=contest_id)

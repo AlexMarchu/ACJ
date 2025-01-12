@@ -2,7 +2,7 @@ from django.urls import path
 
 from contests.views import contests_list, contest_view, contest_problems, submit_contest_code, check_contest_status, \
     contest_problem_detail, join_contest, contest_submissions, contest_results, toggle_favorite_contest, \
-    submission_detail, contest_settings, delete_contest_problem
+    submission_detail, contest_settings, delete_contest_problem, add_contest_problem
 
 urlpatterns = [
     path('', contests_list, name='contests_list'),
@@ -17,5 +17,6 @@ urlpatterns = [
     path('<int:contest_id>/problem/<int:problem_id>/', contest_problem_detail, name='contest_problem_detail'),
     path('<int:contest_id>/submit/<int:problem_id>/', submit_contest_code, name='submit_contest_code'),
     path('<int:contest_id>/status/<int:submission_id>/', check_contest_status, name='check_contest_status'),
-    path('<int:contest_id>/problem/<int:problem_id>/delete/', delete_contest_problem, name='delete_contest_problem'),
+    path('<int:contest_id>/delete-problem/<int:problem_id>/', delete_contest_problem, name='delete_contest_problem'),
+    path('<int:contest_id>/add-problem/<int:problem_id>/', add_contest_problem, name='add_contest_problem'),
 ]

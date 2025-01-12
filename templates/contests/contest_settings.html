@@ -1,4 +1,5 @@
 {% extends 'content_base.html' %}
+
 {% load static %}
 
 {% block title %}
@@ -6,30 +7,120 @@
 {% endblock %}
 
 {% block content %}
-    <h2 class="title">Задачи</h2>
-    <table class="default-table">
-        <thead>
-            <tr>
-                <th>Задача</th>
-                <th>Действие</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for problem in problems %}
-                <tr>
-                    <td>
-                        <a class="no-decoration" href="{% url 'contest_problem_detail' contest.id problem.get_id %}">
-                            {{ problem.letter }}. {{ problem.get_title }}
-                        </a>
-                    </td> 
-                    <td>
-                        <form method="post" action="{% url 'delete_contest_problem' contest.id problem.id %}">
-                            {% csrf_token %}
-                            <button type="submit">Удалить</button>
-                        </form>
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+<h1>Настройки контеста: {{ contest.title }}</h1>
+
+<!-- Форма редактирования контеста -->
+<form method="post" id="contest-settings-form">
+    {% csrf_token %}
+    {{ contest_form.as_p }}
+
+    <div id="problem-forms">
+        {{ problem_formset.management_form }}
+        {% for form in problem_formset %}
+            <div class="contest-problem-form" data-problem-id="{{ form.instance.id }}">
+                {{ form.as_p }}
+            </div>
+        {% endfor %}
+    </div>
+    <button type="submit" class="primary-btn">Сохранить изменения</button>
+</form>
+
+
+
+<!-- Список задач -->
+<h2 class="title">Список задач</h2>
+<table class="default-table" id="problems-table">
+    <thead>
+        <tr>
+            <th>Название задачи</th>
+            <th>Действия</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for problem in all_problems %}
+        <tr>
+            <td>{{ problem.title }}</td>
+            <td>
+                {% if problem.in_contest %}
+                    <!-- Удалить задачу -->
+                    <form action="{% url 'delete_contest_problem' contest.id problem.id %}" method="post" class="problem-form">
+                        {% csrf_token %}
+                        <button type="submit" class="delete-problem-btn">
+                            Удалить
+                        </button>
+                    </form>
+                {% else %}
+                    <!-- Добавить задачу -->
+                    <form action="{% url 'add_contest_problem' contest.id problem.id %}" method="post" class="problem-form">
+                        {% csrf_token %}
+                        <button type="submit" class="add-problem-btn">
+                            Добавить
+                        </button>
+                    </form>
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const problemsTable = document.getElementById("problems-table");
+
+    problemsTable.addEventListener("click", function (event) {
+        const button = event.target;
+
+        if (button.classList.contains("add-problem-btn") || button.classList.contains("delete-problem-btn")) {
+            event.preventDefault();
+
+            const form = button.closest("form");
+            const url = form.action;
+            const csrfToken = form.querySelector("input[name='csrfmiddlewaretoken']").value;
+            const row = form.closest("tr");
+
+            fetch(url, {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": csrfToken,
+                },
+            })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                return response.json();
+            })
+            .then((data) => {
+                console.log(data);
+                if (data.status === "success") {
+                    row.innerHTML =
+                        `<td>${row.querySelector("td").innerText}</td>
+                        <td>
+                            ${data.in_contest
+                                ?
+                                `<form action="/contests/${data.contest_id}/delete-problem/${data.problem_id}/" method="post" class="problem-form">
+                                    <input type="hidden" name="csrfmiddlewaretoken" value="${csrfToken}">
+                                    <button type="submit" class="delete-problem-btn">Удалить</button>
+                                </form>`
+                                :
+                                `<form action="/contests/${data.contest_id}/add-problem/${data.problem_id}/" method="post" class="problem-form">
+                                    <input type="hidden" name="csrfmiddlewaretoken" value="${csrfToken}">
+                                    <button type="submit" class="add-problem-btn">Добавить</button>
+                                </form>`
+                            }
+                        </td>`;
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch((error) => {
+                alert("Произошла ошибка: " + error);
+            });
+        }
+    });
+});
+
+</script>
+
 {% endblock %}
