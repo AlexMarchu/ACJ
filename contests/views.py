@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.db.models.functions import Lower
-from django.http import JsonResponse, HttpResponseForbidden
+from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.csrf import csrf_exempt
@@ -18,9 +18,6 @@ from contests.serializers import ContestSerializer, ContestProblemSerializer, Co
 from contests.forms import CreateContestForm, ContestProblemFormSet
 from problems.models import Submission, SubmissionStatus, SubmissionContent, Language, Problem
 from problems.views import submit_to_judge0, update_submission_status
-from problems.permissions import IsAdminOrTeacher
-import locale
-from django.utils.translation import get_language
 
 
 class ContestViewSet(viewsets.ModelViewSet):
@@ -42,13 +39,13 @@ class ContestParticipantViewSet(viewsets.ModelViewSet):
 
 
 class ContestSubmissionViewSet(viewsets.ModelViewSet):
-    
+
     queryset = ContestSubmission.objects.all()
     serializer_class = ContestSubmissionSerializer
 
 
 class CreateContestView(UserPassesTestMixin, CreateView):
-    
+
     model = Contest
     form_class = CreateContestForm
     template_name = "contests/create_contest.html"
@@ -56,7 +53,7 @@ class CreateContestView(UserPassesTestMixin, CreateView):
 
     def test_func(self):
         return self.request.user.is_teacher() or self.request.user.is_admin()
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         if self.request.POST:
@@ -65,7 +62,7 @@ class CreateContestView(UserPassesTestMixin, CreateView):
             context['contest_problem_formset'] = ContestProblemFormSet()
         context['problems'] = Problem.objects.all()
         return context
-    
+
     def form_valid(self, form):
         context = self.get_context_data()
         contest_problem_formset = context['contest_problem_formset']
@@ -126,7 +123,7 @@ def contest_view(request, contest_id):
 def contest_problems(request, contest_id):
     contest = get_object_or_404(Contest, pk=contest_id)
     problems = ContestProblem.objects.filter(contest=contest)
-    problem_statuses = dict() # problem_id: (status, submission_id)
+    problem_statuses = dict()  # problem_id: (status, submission_id)
     participant = None
     is_favorite = False
     have_permission = contest.is_public
@@ -152,7 +149,6 @@ def contest_problems(request, contest_id):
                     )
         if not contest.is_public:
             have_permission = not request.user.is_student() or participant
-
 
     if not contest.is_started() and contest.hide_problems_until_start:
         problems = ContestProblem.objects.none()
@@ -232,7 +228,7 @@ def contest_results(request, contest_id):
             "problems": dict(),
             "solved_count": 0,
         }
-        
+
         for problem in problems:
             submissions = ContestSubmission.objects.filter(
                 participant=participant,
@@ -269,40 +265,36 @@ def contest_results(request, contest_id):
     }
 
     return render(request, "contests/contest_results.html", context)
-import locale
-from django.utils.translation import get_language
+
 
 def contest_settings(request, contest_id):
+    if not request.user.is_authenticated or not (request.user.is_admin() or request.user.is_teacher()):
+        from django.http import HttpResponseForbidden
+        return HttpResponseForbidden("Forbidden")
+
     contest = get_object_or_404(Contest, id=contest_id)
 
-    all_problems = list(Problem.objects.all())
-
-    try:
-        locale.setlocale(locale.LC_COLLATE, (get_language(), 'UTF-8'))
-    except locale.Error:
-        pass
-
-    all_problems.sort(key=lambda x: locale.strxfrm(x.title))
-
-    contest_problems = set(
-        ContestProblem.objects.filter(contest=contest).values_list('problem_id', flat=True)
-    )
+    contest_problems = ContestProblem.objects.filter(contest=contest).select_related("problem").order_by(
+        "problem__title")
+    contest_problem_ids = set(map(lambda x: x.problem.id, contest_problems))
+    all_problems = Problem.objects.all().order_by("title")
 
     for problem in all_problems:
-        problem.in_contest = problem.id in contest_problems
+        problem.in_contest = problem.id in contest_problem_ids
 
-    if request.method == 'POST':
+    if request.method == "POST":
         contest_form = CreateContestForm(request.POST, instance=contest)
         if contest_form.is_valid():
             contest_form.save()
     else:
         contest_form = CreateContestForm(instance=contest)
 
-    return render(request, 'contests/contest_settings.html', {
-        'contest': contest,
-        'contest_form': contest_form,
-        'all_problems': all_problems,
+    return render(request, "contests/contest_settings.html", {
+        "contest": contest,
+        "contest_form": contest_form,
+        "all_problems": sorted(all_problems, key=lambda x: not x.in_contest),
     })
+
 
 @require_POST
 def add_contest_problem(request, contest_id, problem_id):
@@ -312,20 +304,25 @@ def add_contest_problem(request, contest_id, problem_id):
     if not ContestProblem.objects.filter(contest=contest, problem=problem).exists():
         ContestProblem.objects.create(contest=contest, problem=problem)
         problem.in_contest = True
-        return JsonResponse({
-            'status': 'success',
-            'message': 'Задача добавлена',
-            'problem_id': problem.id,
-            'contest_id': contest_id,
-            'in_contest': problem.in_contest,
-        })
-    return JsonResponse({
-        'status': 'error',
-        'message': 'Задача уже добавлена',
-        'problem_id': problem.id,
-        'contest_id': contest_id,
-        'in_contest': False,
-    })
+        return JsonResponse(
+            {
+                "status": "success",
+                "message": "Задача добавлена",
+                "problem_id": problem.id,
+                "contest_id": contest_id,
+                "in_contest": problem.in_contest,
+            }
+        )
+    return JsonResponse(
+        {
+            "status": "error",
+            "message": "Задача уже добавлена",
+            "problem_id": problem.id,
+            "contest_id": contest_id,
+            "in_contest": False,
+        }, status=400
+    )
+
 
 @require_POST
 def delete_contest_problem(request, contest_id, problem_id):
@@ -336,17 +333,24 @@ def delete_contest_problem(request, contest_id, problem_id):
 
     if contest_problem:
         contest_problem.delete()
-        return JsonResponse({'status': 'success',
-                             'message': 'Задача удалена',
-                             'problem_id': problem.id,
-                             'contest_id': contest.id,
-                             })
+        return JsonResponse(
+            {
+                "status": "success",
+                "message": "Задача удалена",
+                "problem_id": problem.id,
+                "contest_id": contest.id,
+            }
+        )
+    return JsonResponse(
+        {
+            "status": "error",
+            "message": "Задачи нет в турнире",
+            "problem_id": problem.id,
+            "contest_id": contest.id,
+        }
+    )
 
-    return JsonResponse({'status': 'error',
-                         'message': 'Задачи нет в турнире',
-                         'problem_id': problem.id,
-                         'contest_id': contest.id,
-                         })
+
 @login_required(login_url="/auth/login/")
 def join_contest(request, contest_id):
     contest = get_object_or_404(Contest, id=contest_id)

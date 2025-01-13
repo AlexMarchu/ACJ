@@ -56,12 +56,20 @@ class ContestParticipant(models.Model):
         ).exists() for problem in self.contest.problems.all())
 
 
-
 class ContestProblem(models.Model):
 
     contest = models.ForeignKey(Contest, on_delete=models.CASCADE, related_name='problems')
     problem = models.ForeignKey(Problem, on_delete=models.CASCADE, related_name='contests')
     letter = models.CharField(max_length=3, blank=True, null=True)
+
+    class Meta:
+
+        constraints = [
+            models.UniqueConstraint(
+                fields=["contest", "problem"],
+                name="unique_contest_problem"
+            )
+        ]
 
     def save(self, *args, **kwargs):
         if not self.letter:
