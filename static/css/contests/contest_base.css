@@ -11,14 +11,13 @@
     align-items: center;
 }
 
-.heading .settings-btn {
-    font-size: 18pt;
-    margin-right: auto;
-    margin-top: 7px;
+.heading .r-wrapper {
+    column-gap: 8px;
+    align-items: center;
 }
 
-.heading .favorite-btn {
-    font-size: 18pt;
+.settings-btn, .favorite-btn {
+    font-size: 17pt;
 }
 
 .info {

@@ -1,36 +1,42 @@
 {% extends 'content_base.html' %}
 {% load static %}
+{% load acj_tags %}
 
 {% block title %}
     Детали
 {% endblock %}
 
 {% block content %}
-    <link rel="stylesheet" href="{% static 'css/problems/problems_list.css' %}">
+    <link rel="stylesheet" href="{% static 'css/contests/submission_detail.css' %}">
     <div id="data-translator" data-submission-id="{{ submission.id }}" data-is-checking="{{ is_checking }}"></div>
-    <div class="problem-detail-container">
-        <table class="results-table">
+    <div class="container">
+        <h1 class="title">Информация о попытке</h1>
+        <table class="default-table info-table">
             <tr>
                 <th>ID</th>
                 <td>{{ submission.id }}</td>
             </tr>
             <tr>
                 <th>Пользователь</th>
-                <td>{{ submission.user.get_name }}</td>
+                <td><a class="no-decoration" href="{% url 'profile' submission.user.username %}">{{ submission.user.get_name }}</a></td>
             </tr>
             <tr>
                 <th>Время</th>
-                <td>{{ submission.timestamp }}</td>
+                <td>{{ submission.timestamp|format_date }}</td>
             </tr>
             {% if contest %}
                 <tr>
                     <th>Турнир</th>
-                    <td>{{ contest.title }}</td>
+                    <td><a class="no-decoration" href="{% url 'contest' contest.id %}">{{ contest.title }}</a></td>
                 </tr>
             {% endif %}
             <tr>
                 <th>Задача</th>
-                <td>{{ submission.problem.title }}</td>
+                <td>
+                    <a class="no-decoration" href="{% if contest %} {% url 'contest_problem_detail' contest.id submission.problem.id %} {% else %} {% url 'problem_detail' submission.problem.id %} {% endif %}">
+                        {{ submission.problem.title }}
+                    </a>
+                </td>
             </tr>
             <tr>
                 <th>Ограничения</th>
@@ -42,15 +48,15 @@
             </tr>
         </table>
 
-        <h2>Код</h2>
+        <h2 class="title">Код</h2>
         <textarea id="code-input" readonly>{{ submission.content.content }}</textarea>
 
-        <h2>Тесты</h2>
-        <table class="results-table">
+        <h2 class="title">Тесты</h2>
+        <table class="default-table">
             <thead>
                 <tr>
-                    <th width="10%">Тест</th>
-                    <th width="15%">Вердикт</th>
+                    <th width="15%">Тест</th>
+                    <th>Вердикт</th>
                     <th>Время</th>
                     <th>Память</th>
                 </tr>
@@ -59,7 +65,9 @@
                 {% for test in tests %}
                     <tr id="test-{{ test.id }}">
                         <td>{{ forloop.counter }}</td>
-                        <td>{{ test.status }}</td>
+                        <td>
+                            <span class="status-{{ test.status|lower }}">{{ test.status }}</span>
+                        </td>
                         <td>{{ test.execution_time }}</td>
                         <td>{{ test.memory_used }}</td>
                     </tr>
@@ -67,6 +75,5 @@
             </tbody>
         </table>
     </div>
-
     <script src="{% static 'js/sockets.js' %}"></script>
 {% endblock %}

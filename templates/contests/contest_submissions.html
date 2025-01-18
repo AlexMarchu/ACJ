@@ -33,7 +33,7 @@
                     </td>
                     <td>
                         <a class="no-decoration" href="{% url 'contest_problem_detail' submission.get_contest_id submission.get_problem_id %}">
-                            {{ submission.contest_problem.letter }} - {{ submission.contest_problem.problem }}
+                            {{ submission.contest_problem.letter }}. {{ submission.contest_problem.problem }}
                         </a>
                     </td>
                     <td>{{ submission.submission.language.name }}</td>

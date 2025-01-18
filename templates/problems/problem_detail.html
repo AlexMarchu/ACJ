@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="{% static 'css/problems/problem_detail.css' %}">
     <div class="container">
         <div class="info">
-            <div class="title-container">
+            <div class="dc-wrapper heading">
                 <h1 class="title">Задача {% if problem_letter %}{{ problem_letter }}{% else %}{{ problem.id }}{% endif %}. {{ problem.title }}</h1>
                 {% if user.is_authenticated %}
                     {% if user.is_teacher or user.is_admin %}

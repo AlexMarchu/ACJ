@@ -12,15 +12,17 @@
     <div class="container">
         <div class="dc-wrapper heading">
             <h1 class="title text-left">{{ contest.title }}</h1>
-            {% if user.is_authenticated %}
-                {% if user.is_teacher or user.is_admin %}
-                    <a class="no-decoration settings-btn" href="{% url 'contest_settings' contest.id %}"><i class="fi fi-rr-settings"></i></a>
+            <div class="r-wrapper">
+                {% if user.is_authenticated %}
+                    {% if user.is_teacher or user.is_admin %}
+                        <a class="no-decoration settings-btn" href="{% url 'contest_settings' contest.id %}"><i class="fi fi-rr-settings"></i></a>
+                    {% endif %}
                 {% endif %}
-            {% endif %}
-            <a class="no-decoration favorite-btn" href="{% url 'toggle_favorite_contest' contest.id %}"
-                            data-contest-id="{{ contest.id }}" data-csrf-token="{{ csrf_token }}">
-                <i class="fi fi-rr-star {% if contest.id in favorite_contests or is_favorite %}golden{% endif %}"></i>
-            </a>
+                <a class="no-decoration favorite-btn" href="{% url 'toggle_favorite_contest' contest.id %}"
+                                data-contest-id="{{ contest.id }}" data-csrf-token="{{ csrf_token }}">
+                    <i class="fi fi-rr-star {% if contest.id in favorite_contests or is_favorite %}golden{% endif %}"></i>
+                </a>
+            </div>
         </div>
         <p class="info">{{ contest.start_time|date:"d.m.Y H:i" }}, {% hours_between contest.start_time contest.end_time %}</p>
         <div class="tabs">

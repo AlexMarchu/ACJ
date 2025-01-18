@@ -49,6 +49,10 @@
                         <td class="td-forced">{{ problem.get_time_limit }} сек</td>
                         <td class="td-forced">{{ problem.get_memory_limit }} МБ</td>
                     </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="100%" class="no-data">Нет задач</td>
+                    </tr>
                 {% endfor %}
             </tbody>
         </table>

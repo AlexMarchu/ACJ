@@ -13,6 +13,15 @@ p {
     margin: 0px;
 }
 
+.heading {
+    align-items: center;
+    justify-content: space-between;
+}
+
+.heading .settings-btn {
+    font-size: 17pt;
+}
+
 h2.title {
     margin-bottom: 6px;
 }
@@ -23,20 +32,6 @@ h2.title {
     border-bottom: 1px solid #e0e0e0;
     row-gap: 6px;
     padding-bottom: 10px;
-}
-
-.title-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 6px;
-}
-
-.title-container .settings-btn {
-    font-size: 18pt;
-    margin-right: auto;
-    margin-top: 7px;
-    margin-left: 10pt;
 }
 
 .tests-table {
