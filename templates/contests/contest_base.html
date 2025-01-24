@@ -25,6 +25,11 @@
             </div>
         </div>
         <p class="info">{{ contest.start_time|date:"d.m.Y H:i" }}, {% hours_between contest.start_time contest.end_time %}</p>
+        {% if contest.description %}
+            <div class="contest-description">
+                <p>{{ contest.description }}</p>
+            </div>
+        {% endif %}
         <div class="tabs">
             <a class="no-decoration tab" id="problems-tab" href="{% url 'contest_problems' contest.id %}">Задачи</a>
             <a class="no-decoration tab" id="submissions-tab" href="{% url 'contest_submissions' contest.id %}">Попытки</a>
