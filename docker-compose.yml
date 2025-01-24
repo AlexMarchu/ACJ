@@ -1,11 +1,52 @@
 version: "3.7"
 
+x-logging:
+  &default-logging
+  logging:
+    driver: json-file
+    options:
+      max-size: 100M
+
 services:
+  server:
+    image: judge0/judge0:1.13.1
+    volumes:
+      - ./judge0.conf:/judge0.conf:ro
+    ports:
+      - "2358:2358"
+    privileged: true
+    <<: *default-logging
+    restart: always
+
+  workers:
+    image: judge0/judge0:1.13.1
+    command: ["./scripts/workers"]
+    volumes:
+      - ./judge0.conf:/judge0.conf:ro
+    privileged: true
+    <<: *default-logging
+    restart: always
+
+  db:
+    image: postgres:16.2
+    env_file: judge0.conf
+    volumes:
+      - data:/var/lib/postgresql/data/
+    <<: *default-logging
+    restart: always
+
   redis:
     container_name: redis
-    image: redis:latest
+    image: redis:7.2.4
+    command: [
+      "bash", "-c",
+      'docker-entrypoint.sh --appendonly no --requirepass "$$REDIS_PASSWORD"'
+    ]
+    env_file: judge0.conf
     ports:
       - "6379:6379"
+    <<: *default-logging
+    restart: always
 
   backend:
     container_name: acj-backend
@@ -15,12 +56,19 @@ services:
       - "./:/application"
     ports:
       - "8000:8000"
+    depends_on:
+      - redis
 
   celery:
     build: .
     command: celery -A celery_app.celery worker --loglevel=info
     volumes:
       - "./:/application"
+    environment:
+      CELERY_BROKER_URL: "redis://:SW5zNVJHe7R2LMQ5VCsffvdXH3dH8LA4@redis:6379/0"
     depends_on:
       - backend
       - redis
+
+volumes:
+  data:
