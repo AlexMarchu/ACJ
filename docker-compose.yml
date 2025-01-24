@@ -36,7 +36,6 @@ services:
     restart: always
 
   redis:
-    container_name: redis
     image: redis:7.2.4
     command: [
       "bash", "-c",
@@ -49,7 +48,6 @@ services:
     restart: always
 
   backend:
-    container_name: acj-backend
     build: .
     command: python3 /application/manage.py runserver 0.0.0.0:8000
     volumes:

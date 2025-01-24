@@ -21,7 +21,6 @@ from problems.permissions import IsAdminOrTeacher
 from problems.serializers import ProblemSerializer, TestSerializer
 from problems.forms import ProblemForm, TestFormSet
 
-
 class ProblemViewSet(viewsets.ModelViewSet):
 
     queryset = Problem.objects.all()
@@ -174,15 +173,12 @@ def delete_problem_test(request, problem_id, test_id):
         return HttpResponseForbidden("Forbidden")
     pass
 
-url = "http://localhost:2358/submissions"
+url = "http://server:2358/submissions"
 
 def submit_to_judge0(submission):
     # url = "https://judge0-ce.p.rapidapi.com/submissions"
     headers = {
-        "Accept": "application/json",
         "Content-Type": "application/json",
-        "x-rapidapi-key": "fc3f3f5b5cmsh85267e1e76be9bap12876ajsnb49bd475f152",
-        "x-rapidapi-host": "judge0-ce.p.rapidapi.com",
     }
     tests = submission.problem.fetch_tests()
     submission_tokens = list()
@@ -208,8 +204,6 @@ def get_submission_result(submission_token):
     # url = f"https://judge0-ce.p.rapidapi.com/submissions/{submission_token}"
     headers = {
         "Accept": "application/json",
-        "x-rapidapi-key": "fc3f3f5b5cmsh85267e1e76be9bap12876ajsnb49bd475f152",
-        "x-rapidapi-host": "judge0-ce.p.rapidapi.com",
     }
     response = requests.get(f"{url}/{submission_token}", headers=headers)
     if response.status_code == 200:
