@@ -4,7 +4,7 @@ from django.urls import path, include
 
 from acj import settings
 from acj.views import home_view
-from problems.views import problems_list, problem_detail, problem_submission_detail, problem_settings, delete_problem_test
+from problems.views import problems_list, problem_detail, problem_submission_detail, problem_settings, delete_problem_test, add_problem_test
 from users.views import ACJUserPasswordResetView, ACJUserPasswordResetConfirmView, PasswordResetCompleteView, \
     profile_view, settings_view
 
@@ -15,6 +15,7 @@ urlpatterns = [
     path('problem/<int:problem_id>/', problem_detail, name='problem_detail'),
     path('problem/<int:problem_id>/settings', problem_settings, name='problem_settings'),
     path('problem/<int:problem_id>/tests/<int:test_id>/delete/', delete_problem_test, name='delete_problem_test'),
+    path('problem/<int:problem_id>/test/add/', add_problem_test, name='add_problem_test'),
     path('problems/submission/<int:submission_id>', problem_submission_detail, name='problem_submission_detail'),
     path('admin/', admin.site.urls),
     path('api/', include('problems.urls')),

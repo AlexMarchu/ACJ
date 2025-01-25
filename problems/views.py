@@ -19,7 +19,7 @@ from problems.models import SubmissionStatus, Language, Problem, Test, Submissio
     SubmissionTestResult, ProblemTag
 from problems.permissions import IsAdminOrTeacher
 from problems.serializers import ProblemSerializer, TestSerializer
-from problems.forms import ProblemForm, TestFormSet
+from problems.forms import ProblemForm, TestFormSet, TestForm
 
 class ProblemViewSet(viewsets.ModelViewSet):
 
@@ -158,20 +158,61 @@ def problem_settings(request, problem_id):
     problem = get_object_or_404(Problem, id=problem_id)
     tests = problem.fetch_tests
 
+    if request.method == "POST":
+        problem_form = ProblemForm(request.POST, instance=problem)
+        test_form = TestForm()
+        if problem_form.is_valid():
+            problem_form.save()
+    else:
+        problem_form = ProblemForm(instance=problem)
+        test_form = TestForm()
+
     context = {
         "problem": problem,
         "tests": tests,
+        "problem_form" : problem_form,
+        "test_form" : test_form,
     }
 
     return render(request, "problems/problem_settings.html", context)
 
-
 @require_POST
 def delete_problem_test(request, problem_id, test_id):
     if not request.user.is_authenticated or not (request.user.is_admin() or request.user.is_teacher()):
-        from django.http import HttpResponseForbidden
-        return HttpResponseForbidden("Forbidden")
-    pass
+        return JsonResponse({'status': 'error', 'message': 'Forbidden'}, status=403)
+    
+    test = get_object_or_404(Test, id=test_id, problem_id=problem_id)
+    test.delete()
+
+    return JsonResponse({
+        'status': 'success',
+        'message': 'Тест удален',
+        'test_id': test_id,
+        'problem_id': problem_id
+    })
+
+
+@require_POST
+def add_problem_test(request, problem_id):
+    if not request.user.is_authenticated or not (request.user.is_admin() or request.user.is_teacher()):
+        return JsonResponse({'status': 'error', 'message': 'Forbidden'}, status=403)
+    
+    problem = get_object_or_404(Problem, id=problem_id)
+    form = TestForm(request.POST)
+
+    if form.is_valid():
+        test = form.save(commit=False)
+        test.problem = problem
+        test.save()
+        return JsonResponse({
+            'status': 'success',
+            'test': {
+                'id': test.id,
+                'description': str(test)
+            }
+        })
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Неверные данные теста', 'errors': form.errors}, status=400)
 
 url = "http://server:2358/submissions"
 

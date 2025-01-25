@@ -6,8 +6,25 @@
 {% endblock %}
 
 {% block content %}
+
+    <h1>Настройки задачи {{ problem.title }}</h1>
+    <form method="post" id="contest-settings-form">
+        {% csrf_token %}
+        {{ problem_form.as_p }}
+        <div id="problem-forms">
+        </div>
+        <button type="submit" class="primary-btn">Сохранить изменения</button>
+    </form>
+
+    <h2>Добавить тест</h2>
+    <form method="post" id="add-test-form">
+        {% csrf_token %}
+        {{ test_form.as_p }}
+        <button type="submit" class="primary-btn">Добавить тест</button>
+    </form>
+
     <h2 class="title">Тесты</h2>
-    <table class="default-table">
+    <table class="default-table" id="tests-table">
         <thead>
             <tr>
                 <th>Тест</th>
@@ -16,18 +33,107 @@
         </thead>
         <tbody>
             {% for test in tests %}
-                <tr>
+                <tr id="test-{{ test.id }}">
                     <td>
                         {{ test }}
                     </td> 
                     <td>
-                        <form method="post" action="{% url 'delete_problem_test' problem.id test.id %}">
+                        <form method="post" action="{% url 'delete_problem_test' problem.id test.id %}" class="delete-test-form">
                             {% csrf_token %}
-                            <button type="submit">Удалить</button>
+                            <button type="submit" class="delete-test-btn" data-test-id="{{ test.id }}">Удалить</button>
                         </form>
                     </td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const addTestForm = document.getElementById('add-test-form');
+            addTestForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+
+                const formData = new FormData(addTestForm);
+                const url = "{% url 'add_problem_test' problem.id %}";
+                const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrfToken
+                    },
+                    body: formData
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.text().then(text => {
+                            throw new Error(`Ошибка сервера: ${response.status} ${response.statusText}\n${text}`);
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.status === 'success') {
+                        const testsTable = document.getElementById('tests-table').getElementsByTagName('tbody')[0];
+                        const newRow = document.createElement('tr');
+                        newRow.id = `test-${data.test.id}`;
+                        newRow.innerHTML = `
+                            <td>${data.test.description}</td>
+                            <td>
+                                <form method="post" action="{% url 'delete_problem_test' problem.id '0' %}" class="delete-test-form">
+                                    {% csrf_token %}
+                                    <button type="submit" class="delete-test-btn" data-test-id="${data.test.id}">Удалить</button>
+                                </form>
+                            </td>
+                        `;
+                        testsTable.appendChild(newRow);
+
+                        addTestForm.reset();
+                    } else {
+                        alert('Ошибка при добавлении теста: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Ошибка при отправке запроса:', error);
+                    alert('Ошибка при отправке запроса: ' + error.message);
+                });
+            });
+
+            document.querySelectorAll('.delete-test-form').forEach(function(form) {
+                form.addEventListener('submit', function(event) {
+                    event.preventDefault();
+
+                    const testId = form.querySelector('.delete-test-btn').getAttribute('data-test-id');
+                    const url = form.getAttribute('action');
+                    const csrfToken = form.querySelector('[name=csrfmiddlewaretoken]').value;
+
+                    fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'X-CSRFToken': csrfToken
+                        },
+                        body: `csrfmiddlewaretoken=${csrfToken}`
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            const row = document.getElementById(`test-${data.test_id}`);
+                            if (row) {
+                                row.remove();
+                            }
+                        } else {
+                            alert('Ошибка при удалении теста: ' + data.message);
+                        }
+                    })
+                    .catch(error => {
+                        alert('Ошибка при отправке запроса: ' + error.message);
+                    });
+                });
+            });
+        });
+    </script>
+
+{{ problem_form.media }}
 {% endblock %}
