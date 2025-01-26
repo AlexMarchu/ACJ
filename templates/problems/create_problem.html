@@ -6,50 +6,53 @@
 {% endblock %}
 
 {% block content %}
-<h1>Создать задачу</h1>
-<form method="post" id="problem-form">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <h2>Тесты</h2>
-    <div id="test-forms">
-        {{ test_formset.management_form }}
-        {% for form in test_formset %}
-            <div class="test-form">
-                {{ form.as_p }}
+    <link rel="stylesheet" href="{% static 'css/problems/create_problem.css' %}">
+    <div class="container">
+        <h1 class="title text-center">Создать задачу</h1>
+        <form method="post" id="problem-form">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <h2>Тесты</h2>
+            <div id="test-forms">
+                {{ test_formset.management_form }}
+                {% for form in test_formset %}
+                    <div class="test-form">
+                        {{ form.as_p }}
+                    </div>
+                {% endfor %}
             </div>
-        {% endfor %}
+            <button type="button" id="add-test-form" class="primary-btn">Добавить тест</button>
+            <button type="submit" class="primary-btn">Создать задачу</button>
+        </form>
     </div>
-    <button type="button" id="add-test-form" class="primary-btn">Добавить тест</button>
-    <button type="submit" class="primary-btn">Создать задачу</button>
-</form>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const addTestFormButton = document.getElementById('add-test-form');
-    const testFormsContainer = document.getElementById('test-forms');
-    const totalForms = document.querySelector('input[name="tests-TOTAL_FORMS"]');
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const addTestFormButton = document.getElementById('add-test-form');
+            const testFormsContainer = document.getElementById('test-forms');
+            const totalForms = document.querySelector('input[name="tests-TOTAL_FORMS"]');
 
-    addTestFormButton.addEventListener('click', function() {
-        const formCount = parseInt(totalForms.value);
-        const newForm = document.createElement('div');
-        newForm.classList.add('test-form');
-        newForm.innerHTML = `
-            <p>
-                <label for="id_tests-${formCount}-stdin">Входные данные:</label>
-                <textarea name="tests-${formCount}-stdin" cols="40" rows="10" id="id_tests-${formCount}-stdin"></textarea>
-            </p>
-            <p>
-                <label for="id_tests-${formCount}-expected_output">Ожидаемый результат:</label>
-                <textarea name="tests-${formCount}-expected_output" cols="40" rows="10" id="id_tests-${formCount}-expected_output"></textarea>
-            </p>
-            <input type="hidden" name="tests-${formCount}-id" id="id_tests-${formCount}-id">
-            <input type="hidden" name="tests-${formCount}-problem" id="id_tests-${formCount}-problem">
-        `;
-        testFormsContainer.appendChild(newForm);
-        totalForms.value = formCount + 1;
-    });
-});
-</script>
+            addTestFormButton.addEventListener('click', function() {
+                const formCount = parseInt(totalForms.value);
+                const newForm = document.createElement('div');
+                newForm.classList.add('test-form');
+                newForm.innerHTML = `
+                    <p>
+                        <label for="id_tests-${formCount}-stdin">Входные данные:</label>
+                        <textarea name="tests-${formCount}-stdin" cols="40" rows="10" id="id_tests-${formCount}-stdin"></textarea>
+                    </p>
+                    <p>
+                        <label for="id_tests-${formCount}-expected_output">Ожидаемый результат:</label>
+                        <textarea name="tests-${formCount}-expected_output" cols="40" rows="10" id="id_tests-${formCount}-expected_output"></textarea>
+                    </p>
+                    <input type="hidden" name="tests-${formCount}-id" id="id_tests-${formCount}-id">
+                    <input type="hidden" name="tests-${formCount}-problem" id="id_tests-${formCount}-problem">
+                `;
+                testFormsContainer.appendChild(newForm);
+                totalForms.value = formCount + 1;
+            });
+        });
+    </script>
 
-{{ form.media }}
+    {{ form.media }}
 {% endblock %}

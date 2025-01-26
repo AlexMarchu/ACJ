@@ -4,7 +4,7 @@ html, body {
     min-height: 100vh;
 }
 
-body, input, select, button {
+body, input, select, button, textarea {
     font-size: 12.5pt;
     font-family: var(--default-font), sans-serif;
     font-weight: 500;
@@ -32,14 +32,32 @@ input, select {
     border-radius: 6px;
 }
 
+input[type="checkbox"] {
+    width: fit-content;
+    display: inline-block;
+}
+
 input:focus, select:focus {
     outline: 1.5px solid var(--primary-color);
+}
+
+input[type="checkbox"]:focus {
+    outline: none;
 }
 
 form label {
     font-weight: 700;
     display: block;
     margin-bottom: 5px;
+}
+
+textarea {
+    box-sizing: border-box;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    resize: none;
+    width: 100%;
 }
 
 .fi {

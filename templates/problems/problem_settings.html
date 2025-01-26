@@ -2,51 +2,53 @@
 {% load static %}
 
 {% block title %}
-    {{ problem.title }} - настройки
+    {{ problem.title }}: Настройки
 {% endblock %}
 
 {% block content %}
-
-    <h1>Настройки задачи {{ problem.title }}</h1>
-    <form method="post" id="contest-settings-form">
-        {% csrf_token %}
-        {{ problem_form.as_p }}
-        <div id="problem-forms">
-        </div>
-        <button type="submit" class="primary-btn">Сохранить изменения</button>
-    </form>
-
-    <h2>Добавить тест</h2>
-    <form method="post" id="add-test-form">
-        {% csrf_token %}
-        {{ test_form.as_p }}
-        <button type="submit" class="primary-btn">Добавить тест</button>
-    </form>
-
-    <h2 class="title">Тесты</h2>
-    <table class="default-table" id="tests-table">
-        <thead>
-            <tr>
-                <th>Тест</th>
-                <th>Действие</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for test in tests %}
-                <tr id="test-{{ test.id }}">
-                    <td>
-                        {{ test }}
-                    </td> 
-                    <td>
-                        <form method="post" action="{% url 'delete_problem_test' problem.id test.id %}" class="delete-test-form">
-                            {% csrf_token %}
-                            <button type="submit" class="delete-test-btn" data-test-id="{{ test.id }}">Удалить</button>
-                        </form>
-                    </td>
+    <link rel="stylesheet" href="{% static 'css/problems/problem_settings.css' %}">
+    <div class="container">
+        <h1 class="title text-center">Настройки задачи: {{ problem.title }}</h1>
+        <form method="POST" id="contest-settings-form">
+            {% csrf_token %}
+            {{ problem_form.as_p }}
+            <button type="submit" class="primary-btn">Сохранить изменения</button>
+        </form>
+    </div>
+    <div class="container">
+        <h2>Добавить тест</h2>
+        <form method="post" id="add-test-form">
+            {% csrf_token %}
+            {{ test_form.as_p }}
+            <button type="submit" class="primary-btn">Добавить тест</button>
+        </form>
+    </div>
+    <div class="container">
+        <h2 class="title">Тесты</h2>
+        <table class="default-table" id="tests-table">
+            <thead>
+                <tr>
+                    <th>Тест</th>
+                    <th>Действие</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for test in tests %}
+                    <tr id="test-{{ test.id }}">
+                        <td>
+                            {{ test }}
+                        </td> 
+                        <td>
+                            <form method="post" action="{% url 'delete_problem_test' problem.id test.id %}" class="delete-test-form">
+                                {% csrf_token %}
+                                <button type="submit" class="delete-test-btn" data-test-id="{{ test.id }}">Удалить</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -135,5 +137,5 @@
         });
     </script>
 
-{{ problem_form.media }}
+    {{ problem_form.media }}
 {% endblock %}

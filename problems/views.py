@@ -221,6 +221,7 @@ def submit_to_judge0(submission):
     headers = {
         "Content-Type": "application/json",
     }
+    
     tests = submission.problem.fetch_tests()
     submission_tokens = list()
     for test in tests:
@@ -233,6 +234,7 @@ def submit_to_judge0(submission):
             "memory_limit": submission.problem.memory_limit * 1024
         }
         response = requests.post(url, headers=headers, json=payload)
+
         if response.status_code == 201:
             submission_token = response.json()["token"]
             submission_tokens.append((test.id, submission_token))
@@ -280,12 +282,16 @@ def update_submission_status(submission, tokens):
             result = get_submission_result(token)
             status_id = result["status"]["id"]
 
+            while status_id == 1 or status_id == 2:
+                result = get_submission_result(token)
+                status_id = result["status"]["id"]
+
             test_result = SubmissionTestResult.objects.create(
                 submission=submission,
                 test_id=test_id,
                 status=failure_statuses.get(status_id, SubmissionStatus.StatusChoices.ACCEPTED),
-                execution_time=float(result.get("time", 0)) * 1000,
-                memory_used=float(result.get("memory", 0)),
+                execution_time=float(result.get("time")) * 1000 if result.get("time") != None else 0,
+                memory_used=float(result.get("memory")) if result.get("memory") != None else 0,
                 output=result.get("stdout", ""),
             )
 

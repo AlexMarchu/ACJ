@@ -1,50 +1,54 @@
 {% extends 'content_base.html' %}
+{% load static %}
 
 {% block title %}
     Создать турнир
 {% endblock %}
 
 {% block content %}
-<h1>Создать турнир</h1>
-<form method="post" id="contest-form">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <h2>Задачи</h2>
-    <div id="problem-forms">
-        {{ contest_problem_formset.management_form }}
-        {% for form in contest_problem_formset %}
-            <div class="contest-problem-form">
-                {{ form.as_p }}
+<link rel="stylesheet" href="{% static 'css/contests/create_contest.css' %}">
+    <div class="container">
+        <h1 class="title text-center">Создать турнир</h1>
+        <form method="post" id="contest-form">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <h2>Задачи</h2>
+            <div id="problem-forms">
+                {{ contest_problem_formset.management_form }}
+                {% for form in contest_problem_formset %}
+                    <div class="contest-problem-form">
+                        {{ form.as_p }}
+                    </div>
+                {% endfor %}
             </div>
-        {% endfor %}
+            <button type="button" id="add-problem-form" class="primary-btn">Добавить задачу</button>
+            <button type="submit" class="primary-btn">Создать турнир</button>
+        </form>
     </div>
-    <button type="button" id="add-problem-form" class="primary-btn">Добавить задачу</button>
-    <button type="submit" class="primary-btn">Создать турнир</button>
-</form>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const addProblemFormButton = document.getElementById('add-problem-form');
-    const problemFormsContainer = document.getElementById('problem-forms');
-    const totalForms = document.querySelector('input[name="problems-TOTAL_FORMS"]');
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const addProblemFormButton = document.getElementById('add-problem-form');
+            const problemFormsContainer = document.getElementById('problem-forms');
+            const totalForms = document.querySelector('input[name="problems-TOTAL_FORMS"]');
 
-    addProblemFormButton.addEventListener('click', function() {
-        const formCount = parseInt(totalForms.value);
-        const newForm = document.createElement('div');
-        newForm.classList.add('contest-problem-form');
-        newForm.innerHTML = `
-            <p>
-                <label for="id_problems-${formCount}-problem">Задача:</label>
-                <select name="problems-${formCount}-problem" id="id_problems-${formCount}-problem">
-                    {% for problem in problems %}
-                        <option value="{{ problem.id }}">{{ problem.title }}</option>
-                    {% endfor %}
-                </select>
-            </p>
-        `;
-        problemFormsContainer.appendChild(newForm);
-        totalForms.value = formCount + 1;
-    });
-});
-</script>
+            addProblemFormButton.addEventListener('click', function() {
+                const formCount = parseInt(totalForms.value);
+                const newForm = document.createElement('div');
+                newForm.classList.add('contest-problem-form');
+                newForm.innerHTML = `
+                    <p>
+                        <label for="id_problems-${formCount}-problem">Задача:</label>
+                        <select name="problems-${formCount}-problem" id="id_problems-${formCount}-problem">
+                            {% for problem in problems %}
+                                <option value="{{ problem.id }}">{{ problem.title }}</option>
+                            {% endfor %}
+                        </select>
+                    </p>
+                `;
+                problemFormsContainer.appendChild(newForm);
+                totalForms.value = formCount + 1;
+            });
+        });
+    </script>
 {% endblock %}
